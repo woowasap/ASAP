@@ -1,0 +1,54 @@
+import java.util.stream.Collectors
+
+var excludeFromCoverage = new ArrayList<String>()
+file('coverage-exclude.asap').withInputStream(){
+    it -> excludeFromCoverage.addAll(new BufferedReader(new InputStreamReader(it))
+            .lines()
+            .parallel()
+            .map(s -> s.substring(7).strip())
+            .collect(Collectors.toList()))
+}
+
+jacoco {
+    toolVersion = "${jacocoToolVersion}"
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+}
+
+jacocoTestReport {
+    reports {
+        html.required = true
+        csv.required = true
+        xml.required = true
+    }
+    finalizedBy 'jacocoTestCoverageVerification'
+    dependsOn test
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+
+        rule {
+            enabled = true
+            element = 'CLASS'
+            excludes += excludeFromCoverage.stream()
+                    .map(s -> s.replace("/", "."))
+                    .collect(Collectors.toList())
+
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.70
+            }
+
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.70
+            }
+        }
+    }
+}
