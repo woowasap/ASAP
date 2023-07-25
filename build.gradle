@@ -3,11 +3,13 @@ plugins {
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
     id 'jacoco'
+    id 'org.sonarqube'
 }
 
 apply from: 'gradle/spring.gradle'
 apply from: 'gradle/lombok.gradle'
 apply from: 'gradle/jacoco.gradle'
+apply from: 'gradle/sonar.gradle'
 
 group = "${projectGroup}"
 version = "${applicationVersion}"

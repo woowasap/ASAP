@@ -1,0 +1,20 @@
+import java.util.stream.Collectors
+
+var exclusionList = new ArrayList();
+file('coverage-exclude.asap').withInputStream() {
+    exclusionList.addAll(new BufferedReader(new InputStreamReader(it))
+            .lines()
+            .parallel()
+            .map(s -> '**/' + s.substring(7).strip() + '.java')
+            .collect(Collectors.toList())
+    )
+}
+
+sonar {
+    properties {
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.organization', 'woowasap-key'
+        property 'sonar.projectKey', 'woowasap_ASAP'
+        property 'sonar.exclusions', exclusionList
+    }
+}
