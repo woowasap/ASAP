@@ -3,6 +3,7 @@ on:
   pull_request:
     branches:
       - 'develop'
+      - 'main' # TODO : Sonarcloud 테스트용 나중에 지우기
 
 jobs:
   build:
