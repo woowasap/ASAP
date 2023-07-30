@@ -1,1 +1,3 @@
-exclude shop/woowasap/asap/Application
+exclude shop/woowasap/asap/app/Application
+exclude shop/woowasap/asap/shop/domain/*
+exclude shop/woowasap/asap/auth/domain/*
