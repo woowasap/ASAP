@@ -27,3 +27,5 @@ include 'auth:auth-service'
 include 'auth:auth-controller'
 include 'auth:auth-repository'
 
+include 'core'
+include 'core:entity'
