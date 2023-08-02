@@ -30,8 +30,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Build and analyze
-        # TODO: 인수테스트 제거 추가하기
-        run: ./gradlew clean test jacocoTestReport sonar --info
+        run: ./gradlew clean test --exclude-task app:test jacocoTestReport testCodeCoverageReport sonar --info
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
