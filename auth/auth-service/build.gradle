@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(':auth:auth-domain')
+    implementation project(':auth:auth-repository')
+}
