@@ -1,4 +1,4 @@
-package shop.woowasap.asap.shop.domain;
+package shop.woowasap.shop.domain;
 
 import java.math.BigInteger;
 import java.time.Instant;

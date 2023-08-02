@@ -1,6 +1,4 @@
 dependencies {
-    implementation project(':shop:shop-controller')
-    implementation project(':shop:shop-service')
     implementation project(':shop:shop-domain')
     implementation project(':shop:shop-repository')
 }
