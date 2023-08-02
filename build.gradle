@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
     id 'jacoco'
@@ -12,12 +12,14 @@ apply from: 'gradle/jacoco.gradle'
 apply from: 'gradle/junit.gradle'
 apply from: 'gradle/sonar.gradle'
 
-group = "${projectGroup}"
-version = "${applicationVersion}"
+allprojects {
+    group = "${projectGroup}"
+    version = "${applicationVersion}"
 
-sourceCompatibility = "${javaVersion}"
-targetCompatibility = "${javaVersion}"
+    sourceCompatibility = "${javaVersion}"
+    targetCompatibility = "${javaVersion}"
 
-repositories {
-    mavenCentral()
+    repositories {
+        mavenCentral()
+    }
 }
