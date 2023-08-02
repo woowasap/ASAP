@@ -10,3 +10,6 @@ pluginManagement {
 
 rootProject.name = 'asap'
 
+include 'support'
+include 'support:jacoco'
+
