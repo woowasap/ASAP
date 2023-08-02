@@ -14,3 +14,11 @@ include 'app'
 
 include 'support'
 include 'support:jacoco'
+
+include 'shop'
+include 'shop:shop-domain'
+include 'shop:shop-service'
+include 'shop:shop-controller'
+include 'shop:shop-repository'
+
+
