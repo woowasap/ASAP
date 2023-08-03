@@ -7,8 +7,7 @@ pluginManagement {
     }
 }
 
-
-rootProject.name = 'asap'
+rootProject.name = 'ASAP'
 
 include 'app'
 
