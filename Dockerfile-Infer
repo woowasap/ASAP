@@ -1,0 +1,29 @@
+FROM ubuntu:latest
+
+ENV INFER_VERSION v1.1.0
+
+COPY . /
+
+## set package
+RUN apt-get update && \
+      apt-get -y install \
+    openjdk-17-jdk-headless \
+    curl \
+    libc6-dev \
+    sqlite3 \
+    xz-utils \
+    wget \
+    tzdata \
+    zlib1g-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+## download infer
+RUN wget https://github.com/facebook/infer/releases/download/$INFER_VERSION/infer-linux64-$INFER_VERSION.tar.xz
+
+## set infer
+RUN tar -xf infer-linux64-$INFER_VERSION.tar.xz && \
+    ln -s ${PWD}/infer-linux64-$INFER_VERSION /infer
+
+ENV PATH /infer/bin:${PATH}
+
+ENTRYPOINT ["infer", "run", "--fail-on-issue", "--", "./gradlew", "test"]

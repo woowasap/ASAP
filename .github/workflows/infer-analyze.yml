@@ -1,0 +1,24 @@
+name: infer-analyze
+on:
+  pull_request:
+    branches:
+      - 'main'
+      - 'develop'
+      - '**/base-**'
+
+jobs:
+  build:
+    name: infer-analyze-workflows
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: docker setup
+        uses: docker-practice/actions-setup-docker@master
+
+      - name: build infer-jdk-17
+        run: docker build -f Dockerfile-Infer -t infer-jdk-17 .
+
+      - name: analyze code with infer
+        run: docker run infer-jdk-17
