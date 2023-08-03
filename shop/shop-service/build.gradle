@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(':shop:shop-domain')
+    implementation project(':shop:shop-repository')
+}

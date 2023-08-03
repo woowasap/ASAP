@@ -1,6 +1,19 @@
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter'
+allprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    bootJar.enabled = false
+    jar.enabled = true
+
+    if (name == 'app') {
+        bootJar.enabled = true
+    }
+
+    if (!name.contains('domain')) {
+        dependencies {
+            implementation 'org.springframework.boot:spring-boot-starter'
+            testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        }
+    }
 }

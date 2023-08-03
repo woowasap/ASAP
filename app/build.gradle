@@ -1,0 +1,13 @@
+dependencies {
+    implementation project(':shop:shop-controller')
+    implementation project(':shop:shop-service')
+    implementation project(':shop:shop-domain')
+    implementation project(':shop:shop-repository')
+
+    implementation project(':auth:auth-controller')
+    implementation project(':auth:auth-service')
+    implementation project(':auth:auth-domain')
+    implementation project(':auth:auth-repository')
+
+    implementation project(':core:entity')
+}

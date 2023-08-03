@@ -10,3 +10,22 @@ pluginManagement {
 
 rootProject.name = 'asap'
 
+include 'app'
+
+include 'support'
+include 'support:jacoco'
+
+include 'shop'
+include 'shop:shop-domain'
+include 'shop:shop-service'
+include 'shop:shop-controller'
+include 'shop:shop-repository'
+
+include 'auth'
+include 'auth:auth-domain'
+include 'auth:auth-service'
+include 'auth:auth-controller'
+include 'auth:auth-repository'
+
+include 'core'
+include 'core:entity'
