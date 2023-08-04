@@ -3,6 +3,7 @@ package shop.woowasap.auth.domain;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import shop.woowasap.auth.domain.exception.DuplicatedUserIdException;
 import shop.woowasap.auth.domain.exception.UserIdValidateException;
 
 @Getter
@@ -34,6 +35,12 @@ public final class UserId {
             throw new UserIdValidateException(
                 "유저의 아이디는 " + USER_ID_MIN_LENGTH + "이상, " + USER_ID_MAX_LENGTH
                     + "자 이하의 소문자와 숫자만 가능합니다.");
+        }
+    }
+
+    public void assertNotDuplicated(final UserId userId) {
+        if (this.value.equals(userId.value)) {
+            throw new DuplicatedUserIdException(userId.value);
         }
     }
 }
