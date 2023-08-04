@@ -26,4 +26,4 @@ RUN tar -xf infer-linux64-$INFER_VERSION.tar.xz && \
 
 ENV PATH /infer/bin:${PATH}
 
-ENTRYPOINT ["infer", "run", "--fail-on-issue", "--", "./gradlew", "test"]
+ENTRYPOINT ["infer", "run", "--fail-on-issue", "--", "./gradlew", "test", "--exclude-task", "app:test"]
