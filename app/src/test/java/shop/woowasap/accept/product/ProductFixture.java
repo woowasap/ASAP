@@ -6,7 +6,7 @@ import shop.woowasap.mock.dto.RegisterProductRequest;
 
 public class ProductFixture {
 
-    public static final String UNAUTHORIZED_USER_ID = "unauthorizedUserId";
+    public static final String FORBIDDEN_USER_ID = "forbiddenUserId";
     public static final String USER_ID = "userId";
     public static final String PASSWORD = "password";
     public static final String NAME = "productName";
@@ -20,8 +20,8 @@ public class ProductFixture {
         return new LoginRequest(USER_ID, PASSWORD);
     }
 
-    public static LoginRequest unauthorizedUserLoginRequest() {
-        return new LoginRequest(UNAUTHORIZED_USER_ID, PASSWORD);
+    public static LoginRequest forbiddenUserLoginRequest() {
+        return new LoginRequest(FORBIDDEN_USER_ID, PASSWORD);
     }
 
     public static RegisterProductRequest registerProductRequest() {

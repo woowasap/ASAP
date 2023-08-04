@@ -3,11 +3,12 @@ package shop.woowasap.accept;
 import static org.assertj.core.api.Assertions.assertThat;
 import static shop.woowasap.accept.product.ProductFixture.loginRequest;
 import static shop.woowasap.accept.product.ProductFixture.registerProductRequest;
-import static shop.woowasap.accept.product.ProductFixture.unauthorizedUserLoginRequest;
+import static shop.woowasap.accept.product.ProductFixture.forbiddenUserLoginRequest;
+import static shop.woowasap.accept.support.valid.HttpValidator.assertCreated;
+import static shop.woowasap.accept.support.valid.HttpValidator.assertForbidden;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.AuthApiSupporter;
@@ -31,15 +32,16 @@ class ProductAcceptanceTest extends AcceptanceTest {
             .registerProduct(accessToken, registerProductRequest());
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
+        assertCreated(response);
+        assertThat(response.header("Location")).isNotBlank();
     }
 
     @Test
-    @DisplayName("권한이 없는 회원이 /products 요청을 통해서 상품을 생성하는 경우 UNAUTHORIZED 응답을 받는다.")
-    void createProductWithUnauthorized() {
+    @DisplayName("권한이 없는 회원이 /products 요청을 통해서 상품을 생성하는 경우 FORBIDDEN 응답을 받는다.")
+    void createProductWithForbidden() {
         // given
-        final LoginRequest unauthorizedUserLoginRequest = unauthorizedUserLoginRequest();
-        final String accessToken = AuthApiSupporter.login(unauthorizedUserLoginRequest)
+        final LoginRequest forbiddenUserLoginRequest = forbiddenUserLoginRequest();
+        final String accessToken = AuthApiSupporter.login(forbiddenUserLoginRequest)
             .as(LoginResponse.class).token();
 
         // when
@@ -47,6 +49,6 @@ class ProductAcceptanceTest extends AcceptanceTest {
             .registerProduct(accessToken, registerProductRequest());
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
+        assertForbidden(response);
     }
 }
