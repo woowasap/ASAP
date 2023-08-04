@@ -10,4 +10,6 @@ dependencies {
     implementation project(':auth:auth-repository')
 
     implementation project(':core:entity')
+
+    testImplementation 'io.rest-assured:rest-assured:5.3.0'
 }
