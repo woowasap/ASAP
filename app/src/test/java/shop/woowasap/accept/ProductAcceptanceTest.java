@@ -14,9 +14,10 @@ import shop.woowasap.accept.support.api.AuthApiSupporter;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.mock.dto.LoginRequest;
 import shop.woowasap.mock.dto.LoginResponse;
+import shop.woowasap.mock.dto.UpdateProductRequest;
 
 @DisplayName("Product 인수테스트")
-public class ProductAcceptanceTest extends AcceptanceTest {
+class ProductAcceptanceTest extends AcceptanceTest {
 
     @Test
     @DisplayName("상품 내용을 수정한다.")
@@ -25,10 +26,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         final LoginRequest loginRequest = loginRequest();
         final String accessToken = AuthApiSupporter.login(loginRequest)
             .as(LoginResponse.class).token();
+        final UpdateProductRequest updateProductRequest = updateProductRequest();
 
         // when
         ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
-            updateProductRequest());
+            updateProductRequest);
 
         // then
         assertOk(response);
@@ -41,10 +43,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         final LoginRequest forbiddenUserLoginRequest = forbiddenUserLoginRequest();
         final String accessToken = AuthApiSupporter.login(forbiddenUserLoginRequest)
             .as(LoginResponse.class).token();
+        final UpdateProductRequest updateProductRequest = updateProductRequest();
 
         // when
         ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
-            updateProductRequest());
+            updateProductRequest);
 
         // then
         assertForbidden(response);
