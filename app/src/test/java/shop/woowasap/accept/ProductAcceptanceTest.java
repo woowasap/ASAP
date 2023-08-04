@@ -1,11 +1,10 @@
 package shop.woowasap.accept;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static shop.woowasap.accept.product.ProductFixture.forbiddenUserLoginRequest;
 import static shop.woowasap.accept.product.ProductFixture.loginRequest;
 import static shop.woowasap.accept.product.ProductFixture.registerProductRequest;
-import static shop.woowasap.accept.product.ProductFixture.forbiddenUserLoginRequest;
-import static shop.woowasap.accept.support.valid.HttpValidator.assertCreated;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertForbidden;
+import static shop.woowasap.accept.support.valid.ShopValidator.assertProductRegistered;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -32,8 +31,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
             .registerProduct(accessToken, registerProductRequest());
 
         // then
-        assertCreated(response);
-        assertThat(response.header("Location")).isNotBlank();
+        assertProductRegistered(response);
     }
 
     @Test
