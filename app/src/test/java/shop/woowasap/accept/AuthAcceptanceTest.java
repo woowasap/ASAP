@@ -1,22 +1,17 @@
 package shop.woowasap.accept;
 
-import static io.restassured.http.ContentType.JSON;
-import static org.assertj.core.api.Assertions.assertThat;
+import static shop.woowasap.accept.support.api.AuthApiSupporter.signUp;
+import static shop.woowasap.accept.support.valid.HttpValidator.assertBadRequest;
+import static shop.woowasap.accept.support.valid.HttpValidator.assertConflict;
+import static shop.woowasap.accept.support.valid.HttpValidator.assertCreated;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import shop.woowasap.mock.dto.SignUpRequest;
 
 class AuthAcceptanceTest extends AcceptanceTest {
-
-    private static final String API_VERSION = "/v1";
-    private static final String USER_ID = "userId";
-    private static final String PASSWORD = "password";
 
     @DisplayName("회원 가입 정상 성공 시 201 CREATED 반환")
     @Test
@@ -24,16 +19,13 @@ class AuthAcceptanceTest extends AcceptanceTest {
         // given
         String userId = "testUserId";
         String password = "testPassword";
-        Map<String, Object> params = new HashMap<>() {{
-            put(USER_ID, userId);
-            put(PASSWORD, password);
-        }};
+        SignUpRequest signUpRequest = new SignUpRequest(userId, password);
 
         // when
-        ExtractableResponse<Response> response = signUp(params);
+        ExtractableResponse<Response> response = signUp(signUpRequest);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
+        assertCreated(response);
     }
 
     @DisplayName("회원 가입 아이디 중복 시 409 Conflict 반환")
@@ -42,17 +34,14 @@ class AuthAcceptanceTest extends AcceptanceTest {
         // given
         String userId = "testUserId";
         String password = "testPassword";
-        Map<String, Object> duplicatedParams = new HashMap<>() {{
-            put(USER_ID, userId);
-            put(PASSWORD, password);
-        }};
-        signUp(duplicatedParams);
+        SignUpRequest duplicatedSignUpRequest = new SignUpRequest(userId, password);
 
+        signUp(duplicatedSignUpRequest);
         // when
-        ExtractableResponse<Response> response = signUp(duplicatedParams);
+        ExtractableResponse<Response> response = signUp(duplicatedSignUpRequest);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CONFLICT);
+        assertConflict(response);
     }
 
     @DisplayName("회원 가입 아이디 잘못되었을시 400 Bad Request 반환")
@@ -60,42 +49,26 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void givenWrongUserIdWhenSignUpThenReturnBadRequest() {
         // given
         String password = "testPassword";
-        Map<String, Object> params = new HashMap<>() {{
-            put(PASSWORD, password);
-        }};
+        SignUpRequest wrongUserIdSignUpRequest = new SignUpRequest(null, password);
 
         // when
-        ExtractableResponse<Response> response = signUp(params);
+        ExtractableResponse<Response> response = signUp(wrongUserIdSignUpRequest);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+        assertBadRequest(response);
     }
 
     @DisplayName("회원 가입 비밀번호 잘못되었을 시 400 Bad Request 반환")
     @Test
     void givenWrongPasswordIdWhenSignUpThenReturnBadRequest() {
         // given
-        String password = "testPassword";
-        Map<String, Object> params = new HashMap<>() {{
-            put(PASSWORD, password);
-        }};
+        String userId = "testUserId";
+        SignUpRequest signUpRequest = new SignUpRequest(userId, null);
 
         // when
-        ExtractableResponse<Response> response = signUp(params);
+        ExtractableResponse<Response> response = signUp(signUpRequest);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+        assertBadRequest(response);
     }
-
-    private static ExtractableResponse<Response> signUp(Map<String, Object> params) {
-        return RestAssured
-            .given().log().all()
-            .accept(JSON)
-            .contentType(JSON)
-            .body(params)
-            .when().post(API_VERSION + "/signup")
-            .then().log().all()
-            .extract();
-    }
-
 }
