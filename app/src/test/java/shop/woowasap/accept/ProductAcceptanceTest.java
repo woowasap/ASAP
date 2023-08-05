@@ -14,7 +14,7 @@ import shop.woowasap.accept.support.api.AuthApiSupporter;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.mock.dto.LoginRequest;
 import shop.woowasap.mock.dto.LoginResponse;
-import shop.woowasap.mock.dto.UpdateProductRequest;
+import shop.woowasap.shop.service.dto.UpdateProductRequest;
 
 @DisplayName("Product 인수테스트")
 class ProductAcceptanceTest extends AcceptanceTest {
