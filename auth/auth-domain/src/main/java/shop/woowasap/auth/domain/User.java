@@ -1,9 +1,7 @@
 package shop.woowasap.auth.domain;
 
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
 public final class User {
 
     private final Long id;
@@ -15,5 +13,17 @@ public final class User {
         this.id = id;
         this.userId = UserId.of(userId);
         this.password = Password.of(password);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUserId() {
+        return userId.getValue();
+    }
+
+    public String getPassword() {
+        return password.getDigest();
     }
 }
