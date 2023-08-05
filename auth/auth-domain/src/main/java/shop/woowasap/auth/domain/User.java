@@ -15,6 +15,10 @@ public final class User {
         this.password = Password.of(password);
     }
 
+    public void assertNotDuplicatedUserId(User user) {
+        this.userId.assertNotDuplicated(user.userId);
+    }
+
     public Long getId() {
         return id;
     }
