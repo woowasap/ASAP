@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 @DisplayName("유저 객체 테스트")
 class UserTest {
 
-    @DisplayName("")
     @Test
+    @DisplayName("유저 객체 정상 테스트")
     void userCreateSuccess() {
         // given
         String userId = "helloworld";

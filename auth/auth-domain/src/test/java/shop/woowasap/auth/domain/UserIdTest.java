@@ -14,8 +14,8 @@ import shop.woowasap.auth.domain.exception.UserIdValidateException;
 @DisplayName("유저 아이디 테스트")
 class UserIdTest {
 
-    @DisplayName("유저 아이디 정상 생성 테스트")
     @Test
+    @DisplayName("유저 아이디 정상 생성 테스트")
     void userIdCreateSuccess() {
         // given
         final String value = "thisisuserid12";
@@ -27,8 +27,8 @@ class UserIdTest {
         assertEquals(userId.getValue(), value);
     }
 
-    @DisplayName("유저 아이디 null 생성 실패 테스트")
     @Test
+    @DisplayName("유저 아이디 null 생성 실패 테스트")
     void nullUserIdCreateFail() {
         // when
         final UserIdValidateException e = assertThrows(UserIdValidateException.class,
@@ -38,15 +38,10 @@ class UserIdTest {
         assertEquals("유저의 아이디는 있어야 합니다.", e.getMessage());
     }
 
-    @DisplayName("유저 아이디 값 비정상시 생성 실패 테스트")
     @ParameterizedTest
-    @ValueSource(strings = {
-        "   ",
-        "aaaa",
-        "a1234567789b123456789c123456789",
-        "Asdafsdgwer",
-        "#@!$%^&asd"
-    })
+    @DisplayName("유저 아이디 값 비정상시 생성 실패 테스트")
+    @ValueSource(strings = {"   ", "aaaa", "a1234567789b123456789c123456789", "Asdafsdgwer",
+        "#@!$%^&asd"})
     void wrongValueUserIdCreateFail(String value) {
 
         // when
@@ -57,8 +52,8 @@ class UserIdTest {
         assertEquals("유저의 아이디는 " + 5 + "이상, " + 25 + "자 이하의 소문자와 숫자만 가능합니다.", e.getMessage());
     }
 
-    @DisplayName("유저간 아이디가 같으면 예외 발생")
     @Test
+    @DisplayName("유저간 아이디가 같으면 예외 발생")
     void duplicatedUserIdThenThrow() {
         // given
         final String value = "helloworld";
@@ -70,8 +65,8 @@ class UserIdTest {
         assertThrows(DuplicatedUserIdException.class, () -> userId1.assertNotDuplicated(userId2));
     }
 
-    @DisplayName("유저간 아이디가 다르면 예외 발생 안함")
     @Test
+    @DisplayName("유저간 아이디가 다르면 예외 발생 안함")
     void notDuplicatedUserIdThenVoid() {
         // given
         final String value = "helloworld";

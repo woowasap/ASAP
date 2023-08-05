@@ -13,8 +13,8 @@ import shop.woowasap.auth.domain.exception.PasswordValidateException;
 @DisplayName("유저 비밀번호 테스트")
 class PasswordTest {
 
-    @DisplayName("유저 비밀번호 정상생성 테스트")
     @Test
+    @DisplayName("유저 비밀번호 정상생성 테스트")
     void passwordCreateSuccessThenReturn() {
         // given
         String digest = "{bcrypt}$2aasdlkjlaksjdlasjd";
@@ -26,9 +26,9 @@ class PasswordTest {
         assertEquals(digest, password.getDigest());
     }
 
-    @DisplayName("유저 비밀번호 비어있으면 생성시 예외 발생")
     @ParameterizedTest
     @NullAndEmptySource
+    @DisplayName("유저 비밀번호 비어있으면 생성시 예외 발생")
     void nullOrBlankDigestThenThrow(String digest) {
         // when
         PasswordValidateException exception = assertThrows(PasswordValidateException.class,
@@ -38,8 +38,8 @@ class PasswordTest {
         assertEquals("비밀번호는 비어있을 수 없습니다.", exception.getMessage());
     }
 
-    @DisplayName("유저 비밀번호가 너무 길면 생성시 예외 발생")
     @Test
+    @DisplayName("유저 비밀번호가 너무 길면 생성시 예외 발생")
     void tooLongDigestThenThrow() {
         // given
         String digest = "a".repeat(256);
