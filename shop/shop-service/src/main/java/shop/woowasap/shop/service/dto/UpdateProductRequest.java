@@ -1,4 +1,4 @@
-package shop.woowasap.mock.dto;
+package shop.woowasap.shop.service.dto;
 
 import java.time.LocalDateTime;
 
