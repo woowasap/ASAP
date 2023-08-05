@@ -35,7 +35,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
             registerProductRequest);
 
-        long productId = Long.parseLong(registerResponse
+        final long productId = Long.parseLong(registerResponse
                             .header("Location")
                             .split("/")[4]);
 
@@ -62,7 +62,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
             registerProductRequest);
 
-        long productId = Long.parseLong(registerResponse
+        final long productId = Long.parseLong(registerResponse
             .header("Location")
             .split("/")[4]);
 
