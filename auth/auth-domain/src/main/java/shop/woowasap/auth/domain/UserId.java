@@ -8,7 +8,7 @@ import shop.woowasap.auth.domain.exception.UserIdValidateException;
 
 @Getter
 @EqualsAndHashCode
-public final class UserId {
+final class UserId {
 
     private static final int USER_ID_MIN_LENGTH = 5;
     private static final int USER_ID_MAX_LENGTH = 25;

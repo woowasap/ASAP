@@ -4,14 +4,14 @@ import lombok.Getter;
 import shop.woowasap.auth.domain.exception.PasswordValidateException;
 
 @Getter
-public final class Password {
+final class Password {
 
     private static final int PASSWORD_MAX_LENGTH = 255;
-    private final String digest;
+    private final String value;
 
-    private Password(String digest) {
-        validate(digest);
-        this.digest = digest;
+    private Password(String value) {
+        validate(value);
+        this.value = value;
     }
 
     public static Password of(String digest) {

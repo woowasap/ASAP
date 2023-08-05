@@ -23,7 +23,7 @@ class PasswordTest {
         Password password = assertDoesNotThrow(() -> Password.of(digest));
 
         // then
-        assertEquals(digest, password.getDigest());
+        assertEquals(digest, password.getValue());
     }
 
     @ParameterizedTest

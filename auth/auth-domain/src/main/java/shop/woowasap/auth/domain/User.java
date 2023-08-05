@@ -24,6 +24,6 @@ public final class User {
     }
 
     public String getPassword() {
-        return password.getDigest();
+        return password.getValue();
     }
 }
