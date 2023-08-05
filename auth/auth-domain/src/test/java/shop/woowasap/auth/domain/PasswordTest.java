@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -13,42 +14,52 @@ import shop.woowasap.auth.domain.exception.PasswordValidateException;
 @DisplayName("유저 비밀번호 테스트")
 class PasswordTest {
 
-    @Test
-    @DisplayName("유저 비밀번호 정상생성 테스트")
-    void passwordCreateSuccessThenReturn() {
-        // given
-        String digest = "{bcrypt}$2aasdlkjlaksjdlasjd";
+    @Nested
+    @DisplayName("비밀번호 정상 생성")
+    class WhenOfThenSuccess {
 
-        // when
-        Password password = assertDoesNotThrow(() -> Password.of(digest));
+        @Test
+        @DisplayName("유저 비밀번호 정상생성 테스트")
+        void passwordCreateSuccessThenReturn() {
+            // given
+            String digest = "{bcrypt}$2aasdlkjlaksjdlasjd";
 
-        // then
-        assertEquals(digest, password.getValue());
+            // when
+            Password password = assertDoesNotThrow(() -> Password.of(digest));
+
+            // then
+            assertEquals(digest, password.getValue());
+        }
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @DisplayName("유저 비밀번호 비어있으면 생성시 예외 발생")
-    void nullOrBlankDigestThenThrow(String digest) {
-        // when
-        PasswordValidateException exception = assertThrows(PasswordValidateException.class,
-            () -> Password.of(digest));
+    @Nested
+    @DisplayName("비밀번호 정상 생성 실패")
+    class WhenOfThenFail {
 
-        // then
-        assertEquals("비밀번호는 비어있을 수 없습니다.", exception.getMessage());
-    }
+        @ParameterizedTest
+        @NullAndEmptySource
+        @DisplayName("유저 비밀번호 비어있으면 생성시 예외 발생")
+        void nullOrBlankDigestThenThrow(String digest) {
+            // when
+            PasswordValidateException exception = assertThrows(PasswordValidateException.class,
+                () -> Password.of(digest));
 
-    @Test
-    @DisplayName("유저 비밀번호가 너무 길면 생성시 예외 발생")
-    void tooLongDigestThenThrow() {
-        // given
-        String digest = "a".repeat(256);
+            // then
+            assertEquals("비밀번호는 비어있을 수 없습니다.", exception.getMessage());
+        }
 
-        // when
-        PasswordValidateException exception = assertThrows(PasswordValidateException.class,
-            () -> Password.of(digest));
+        @Test
+        @DisplayName("유저 비밀번호가 너무 길면 생성시 예외 발생")
+        void tooLongDigestThenThrow() {
+            // given
+            String digest = "a".repeat(256);
 
-        // then
-        assertEquals("비밀번호는 255자 이하여야 합니다.", exception.getMessage());
+            // when
+            PasswordValidateException exception = assertThrows(PasswordValidateException.class,
+                () -> Password.of(digest));
+
+            // then
+            assertEquals("비밀번호는 255자 이하여야 합니다.", exception.getMessage());
+        }
     }
 }

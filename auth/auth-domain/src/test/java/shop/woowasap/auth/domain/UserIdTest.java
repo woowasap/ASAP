@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -14,67 +15,84 @@ import shop.woowasap.auth.domain.exception.UserIdValidateException;
 @DisplayName("유저 아이디 테스트")
 class UserIdTest {
 
-    @Test
-    @DisplayName("유저 아이디 정상 생성 테스트")
-    void userIdCreateSuccess() {
-        // given
-        final String value = "thisisuserid12";
+    @Nested
+    @DisplayName("유저 아이디 정상 생성")
+    class WhenOfThenSuccess {
 
-        // when
-        final UserId userId = UserId.of(value);
+        @Test
+        @DisplayName("유저 아이디 정상 생성 테스트")
+        void userIdCreateSuccess() {
+            // given
+            final String value = "thisisuserid12";
 
-        // then
-        assertEquals(userId.getValue(), value);
+            // when
+            final UserId userId = UserId.of(value);
+
+            // then
+            assertEquals(userId.getValue(), value);
+        }
     }
 
-    @Test
-    @DisplayName("유저 아이디 null 생성 실패 테스트")
-    void nullUserIdCreateFail() {
-        // when
-        final UserIdValidateException e = assertThrows(UserIdValidateException.class,
-            () -> UserId.of(null));
 
-        // then
-        assertEquals("유저의 아이디는 있어야 합니다.", e.getMessage());
+    @Nested
+    @DisplayName("유저 아이디 비정상 입력시 예외 발생")
+    class WhenOfThenFail {
+
+        @Test
+        @DisplayName("유저 아이디 null 생성 실패 테스트")
+        void nullUserIdCreateFail() {
+            // when
+            final UserIdValidateException e = assertThrows(UserIdValidateException.class,
+                () -> UserId.of(null));
+
+            // then
+            assertEquals("유저의 아이디는 있어야 합니다.", e.getMessage());
+        }
+
+        @ParameterizedTest
+        @DisplayName("유저 아이디 값 비정상시 생성 실패 테스트")
+        @ValueSource(strings = {"   ", "aaaa", "a1234567789b123456789c123456789", "Asdafsdgwer",
+            "#@!$%^&asd"})
+        void wrongValueUserIdCreateFail(String value) {
+
+            // when
+            final UserIdValidateException e = assertThrows(UserIdValidateException.class,
+                () -> UserId.of(value));
+
+            // then
+            assertEquals("유저의 아이디는 " + 5 + "이상, " + 25 + "자 이하의 소문자와 숫자만 가능합니다.", e.getMessage());
+        }
     }
 
-    @ParameterizedTest
-    @DisplayName("유저 아이디 값 비정상시 생성 실패 테스트")
-    @ValueSource(strings = {"   ", "aaaa", "a1234567789b123456789c123456789", "Asdafsdgwer",
-        "#@!$%^&asd"})
-    void wrongValueUserIdCreateFail(String value) {
+    @Nested
+    @DisplayName("유저 아이디 비교")
+    class WhenAssertNotDuplicated {
 
-        // when
-        final UserIdValidateException e = assertThrows(UserIdValidateException.class,
-            () -> UserId.of(value));
+        @Test
+        @DisplayName("유저간 아이디가 같으면 예외 발생")
+        void duplicatedUserIdThenThrow() {
+            // given
+            final String value = "helloworld";
 
-        // then
-        assertEquals("유저의 아이디는 " + 5 + "이상, " + 25 + "자 이하의 소문자와 숫자만 가능합니다.", e.getMessage());
-    }
+            UserId userId1 = UserId.of(value);
+            UserId userId2 = UserId.of(value);
 
-    @Test
-    @DisplayName("유저간 아이디가 같으면 예외 발생")
-    void duplicatedUserIdThenThrow() {
-        // given
-        final String value = "helloworld";
+            // when, then
+            assertThrows(DuplicatedUserIdException.class,
+                () -> userId1.assertNotDuplicated(userId2));
+        }
 
-        UserId userId1 = UserId.of(value);
-        UserId userId2 = UserId.of(value);
+        @Test
+        @DisplayName("유저간 아이디가 다르면 예외 발생 안함")
+        void notDuplicatedUserIdThenVoid() {
+            // given
+            final String value = "helloworld";
 
-        // when, then
-        assertThrows(DuplicatedUserIdException.class, () -> userId1.assertNotDuplicated(userId2));
-    }
+            UserId userId1 = UserId.of(value);
+            UserId userId2 = UserId.of(value + "a");
 
-    @Test
-    @DisplayName("유저간 아이디가 다르면 예외 발생 안함")
-    void notDuplicatedUserIdThenVoid() {
-        // given
-        final String value = "helloworld";
-
-        UserId userId1 = UserId.of(value);
-        UserId userId2 = UserId.of(value + "a");
-
-        // when, then
-        assertDoesNotThrow(() -> userId1.assertNotDuplicated(userId2));
+            // when, then
+            assertDoesNotThrow(() -> userId1.assertNotDuplicated(userId2));
+        }
     }
 }
