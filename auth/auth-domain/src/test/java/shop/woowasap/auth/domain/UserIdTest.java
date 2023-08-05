@@ -16,8 +16,8 @@ import shop.woowasap.auth.domain.exception.UserIdValidateException;
 class UserIdTest {
 
     @Nested
-    @DisplayName("유저 아이디 정상 생성")
-    class WhenOfThenSuccess {
+    @DisplayName("UserId.of 메소드")
+    class UserIdOfMethod {
 
         @Test
         @DisplayName("유저 아이디 정상 생성 테스트")
@@ -31,12 +31,6 @@ class UserIdTest {
             // then
             assertEquals(userId.getValue(), value);
         }
-    }
-
-
-    @Nested
-    @DisplayName("유저 아이디 비정상 입력시 예외 발생")
-    class WhenOfThenFail {
 
         @Test
         @DisplayName("유저 아이디 null 생성 실패 테스트")
@@ -65,8 +59,8 @@ class UserIdTest {
     }
 
     @Nested
-    @DisplayName("유저 아이디 비교")
-    class WhenAssertNotDuplicated {
+    @DisplayName("UserId.assertNotDuplicated 메소드")
+    class UserIdAssertNotDuplicatedMethod {
 
         @Test
         @DisplayName("유저간 아이디가 같으면 예외 발생")

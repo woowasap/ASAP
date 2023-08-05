@@ -15,8 +15,8 @@ import shop.woowasap.auth.domain.exception.PasswordValidateException;
 class PasswordTest {
 
     @Nested
-    @DisplayName("비밀번호 정상 생성")
-    class WhenOfThenSuccess {
+    @DisplayName("Password.of 메소드")
+    class PasswordOfMethod {
 
         @Test
         @DisplayName("유저 비밀번호 정상생성 테스트")
@@ -30,11 +30,6 @@ class PasswordTest {
             // then
             assertEquals(digest, password.getValue());
         }
-    }
-
-    @Nested
-    @DisplayName("비밀번호 정상 생성 실패")
-    class WhenOfThenFail {
 
         @ParameterizedTest
         @NullAndEmptySource
