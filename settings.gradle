@@ -28,3 +28,6 @@ include 'auth:auth-repository'
 
 include 'core'
 include 'core:entity'
+include 'core:id-gen'
+findProject(':core:id-gen')?.name = 'id-gen'
+
