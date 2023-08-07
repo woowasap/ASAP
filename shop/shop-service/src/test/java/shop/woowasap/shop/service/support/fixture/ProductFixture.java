@@ -25,7 +25,7 @@ public final class ProductFixture {
             .endTime(Instant.now().plus(1, ChronoUnit.HOURS));
     }
 
-    public static ProductResponse toProductResponse(Product product, String zoneId) {
+    public static ProductResponse toProductResponse(final Product product, final String zoneId) {
         return new ProductResponse(product.getId(), product.getName(), product.getDescription(),
             product.getPrice().toString(), product.getQuantity(),
             LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of(zoneId)),
