@@ -37,12 +37,12 @@ public final class ShopValidator {
         ProductResponse resultProduct = result.as(ProductResponse.class);
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            assertThat(resultProduct.description()).isEqualTo(expected.description());
-            assertThat(resultProduct.name()).isEqualTo(expected.name());
-            assertThat(resultProduct.endTime()).isEqualTo(expected.endTime());
-            assertThat(resultProduct.startTime()).isEqualTo(expected.startTime());
-            assertThat(resultProduct.price()).isEqualTo(expected.price());
-            assertThat(resultProduct.quantity()).isEqualTo(expected.quantity());
+            softAssertions.assertThat(resultProduct.description()).isEqualTo(expected.description());
+            softAssertions.assertThat(resultProduct.name()).isEqualTo(expected.name());
+            softAssertions.assertThat(resultProduct.endTime()).isEqualTo(expected.endTime());
+            softAssertions.assertThat(resultProduct.startTime()).isEqualTo(expected.startTime());
+            softAssertions.assertThat(resultProduct.price()).isEqualTo(expected.price());
+            softAssertions.assertThat(resultProduct.quantity()).isEqualTo(expected.quantity());
         });
     }
 
