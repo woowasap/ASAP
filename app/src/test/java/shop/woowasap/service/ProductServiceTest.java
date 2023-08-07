@@ -2,6 +2,8 @@ package shop.woowasap.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static shop.woowasap.accept.product.ProductFixture.updateProductRequest;
 
@@ -12,7 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import shop.woowasap.accept.product.ProductFixture;
+import shop.woowasap.domain.support.DomainFixture;
+import shop.woowasap.shop.domain.Product;
 import shop.woowasap.shop.dto.UpdateProductRequest;
 import shop.woowasap.shop.service.ProductService;
 import shop.woowasap.shop.service.exception.UpdateProductException;
@@ -31,6 +37,23 @@ public class ProductServiceTest {
     @Nested
     @DisplayName("update 메소드는")
     class Update_Method {
+
+        @Test
+        @DisplayName("Product 를 갱신한다")
+        void updateProduct() {
+            // given
+            final long noExistProductId = 1L;
+            final UpdateProductRequest updateProductRequest = updateProductRequest();
+            final Product product = DomainFixture.getDefaultBuilder().build();
+
+            when(productRepository.findById(noExistProductId)).thenReturn(Optional.of(product));
+
+            // when
+            productService.update(noExistProductId, updateProductRequest);
+
+            // then
+            verify(productRepository).save(any(Product.class));
+        }
 
         @Test
         @DisplayName("ProductId 에 해당하는 Product 가 존재하지 않을 경우 UpdateProductException 을 던진다")
