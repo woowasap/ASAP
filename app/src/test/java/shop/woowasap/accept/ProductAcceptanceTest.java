@@ -19,14 +19,14 @@ class ProductAcceptanceTest {
     @DisplayName("저장되어있는 특정 상품을 조회할경우, 상품의 정보가 응답된다.")
     void findSpecificProduct() {
         // given
-        String token = "MOCK TOKEN";
-        RegisterProductRequest registerProductRequest = ProductDtoFixture.registerProductRequest();
+        final String token = "MOCK TOKEN";
+        final RegisterProductRequest registerProductRequest = ProductDtoFixture.registerProductRequest();
 
         ShopApiSupporter.registerProduct(token, registerProductRequest);
         ProductsResponse productsResponse = ShopApiSupporter.getAllProducts()
             .as(ProductsResponse.class);
 
-        long anyProductId = productsResponse.products().get(0).productId();
+        final long anyProductId = productsResponse.products().get(0).productId();
         ProductResponse expected = ProductDtoFixture.productResponse(registerProductRequest);
 
         // when
@@ -40,7 +40,7 @@ class ProductAcceptanceTest {
     @DisplayName("productId에 해당하는 상품을 찾을 수 없다면, 400 BadRequest가 응답된다.")
     void returnBadRequestWhenCannotFoundProduct() {
         // given
-        long notFoundProductId = 0L;
+        final long notFoundProductId = 0L;
 
         // when
         ExtractableResponse<Response> result = ShopApiSupporter.getProduct(notFoundProductId);
