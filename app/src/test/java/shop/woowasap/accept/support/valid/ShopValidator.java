@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
+import org.assertj.core.api.SoftAssertions;
+import shop.woowasap.mock.dto.ProductResponse;
 import shop.woowasap.mock.dto.ProductsResponse;
 import shop.woowasap.mock.dto.ProductsResponse.Product;
 
@@ -21,6 +23,27 @@ public final class ShopValidator {
 
     public static void assertProductUpdated(ExtractableResponse<Response> result) {
         HttpValidator.assertOk(result);
+    }
+
+    public static void assertProduct(ExtractableResponse<Response> result,
+        ProductResponse expected) {
+        HttpValidator.assertOk(result);
+
+        assertProductExceptId(result, expected);
+    }
+
+    private static void assertProductExceptId(ExtractableResponse<Response> result,
+        ProductResponse expected) {
+        ProductResponse resultProduct = result.as(ProductResponse.class);
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            assertThat(resultProduct.description()).isEqualTo(expected.description());
+            assertThat(resultProduct.name()).isEqualTo(expected.name());
+            assertThat(resultProduct.endTime()).isEqualTo(expected.endTime());
+            assertThat(resultProduct.startTime()).isEqualTo(expected.startTime());
+            assertThat(resultProduct.price()).isEqualTo(expected.price());
+            assertThat(resultProduct.quantity()).isEqualTo(expected.quantity());
+        });
     }
 
     public static void assertProductsFound(ExtractableResponse<Response> result,

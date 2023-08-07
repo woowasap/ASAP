@@ -62,4 +62,13 @@ public final class ShopApiSupporter {
             .extract();
     }
 
+    public static ExtractableResponse<Response> getProduct(long productId) {
+        return given().log().all()
+            .accept(JSON)
+            .when().log().all()
+            .get(API_VERSION + "/products/details/{product-id}", productId)
+            .then().log().all()
+            .extract();
+    }
+
 }
