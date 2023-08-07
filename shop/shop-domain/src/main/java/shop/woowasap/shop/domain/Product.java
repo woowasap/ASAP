@@ -25,13 +25,13 @@ public final class Product {
     private final Instant startTime;
     private final Instant endTime;
 
-    public Product update(Long id, UpdateProductRequest updateProductRequest) {
+    public Product update(final Long id, final UpdateProductRequest updateProductRequest) {
         return Product.builder()
             .id(id)
             .name(updateProductRequest.name())
             .description(updateProductRequest.description())
             .price(new BigInteger(updateProductRequest.price()))
-            .quantity((long) updateProductRequest.quantity())
+            .quantity(updateProductRequest.quantity())
             .startTime(updateProductRequest.startTime().atZone(ZoneOffset.UTC).toInstant())
             .endTime(updateProductRequest.endTime().atZone(ZoneOffset.UTC).toInstant())
             .build();

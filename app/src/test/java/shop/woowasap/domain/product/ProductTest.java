@@ -25,11 +25,11 @@ public class ProductTest {
         @DisplayName("갱신된 Product 를 반환한다")
         void returnUpdatedProduct() {
             // given
-            UpdateProductRequest updateProductRequest = updateProductRequest();
-            Product original = getDefaultBuilder().build();
+            final UpdateProductRequest updateProductRequest = updateProductRequest();
+            final Product original = getDefaultBuilder().build();
 
             // when
-            Product update = original.update(original.getId(), updateProductRequest);
+            final Product update = original.update(original.getId(), updateProductRequest);
 
             // then
             assertProduct(original.getId(), updateProductRequest, update);
