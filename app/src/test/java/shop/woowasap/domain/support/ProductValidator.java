@@ -1,4 +1,4 @@
-package shop.woowasap.domain.validate;
+package shop.woowasap.domain.support;
 
 import java.time.ZoneOffset;
 import org.assertj.core.api.SoftAssertions;
@@ -6,6 +6,10 @@ import shop.woowasap.shop.domain.Product;
 import shop.woowasap.shop.dto.UpdateProductRequest;
 
 public class ProductValidator {
+
+    private ProductValidator() {
+        throw new UnsupportedOperationException("Cannot invoke constructor \"ProductValidator()\"");
+    }
 
     public static void assertProduct(long id, UpdateProductRequest updateProductRequest, Product update) {
         SoftAssertions.assertSoftly(softAssertions -> {

@@ -1,4 +1,4 @@
-package shop.woowasap.domain.product;
+package shop.woowasap.domain.support;
 
 import java.math.BigInteger;
 import java.time.Instant;
@@ -6,7 +6,11 @@ import shop.woowasap.shop.domain.Product;
 
 public class DomainFixture {
 
-    static Product.ProductBuilder getDefaultBuilder() {
+    private DomainFixture() {
+        throw new UnsupportedOperationException("Cannot invoke constructor \"DomainFixture()\"");
+    }
+
+    public static Product.ProductBuilder getDefaultBuilder() {
         return Product.builder()
             .id(1L)
             .name("name")

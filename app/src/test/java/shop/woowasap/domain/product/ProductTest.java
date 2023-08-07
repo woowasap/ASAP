@@ -2,15 +2,12 @@ package shop.woowasap.domain.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static shop.woowasap.accept.product.ProductFixture.updateProductRequest;
-import static shop.woowasap.domain.product.DomainFixture.getDefaultBuilder;
-import static shop.woowasap.domain.validate.ProductValidator.assertProduct;
+import static shop.woowasap.domain.support.DomainFixture.getDefaultBuilder;
+import static shop.woowasap.domain.support.ProductValidator.assertProduct;
 
-import java.time.ZoneOffset;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import shop.woowasap.domain.validate.ProductValidator;
 import shop.woowasap.shop.domain.Product;
 import shop.woowasap.shop.dto.UpdateProductRequest;
 
