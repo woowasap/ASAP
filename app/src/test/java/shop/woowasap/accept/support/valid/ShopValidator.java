@@ -6,9 +6,9 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
-import shop.woowasap.mock.dto.ProductResponse;
 import shop.woowasap.mock.dto.ProductsResponse;
 import shop.woowasap.mock.dto.ProductsResponse.Product;
+import shop.woowasap.shop.service.dto.ProductResponse;
 
 public final class ShopValidator {
 

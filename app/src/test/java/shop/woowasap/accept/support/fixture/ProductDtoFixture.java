@@ -1,8 +1,8 @@
 package shop.woowasap.accept.support.fixture;
 
 import java.time.LocalDateTime;
-import shop.woowasap.mock.dto.ProductResponse;
 import shop.woowasap.mock.dto.RegisterProductRequest;
+import shop.woowasap.shop.service.dto.ProductResponse;
 
 public final class ProductDtoFixture {
 

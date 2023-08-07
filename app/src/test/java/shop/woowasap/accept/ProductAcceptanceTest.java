@@ -8,9 +8,9 @@ import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.fixture.ProductDtoFixture;
 import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.ShopValidator;
-import shop.woowasap.mock.dto.ProductResponse;
 import shop.woowasap.mock.dto.ProductsResponse;
 import shop.woowasap.mock.dto.RegisterProductRequest;
+import shop.woowasap.shop.service.dto.ProductResponse;
 
 @DisplayName("Product 인수테스트")
 class ProductAcceptanceTest {
