@@ -18,4 +18,8 @@ public final class HttpValidator {
     public static void assertCreated(ExtractableResponse<Response> result) {
         assertThat(result.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
     }
+
+    public static void assertBadRequest(ExtractableResponse<Response> result) {
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+    }
 }
