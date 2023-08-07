@@ -1,6 +1,5 @@
 package shop.woowasap.domain.product;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static shop.woowasap.accept.product.ProductFixture.updateProductRequest;
 import static shop.woowasap.domain.support.DomainFixture.getDefaultBuilder;
 import static shop.woowasap.domain.support.ProductValidator.assertProduct;
@@ -26,7 +25,7 @@ public class ProductTest {
             final Product original = getDefaultBuilder().build();
 
             // when
-            final Product update = original.update(original.getId(), updateProductRequest);
+            Product update = original.update(original.getId(), updateProductRequest);
 
             // then
             assertProduct(original.getId(), updateProductRequest, update);
