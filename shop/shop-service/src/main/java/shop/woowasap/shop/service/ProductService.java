@@ -21,7 +21,7 @@ public class ProductService {
     @Value("${zone.id:Asia/Seoul}")
     private String zoneId;
 
-    public ProductResponse getProductById(long productId) {
+    public ProductResponse getProductById(final long productId) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new CannotFindProductException(productId));
 

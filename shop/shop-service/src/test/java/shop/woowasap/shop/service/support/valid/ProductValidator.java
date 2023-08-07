@@ -13,7 +13,7 @@ public final class ProductValidator {
         throw new UnsupportedOperationException("Cannot invoke constructor \"ProductValidator()\"");
     }
 
-    public static void assertProductResponse(ProductResponse result, ProductResponse expected) {
+    public static void assertProductResponse(final ProductResponse result, final ProductResponse expected) {
         assertThat(result).isEqualTo(expected);
     }
 
