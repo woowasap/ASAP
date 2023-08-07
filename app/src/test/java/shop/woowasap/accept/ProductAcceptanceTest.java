@@ -40,7 +40,7 @@ class ProductAcceptanceTest {
     @DisplayName("productId에 해당하는 상품을 찾을 수 없다면, 400 BadRequest가 응답된다.")
     void returnBadRequestWhenCannotFoundProduct() {
         // given
-        long notFoundProductId = 0;
+        long notFoundProductId = 0L;
 
         // when
         ExtractableResponse<Response> result = ShopApiSupporter.getProduct(notFoundProductId);

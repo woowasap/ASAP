@@ -6,7 +6,7 @@ import shop.woowasap.mock.dto.RegisterProductRequest;
 
 public final class ProductDtoFixture {
 
-    private static final long UNKNOWN_ID = -1;
+    private static final long UNKNOWN_ID = -1L;
 
     private ProductDtoFixture() {
         throw new UnsupportedOperationException(
