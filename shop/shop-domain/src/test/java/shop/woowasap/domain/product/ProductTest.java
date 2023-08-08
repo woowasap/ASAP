@@ -1,6 +1,6 @@
 package shop.woowasap.domain.product;
 
-import static shop.woowasap.accept.product.ProductFixture.updateProductRequest;
+import static shop.woowasap.domain.support.ProductFixture.updateProductRequest;
 import static shop.woowasap.domain.support.DomainFixture.getDefaultBuilder;
 import static shop.woowasap.domain.support.ProductValidator.assertProduct;
 
