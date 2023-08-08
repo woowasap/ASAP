@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shop.woowasap.shop.service.dto.UpdateProductRequest;
+import shop.woowasap.shop.dto.UpdateProductRequest;
 import shop.woowasap.shop.service.ProductService;
 
 @RestController
@@ -18,7 +18,7 @@ public class ProductController {
 
     @PutMapping("/{product-id}")
     public ResponseEntity<Void> updateProduct(@PathVariable("product-id") Long productId, UpdateProductRequest request) {
-        productService.updateProduct(productId, request);
+        productService.update(productId, request);
         return ResponseEntity.ok().build();
     }
 }
