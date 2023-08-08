@@ -1,8 +1,8 @@
-package shop.woowasap.accept.product;
+package shop.woowasap.accept.support.fixture;
 
 import java.time.LocalDateTime;
 import shop.woowasap.mock.dto.LoginRequest;
-import shop.woowasap.mock.dto.RegisterProductRequest;
+import shop.woowasap.shop.service.dto.RegisterProductRequest;
 
 public class ProductFixture {
 
@@ -12,7 +12,7 @@ public class ProductFixture {
     public static final String NAME = "productName";
     public static final String DESCRIPTION = "productDescription";
     public static final String PRICE = "10000";
-    public static final int QUANTITY = 10;
+    public static final long QUANTITY = 10L;
     public static final LocalDateTime START_TIME = LocalDateTime.of(2023, 8, 5, 12, 30);
     public static final LocalDateTime END_TIME = LocalDateTime.of(2023, 8, 5, 14, 30);
 

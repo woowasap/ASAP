@@ -28,6 +28,7 @@ class ProductTest {
         @Test
         @DisplayName("정상적인 입력인 경우 상품을 생성한다.")
         void createProduct() {
+            // when & then
             assertThatCode(() -> ProductBuilder.getDefaultBuilder().build())
                 .doesNotThrowAnyException();
         }
@@ -36,9 +37,11 @@ class ProductTest {
         @NullAndEmptySource
         @DisplayName("잘못된 상품 이름이 입력되는 경우, ProductException을 반환한다.")
         void throwExceptionWhenInvalidProductName(final String invalidName) {
+            // when
             final Exception exception = catchException(
                 () -> ProductBuilder.getDefaultBuilder().name(invalidName).build());
 
+            // then
             assertThat(exception).isInstanceOf(InvalidProductNameException.class);
         }
 
@@ -46,9 +49,11 @@ class ProductTest {
         @NullAndEmptySource
         @DisplayName("잘못된 상품 설명이 입력되는 경우, ProductException을 반환한다.")
         void throwExceptionWhenInvalidProductDescription(final String invalidDescription) {
+            // when
             final Exception exception = catchException(
                 () -> ProductBuilder.getDefaultBuilder().description(invalidDescription).build());
 
+            // then
             assertThat(exception).isInstanceOf(InvalidProductDescriptionException.class);
         }
 
@@ -57,58 +62,72 @@ class ProductTest {
         @ValueSource(strings = {"-1", "0", "0000000", "Hello"})
         @DisplayName("잘못된 상품 가격이 입력되는 경우, InvalidProductPriceException을 반환한다.")
         void throwExceptionWhenInvalidProductPrice(final String invalidPrice) {
+            // when
             final Exception exception = catchException(
                 () -> ProductBuilder.getDefaultBuilder().price(invalidPrice).build());
 
+            // then
             assertThat(exception).isInstanceOf(InvalidProductPriceException.class);
         }
 
         @Test
         @DisplayName("잘못된 상품 수량이 음수로 입력되는 경우, InvalidProductPriceException을 반환한다.")
         void throwExceptionWhenNegativeQuantity() {
+            // given
             final Long negativeQuantity = -1L;
 
+            // when
             final Exception exception = catchException(
                 () -> ProductBuilder.getDefaultBuilder().quantity(negativeQuantity).build());
 
+            // then
             assertThat(exception).isInstanceOf(InvalidProductQuantityException.class);
         }
 
         @Test
         @DisplayName("잘못된 상품 수량이 null로 입력되는 경우, InvalidProductPriceException을 반환한다.")
         void throwExceptionWhenNullQuantity() {
+            // given
             final Long nullQuantity = null;
 
+            // when
             final Exception exception = catchException(
                 () -> ProductBuilder.getDefaultBuilder().quantity(nullQuantity).build());
 
+            // then
             assertThat(exception).isInstanceOf(InvalidProductQuantityException.class);
         }
 
         @Test
         @DisplayName("판매 시작 시간이 판매 종료 시간과 동일한 경우, InvalidProductSaleTimeException을 반환한다.")
         void throwExceptionWhenStartTimeEqualsEndTime() {
+            // given
             final Instant sameTime = Instant.parse("2023-08-05T20:10:00.000Z");
 
+            // when
             final Exception exception = catchException(() -> ProductBuilder.getDefaultBuilder()
                 .startTime(sameTime)
                 .endTime(sameTime)
                 .build());
 
+            // then
             assertThat(exception).isInstanceOf(InvalidProductSaleTimeException.class);
         }
 
         @Test
         @DisplayName("판매 종료 시간이 판매 시작 시간보다 빠른 경우, InvalidProductSaleTimeException을 반환한다.")
         void throwExceptionWhenEndTimeLessThanStartTime() {
+            // given
             final Instant startTime = Instant.parse("2023-08-05T20:10:00.000Z");
             final Instant lessThanStartTime = Instant.parse("2023-08-05T19:10:00.000Z");
 
+            // when
             final Exception exception = catchException(() -> ProductBuilder.getDefaultBuilder()
                 .startTime(startTime)
                 .endTime(lessThanStartTime)
                 .build());
 
+            // then
             assertThat(exception).isInstanceOf(InvalidProductSaleTimeException.class);
         }
     }
