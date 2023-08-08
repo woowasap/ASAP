@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import shop.woowasap.service.support.DomainFixture;
-import shop.woowasap.service.support.ProductFixture;
 import shop.woowasap.shop.domain.Product;
 import shop.woowasap.shop.dto.UpdateProductRequest;
 import shop.woowasap.shop.service.ProductService;
