@@ -6,7 +6,7 @@ import static io.restassured.http.ContentType.JSON;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
-import shop.woowasap.mock.dto.RegisterProductRequest;
+import shop.woowasap.shop.service.dto.RegisterProductRequest;
 import shop.woowasap.mock.dto.UpdateProductRequest;
 
 public final class ShopApiSupporter {

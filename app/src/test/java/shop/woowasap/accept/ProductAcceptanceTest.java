@@ -1,8 +1,8 @@
 package shop.woowasap.accept;
 
-import static shop.woowasap.accept.product.ProductFixture.forbiddenUserLoginRequest;
-import static shop.woowasap.accept.product.ProductFixture.loginRequest;
-import static shop.woowasap.accept.product.ProductFixture.registerProductRequest;
+import static shop.woowasap.accept.support.fixture.ProductFixture.forbiddenUserLoginRequest;
+import static shop.woowasap.accept.support.fixture.ProductFixture.loginRequest;
+import static shop.woowasap.accept.support.fixture.ProductFixture.registerProductRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertForbidden;
 import static shop.woowasap.accept.support.valid.ShopValidator.assertProductRegistered;
 
