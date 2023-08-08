@@ -2,5 +2,4 @@ dependencies {
     implementation project(':shop:shop-service')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation project(path: ':shop:shop-domain')
 }
