@@ -17,13 +17,13 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     @Transactional
-    public void update(long productId, UpdateProductRequest updateProductRequest) {
-        Product product = getProduct(productId);
-        Product updateProduct = product.update(productId, updateProductRequest);
+    public void update(final long productId, final UpdateProductRequest updateProductRequest) {
+        final Product product = getProduct(productId);
+        final Product updateProduct = product.update(productId, updateProductRequest);
         productRepository.save(updateProduct);
     }
 
-    private Product getProduct(long productId) {
+    private Product getProduct(final long productId) {
         return productRepository.findById(productId)
             .orElseThrow(() -> new UpdateProductException(
                 MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
