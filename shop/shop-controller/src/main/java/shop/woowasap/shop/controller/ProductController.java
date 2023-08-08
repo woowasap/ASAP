@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shop.woowasap.shop.dto.UpdateProductRequest;
 import shop.woowasap.shop.service.ProductService;
+import shop.woowasap.shop.service.dto.UpdateProductRequest;
 
 @RestController
 @RequiredArgsConstructor

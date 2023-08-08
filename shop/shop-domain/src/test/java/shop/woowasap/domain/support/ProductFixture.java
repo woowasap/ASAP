@@ -1,7 +1,7 @@
 package shop.woowasap.domain.support;
 
 import java.time.LocalDateTime;
-import shop.woowasap.shop.dto.UpdateProductRequest;
+import shop.woowasap.shop.service.dto.UpdateProductRequest;
 
 public class ProductFixture {
 
