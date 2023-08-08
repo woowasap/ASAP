@@ -1,9 +1,11 @@
 package shop.woowasap.domain.product;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static shop.woowasap.domain.support.DomainFixture.getDefaultBuilder;
-import static shop.woowasap.domain.support.ProductValidator.assertProduct;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,7 @@ public class ProductTest {
             final String name = "newProductName";
             final String description = "newProductDescription";
             final String price = "100";
-            final int quantity = 8;
+            final long quantity = 8;
             final LocalDateTime startTime = LocalDateTime.of(2023, 8, 5, 11, 30);
             final LocalDateTime endTime = LocalDateTime.of(2023, 9, 5, 14, 30);
 
@@ -33,7 +35,16 @@ public class ProductTest {
             Product update = original.update(name, description, price, quantity, startTime, endTime);
 
             // then
-            assertProduct(original.getId(), name, description, price, quantity, startTime, endTime, update);
+            Product expected = Product.builder()
+                                .id(original.getId())
+                                .name(name).description(description)
+                                .price(new BigInteger(price))
+                                .quantity(quantity)
+                                .startTime(startTime.atZone(ZoneOffset.UTC).toInstant())
+                                .endTime(endTime.atZone(ZoneOffset.UTC).toInstant())
+                                .build();
+
+            assertThat(update).usingRecursiveAssertion().isEqualTo(expected);
         }
     }
 }
