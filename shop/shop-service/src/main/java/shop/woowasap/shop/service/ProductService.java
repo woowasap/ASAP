@@ -16,6 +16,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    @Transactional
     public void update(long productId, UpdateProductRequest updateProductRequest) {
         Product product = getProduct(productId);
         Product updateProduct = product.update(productId, updateProductRequest);

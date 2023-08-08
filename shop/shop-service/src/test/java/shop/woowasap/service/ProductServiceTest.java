@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static shop.woowasap.accept.product.ProductFixture.updateProductRequest;
+import static shop.woowasap.service.support.ProductFixture.updateProductRequest;
 
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -14,10 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import shop.woowasap.accept.product.ProductFixture;
-import shop.woowasap.domain.support.DomainFixture;
+import shop.woowasap.service.support.DomainFixture;
+import shop.woowasap.service.support.ProductFixture;
 import shop.woowasap.shop.domain.Product;
 import shop.woowasap.shop.dto.UpdateProductRequest;
 import shop.woowasap.shop.service.ProductService;
@@ -71,7 +70,6 @@ public class ProductServiceTest {
             // then
             assertThat(exception).isInstanceOf(UpdateProductException.class);
             assertThat(exception.getMessage()).contains("productId 에 해당하는 Product 가 존재하지 않습니다.");
-
         }
 
     }
