@@ -1,4 +1,6 @@
 dependencies {
+    implementation project(':core:id-gen')
+
     implementation project(':auth:auth-domain')
     implementation project(':auth:auth-repository')
 }

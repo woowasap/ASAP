@@ -19,11 +19,15 @@ public final class HttpValidator {
         assertThat(result.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
     }
 
-    public static void assertForbidden(ExtractableResponse<Response> result) {
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
+    public static void assertBadRequest(ExtractableResponse<Response> result) {
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
     }
 
     public static void assertNotFound(ExtractableResponse<Response> result) {
         assertThat(result.statusCode()).isEqualTo(HttpStatus.SC_NOT_FOUND);
+    }
+
+    public static void assertForbidden(ExtractableResponse<Response> result) {
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
     }
 }

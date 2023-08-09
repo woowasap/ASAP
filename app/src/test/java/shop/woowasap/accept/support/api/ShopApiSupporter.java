@@ -6,7 +6,7 @@ import static io.restassured.http.ContentType.JSON;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
-import shop.woowasap.mock.dto.RegisterProductRequest;
+import shop.woowasap.shop.service.dto.RegisterProductRequest;
 import shop.woowasap.shop.service.dto.UpdateProductRequest;
 
 public final class ShopApiSupporter {
@@ -25,7 +25,7 @@ public final class ShopApiSupporter {
             .header(HttpHeaders.AUTHORIZATION, token)
             .body(registerProductRequest)
             .when().log().all()
-            .post(API_VERSION + "/products")
+            .post(API_VERSION + "/admin/products")
             .then().log().all()
             .extract();
     }
@@ -40,7 +40,7 @@ public final class ShopApiSupporter {
             .header(HttpHeaders.AUTHORIZATION, token)
             .body(updateProductRequest)
             .when().log().all()
-            .put(API_VERSION + "/products/{product-id}", productId)
+            .put(API_VERSION + "/admin/products/{product-id}", productId)
             .then().log().all()
             .extract();
     }
