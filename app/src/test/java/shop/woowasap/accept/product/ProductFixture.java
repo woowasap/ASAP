@@ -2,8 +2,8 @@ package shop.woowasap.accept.product;
 
 import java.time.LocalDateTime;
 import shop.woowasap.mock.dto.LoginRequest;
-import shop.woowasap.shop.service.dto.RegisterProductRequest;
-import shop.woowasap.shop.service.dto.UpdateProductRequest;
+import shop.woowasap.shop.app.api.request.RegisterProductRequest;
+import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 
 public class ProductFixture {
 

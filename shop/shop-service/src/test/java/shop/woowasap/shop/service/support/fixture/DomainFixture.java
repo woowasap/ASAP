@@ -1,7 +1,7 @@
 package shop.woowasap.shop.service.support.fixture;
 
 import java.time.Instant;
-import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.app.domain.product.Product;
 
 public class DomainFixture {
 

@@ -7,20 +7,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.service.dto.RegisterProductRequest;
-import shop.woowasap.shop.service.dto.UpdateProductRequest;
-import shop.woowasap.shop.service.exception.UpdateProductException;
-import shop.woowasap.shop.service.repository.ProductRepository;
+import shop.woowasap.shop.app.api.ProductUseCase;
+import shop.woowasap.shop.app.api.request.RegisterProductRequest;
+import shop.woowasap.shop.app.api.request.UpdateProductRequest;
+import shop.woowasap.shop.app.domain.product.Product;
+import shop.woowasap.shop.app.exception.CannotFindProductException;
+import shop.woowasap.shop.app.spi.ProductRepository;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ProductService {
+public class ProductService implements ProductUseCase {
 
     private final ProductRepository productRepository;
     private final IdGenerator idGenerator;
 
+    @Override
     @Transactional
     public void update(final long productId, final UpdateProductRequest updateProductRequest) {
         final Product product = getProduct(productId);
@@ -38,12 +40,13 @@ public class ProductService {
 
     private Product getProduct(final long productId) {
         return productRepository.findById(productId)
-            .orElseThrow(() -> new UpdateProductException(
+            .orElseThrow(() -> new CannotFindProductException(
                 MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
                     productId)
             ));
     }
 
+    @Override
     @Transactional
     public Long registerProduct(final RegisterProductRequest registerProductRequest) {
         final Product persistProduct = productRepository.persist(

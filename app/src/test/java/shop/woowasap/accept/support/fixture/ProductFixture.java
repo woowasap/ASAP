@@ -2,7 +2,7 @@ package shop.woowasap.accept.support.fixture;
 
 import java.time.LocalDateTime;
 import shop.woowasap.mock.dto.LoginRequest;
-import shop.woowasap.shop.service.dto.RegisterProductRequest;
+import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 
 public class ProductFixture {
 
