@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import shop.woowasap.shop.domain.product.Product;
 
 @Getter
 @ToString
