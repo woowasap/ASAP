@@ -16,8 +16,8 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     @Transactional
-    public Long createProduct(final RegisterProductRequest createProductRequest) {
-        final Product persistProduct = productRepository.save(toDomain(createProductRequest));
+    public Long registerProduct(final RegisterProductRequest registerProductRequest) {
+        final Product persistProduct = productRepository.save(toDomain(registerProductRequest));
 
         return persistProduct.getId();
     }

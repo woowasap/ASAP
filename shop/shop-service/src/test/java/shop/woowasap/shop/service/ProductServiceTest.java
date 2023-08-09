@@ -43,7 +43,7 @@ class ProductServiceTest {
             when(productRepository.save(any())).thenReturn(product);
 
             // when
-            final Long resultProductId = productService.createProduct(registerProductRequest);
+            final Long resultProductId = productService.registerProduct(registerProductRequest);
 
             // then
             assertThat(resultProductId).isEqualTo(productId);
