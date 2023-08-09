@@ -12,7 +12,7 @@ import shop.woowasap.shop.service.dto.RegisterProductRequest;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/products")
+@RequestMapping("/v1/admin/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -22,7 +22,7 @@ public class ProductController {
         @RequestBody final RegisterProductRequest registerProductRequest) {
         final Long registeredProductId = productService.registerProduct(registerProductRequest);
 
-        return ResponseEntity.created(URI.create("/v1/products/details/" + registeredProductId))
+        return ResponseEntity.created(URI.create("/v1/admin/products/" + registeredProductId))
             .build();
     }
 }
