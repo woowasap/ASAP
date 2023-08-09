@@ -11,7 +11,7 @@ import shop.woowasap.shop.app.api.ProductUseCase;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 import shop.woowasap.shop.app.domain.product.Product;
-import shop.woowasap.shop.app.exception.UpdateProductException;
+import shop.woowasap.shop.app.exception.CannotFindProductException;
 import shop.woowasap.shop.app.spi.ProductRepository;
 
 @Service
@@ -40,7 +40,7 @@ public class ProductService implements ProductUseCase {
 
     private Product getProduct(final long productId) {
         return productRepository.findById(productId)
-            .orElseThrow(() -> new UpdateProductException(
+            .orElseThrow(() -> new CannotFindProductException(
                 MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
                     productId)
             ));

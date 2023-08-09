@@ -22,7 +22,7 @@ import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.app.domain.product.Product;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
-import shop.woowasap.shop.app.exception.UpdateProductException;
+import shop.woowasap.shop.app.exception.CannotFindProductException;
 import shop.woowasap.shop.app.spi.ProductRepository;
 import shop.woowasap.shop.service.support.fixture.DomainFixture;
 
@@ -85,7 +85,7 @@ class ProductServiceTest {
         }
 
         @Test
-        @DisplayName("ProductId 에 해당하는 Product 가 존재하지 않을 경우 UpdateProductException 을 던진다")
+        @DisplayName("ProductId 에 해당하는 Product 가 존재하지 않을 경우 CannotFindProductException 을 던진다")
         void throwUpdateProductExceptionWhenNoProductExist() {
             // given
             final long noExistProductId = 1L;
@@ -98,7 +98,7 @@ class ProductServiceTest {
                 () -> productService.update(noExistProductId, updateProductRequest));
 
             // then
-            assertThat(exception).isInstanceOf(UpdateProductException.class);
+            assertThat(exception).isInstanceOf(CannotFindProductException.class);
             assertThat(exception.getMessage()).contains("productId 에 해당하는 Product 가 존재하지 않습니다.");
         }
     }

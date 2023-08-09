@@ -1,13 +1,18 @@
 dependencies {
-    implementation project(':shop:shop-controller')
-    implementation project(':shop:shop-service')
     implementation project(':shop:shop-app')
+    implementation project(':shop:shop-service')
+    implementation project(':shop:shop-controller')
     implementation project(':shop:shop-repository')
 
-    implementation project(':auth:auth-controller')
-    implementation project(':auth:auth-service')
     implementation project(':auth:auth-domain')
+    implementation project(':auth:auth-service')
+    implementation project(':auth:auth-controller')
     implementation project(':auth:auth-repository')
+
+    implementation project(':order:order-app')
+    implementation project(':order:order-service')
+    implementation project(':order:order-controller')
+    implementation project(':order:order-repository')
 
     testImplementation 'io.rest-assured:rest-assured:5.3.0'
     runtimeOnly 'com.h2database:h2'

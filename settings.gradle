@@ -28,3 +28,13 @@ include 'auth:auth-repository'
 
 include 'core'
 include 'core:id-gen'
+include 'order'
+include 'order:order-app'
+findProject(':order:order-app')?.name = 'order-app'
+include 'order:order-controller'
+findProject(':order:order-controller')?.name = 'order-controller'
+include 'order:order-service'
+findProject(':order:order-service')?.name = 'order-service'
+include 'order:order-repository'
+findProject(':order:order-repository')?.name = 'order-repository'
+

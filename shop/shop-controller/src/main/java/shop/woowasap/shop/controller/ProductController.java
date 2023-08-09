@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shop.woowasap.shop.app.api.ProductUseCase;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
-import shop.woowasap.shop.app.exception.UpdateProductException;
+import shop.woowasap.shop.app.exception.CannotFindProductException;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,7 +38,7 @@ public class ProductController {
             .build();
     }
 
-    @ExceptionHandler(UpdateProductException.class)
+    @ExceptionHandler(CannotFindProductException.class)
     public ResponseEntity<Void> handleException() {
         return ResponseEntity.badRequest().build();
     }
