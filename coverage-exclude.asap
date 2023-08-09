@@ -1,3 +1,4 @@
 exclude shop/woowasap/Application
 exclude shop/woowasap/shop/domain/*
 exclude shop/woowasap/auth/domain/*
+exclude shop/woowasap/shop/controller/ProductController
