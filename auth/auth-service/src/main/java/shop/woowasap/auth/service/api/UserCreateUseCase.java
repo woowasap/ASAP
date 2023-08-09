@@ -1,4 +1,4 @@
-package shop.woowasap.auth.service.in;
+package shop.woowasap.auth.service.api;
 
 import shop.woowasap.auth.service.dto.request.UserCreateRequest;
 
