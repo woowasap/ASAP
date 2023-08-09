@@ -54,7 +54,8 @@ class SnowflakeIdGeneratorTest {
             // given
             final int expectedGeneratedIdCount = 10000;
             final ExecutorService executorService = Executors.newFixedThreadPool(256);
-            final List<Callable<Long>> idGenerateThreads = idGenerateThreads(expectedGeneratedIdCount);
+            final List<Callable<Long>> idGenerateThreads = idGenerateThreads(
+                expectedGeneratedIdCount);
 
             // when & then
             waitAtMost(ofSeconds(10))

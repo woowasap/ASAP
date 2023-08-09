@@ -10,7 +10,8 @@ public final class ProductMapper {
     private ProductMapper() {
     }
 
-    public static Product toDomain(final IdGenerator idGenerator, final RegisterProductRequest registerProductRequest) {
+    public static Product toDomain(final IdGenerator idGenerator,
+        final RegisterProductRequest registerProductRequest) {
         return Product.builder()
             .id(idGenerator.generate())
             .name(registerProductRequest.name())

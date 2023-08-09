@@ -3,9 +3,11 @@ package shop.woowasap.shop.domain.product;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchException;
-import static shop.woowasap.shop.domain.product.DomainFixture.ProductBuilder;
+import static shop.woowasap.shop.domain.support.DomainFixture.getDefaultBuilder;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -29,7 +31,7 @@ class ProductTest {
         @DisplayName("정상적인 입력인 경우 상품을 생성한다.")
         void createProduct() {
             // when & then
-            assertThatCode(() -> ProductBuilder.getDefaultBuilder().build())
+            assertThatCode(() -> getDefaultBuilder().build())
                 .doesNotThrowAnyException();
         }
 
@@ -39,7 +41,7 @@ class ProductTest {
         void throwExceptionWhenInvalidProductName(final String invalidName) {
             // when
             final Exception exception = catchException(
-                () -> ProductBuilder.getDefaultBuilder().name(invalidName).build());
+                () -> getDefaultBuilder().name(invalidName).build());
 
             // then
             assertThat(exception).isInstanceOf(InvalidProductNameException.class);
@@ -51,7 +53,7 @@ class ProductTest {
         void throwExceptionWhenInvalidProductDescription(final String invalidDescription) {
             // when
             final Exception exception = catchException(
-                () -> ProductBuilder.getDefaultBuilder().description(invalidDescription).build());
+                () -> getDefaultBuilder().description(invalidDescription).build());
 
             // then
             assertThat(exception).isInstanceOf(InvalidProductDescriptionException.class);
@@ -64,7 +66,7 @@ class ProductTest {
         void throwExceptionWhenInvalidProductPrice(final String invalidPrice) {
             // when
             final Exception exception = catchException(
-                () -> ProductBuilder.getDefaultBuilder().price(invalidPrice).build());
+                () -> getDefaultBuilder().price(invalidPrice).build());
 
             // then
             assertThat(exception).isInstanceOf(InvalidProductPriceException.class);
@@ -78,7 +80,7 @@ class ProductTest {
 
             // when
             final Exception exception = catchException(
-                () -> ProductBuilder.getDefaultBuilder().quantity(negativeQuantity).build());
+                () -> getDefaultBuilder().quantity(negativeQuantity).build());
 
             // then
             assertThat(exception).isInstanceOf(InvalidProductQuantityException.class);
@@ -92,7 +94,7 @@ class ProductTest {
 
             // when
             final Exception exception = catchException(
-                () -> ProductBuilder.getDefaultBuilder().quantity(nullQuantity).build());
+                () -> getDefaultBuilder().quantity(nullQuantity).build());
 
             // then
             assertThat(exception).isInstanceOf(InvalidProductQuantityException.class);
@@ -105,7 +107,7 @@ class ProductTest {
             final Instant sameTime = Instant.parse("2023-08-05T20:10:00.000Z");
 
             // when
-            final Exception exception = catchException(() -> ProductBuilder.getDefaultBuilder()
+            final Exception exception = catchException(() -> getDefaultBuilder()
                 .startTime(sameTime)
                 .endTime(sameTime)
                 .build());
@@ -122,13 +124,48 @@ class ProductTest {
             final Instant lessThanStartTime = Instant.parse("2023-08-05T19:10:00.000Z");
 
             // when
-            final Exception exception = catchException(() -> ProductBuilder.getDefaultBuilder()
+            final Exception exception = catchException(() -> getDefaultBuilder()
                 .startTime(startTime)
                 .endTime(lessThanStartTime)
                 .build());
 
             // then
             assertThat(exception).isInstanceOf(InvalidProductSaleTimeException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("update 메소드는")
+    class Update_Method {
+
+        @Test
+        @DisplayName("갱신된 Product 를 반환한다")
+        void returnUpdatedProduct() {
+            // given
+            final Product original = getDefaultBuilder().build();
+
+            final String name = "newProductName";
+            final String description = "newProductDescription";
+            final String price = "100";
+            final long quantity = 8;
+            final LocalDateTime startTime = LocalDateTime.of(2023, 8, 5, 11, 30);
+            final LocalDateTime endTime = LocalDateTime.of(2023, 9, 5, 14, 30);
+
+            // when
+            Product update = original.update(name, description, price, quantity, startTime,
+                endTime);
+
+            // then
+            Product expected = Product.builder()
+                .id(original.getId())
+                .name(name).description(description)
+                .price(price)
+                .quantity(quantity)
+                .startTime(startTime.atZone(ZoneOffset.UTC).toInstant())
+                .endTime(endTime.atZone(ZoneOffset.UTC).toInstant())
+                .build();
+
+            assertThat(update).usingRecursiveAssertion().isEqualTo(expected);
         }
     }
 }
