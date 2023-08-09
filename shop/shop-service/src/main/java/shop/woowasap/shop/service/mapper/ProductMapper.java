@@ -2,8 +2,8 @@ package shop.woowasap.shop.service.mapper;
 
 import java.time.ZoneOffset;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.service.dto.RegisterProductRequest;
+import shop.woowasap.shop.app.domain.product.Product;
+import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 
 public final class ProductMapper {
 

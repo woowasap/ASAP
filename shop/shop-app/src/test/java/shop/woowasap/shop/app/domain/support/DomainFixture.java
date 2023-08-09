@@ -1,4 +1,4 @@
-package shop.woowasap.shop.service.support.fixture;
+package shop.woowasap.shop.app.domain.support;
 
 import java.time.Instant;
 import shop.woowasap.shop.app.domain.product.Product;

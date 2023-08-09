@@ -10,29 +10,29 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shop.woowasap.shop.service.ProductService;
-import shop.woowasap.shop.service.dto.RegisterProductRequest;
-import shop.woowasap.shop.service.dto.UpdateProductRequest;
-import shop.woowasap.shop.service.exception.UpdateProductException;
+import shop.woowasap.shop.app.api.ProductUseCase;
+import shop.woowasap.shop.app.api.request.RegisterProductRequest;
+import shop.woowasap.shop.app.api.request.UpdateProductRequest;
+import shop.woowasap.shop.app.exception.UpdateProductException;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/admin/products")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductUseCase productUseCase;
 
     @PutMapping("/{product-id}")
     public ResponseEntity<Void> updateProduct(@PathVariable("product-id") Long productId,
         @RequestBody UpdateProductRequest request) {
-        productService.update(productId, request);
+        productUseCase.update(productId, request);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping
     public ResponseEntity<Void> registerProduct(
         @RequestBody final RegisterProductRequest registerProductRequest) {
-        final Long registeredProductId = productService.registerProduct(registerProductRequest);
+        final Long registeredProductId = productUseCase.registerProduct(registerProductRequest);
 
         return ResponseEntity.created(URI.create("/v1/admin/products/" + registeredProductId))
             .build();

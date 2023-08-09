@@ -13,8 +13,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.fixture.ProductFixture;
-import shop.woowasap.shop.service.dto.RegisterProductRequest;
-import shop.woowasap.shop.service.dto.UpdateProductRequest;
+import shop.woowasap.shop.app.api.request.RegisterProductRequest;
+import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 
 @DisplayName("Product 인수테스트")
 class ProductAcceptanceTest extends AcceptanceTest {

@@ -15,7 +15,7 @@ include 'support'
 include 'support:jacoco'
 
 include 'shop'
-include 'shop:shop-domain'
+include 'shop:shop-app'
 include 'shop:shop-service'
 include 'shop:shop-controller'
 include 'shop:shop-repository'
@@ -27,6 +27,4 @@ include 'auth:auth-controller'
 include 'auth:auth-repository'
 
 include 'core'
-include 'core:entity'
 include 'core:id-gen'
-
