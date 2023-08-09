@@ -1,4 +1,4 @@
-package shop.woowasap.shop.dto;
+package shop.woowasap.shop.service.dto;
 
 import java.time.LocalDateTime;
 

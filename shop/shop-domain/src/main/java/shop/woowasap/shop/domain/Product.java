@@ -2,13 +2,13 @@ package shop.woowasap.shop.domain;
 
 import java.math.BigInteger;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import shop.woowasap.shop.dto.UpdateProductRequest;
 
 @Getter
 @Builder
@@ -25,15 +25,22 @@ public final class Product {
     private final Instant startTime;
     private final Instant endTime;
 
-    public Product update(final Long id, final UpdateProductRequest updateProductRequest) {
+    public Product update(
+        final String name,
+        final String description,
+        final String price,
+        final long quantity,
+        final LocalDateTime startTime,
+        final LocalDateTime endTime
+    ) {
         return Product.builder()
             .id(id)
-            .name(updateProductRequest.name())
-            .description(updateProductRequest.description())
-            .price(new BigInteger(updateProductRequest.price()))
-            .quantity(updateProductRequest.quantity())
-            .startTime(updateProductRequest.startTime().atZone(ZoneOffset.UTC).toInstant())
-            .endTime(updateProductRequest.endTime().atZone(ZoneOffset.UTC).toInstant())
+            .name(name)
+            .description(description)
+            .price(new BigInteger(price))
+            .quantity(quantity)
+            .startTime(startTime.atZone(ZoneOffset.UTC).toInstant())
+            .endTime(endTime.atZone(ZoneOffset.UTC).toInstant())
             .build();
     }
 

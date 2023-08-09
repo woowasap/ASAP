@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import shop.woowasap.service.support.DomainFixture;
 import shop.woowasap.shop.domain.Product;
-import shop.woowasap.shop.dto.UpdateProductRequest;
+import shop.woowasap.shop.service.dto.UpdateProductRequest;
 import shop.woowasap.shop.service.ProductService;
 import shop.woowasap.shop.service.exception.UpdateProductException;
 import shop.woowasap.shop.service.repository.ProductRepository;
@@ -47,10 +47,11 @@ public class ProductServiceTest {
             when(productRepository.findById(noExistProductId)).thenReturn(Optional.of(product));
 
             // when
-            productService.update(noExistProductId, updateProductRequest);
+            productService.update
+                (noExistProductId, updateProductRequest);
 
             // then
-            verify(productRepository).save(any(Product.class));
+            verify(productRepository).persist(any(Product.class));
         }
 
         @Test
@@ -72,6 +73,5 @@ public class ProductServiceTest {
         }
 
     }
-
 
 }

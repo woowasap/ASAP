@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.shop.domain.Product;
-import shop.woowasap.shop.dto.UpdateProductRequest;
+import shop.woowasap.shop.service.dto.UpdateProductRequest;
 import shop.woowasap.shop.service.exception.UpdateProductException;
 import shop.woowasap.shop.service.repository.ProductRepository;
 
@@ -19,8 +19,16 @@ public class ProductService {
     @Transactional
     public void update(final long productId, final UpdateProductRequest updateProductRequest) {
         final Product product = getProduct(productId);
-        final Product updateProduct = product.update(productId, updateProductRequest);
-        productRepository.save(updateProduct);
+        final Product updateProduct = product.update(
+            updateProductRequest.name(),
+            updateProductRequest.description(),
+            updateProductRequest.price(),
+            updateProductRequest.quantity(),
+            updateProductRequest.startTime(),
+            updateProductRequest.endTime()
+        );
+
+        productRepository.persist(updateProduct);
     }
 
     private Product getProduct(final long productId) {
