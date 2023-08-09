@@ -40,7 +40,7 @@ public final class ShopApiSupporter {
             .header(HttpHeaders.AUTHORIZATION, token)
             .body(updateProductRequest)
             .when().log().all()
-            .put(API_VERSION + "/products/{product-id}", productId)
+            .put(API_VERSION + "/admin/products/{product-id}", productId)
             .then().log().all()
             .extract();
     }

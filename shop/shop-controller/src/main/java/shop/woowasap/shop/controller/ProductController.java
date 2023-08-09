@@ -11,7 +11,7 @@ import shop.woowasap.shop.service.dto.UpdateProductRequest;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/products")
+@RequestMapping("/v1/admin/products")
 public class ProductController {
 
     private final ProductService productService;
