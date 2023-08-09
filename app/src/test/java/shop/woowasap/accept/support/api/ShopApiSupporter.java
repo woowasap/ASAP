@@ -25,7 +25,7 @@ public final class ShopApiSupporter {
             .header(HttpHeaders.AUTHORIZATION, token)
             .body(registerProductRequest)
             .when().log().all()
-            .post(API_VERSION + "/products")
+            .post(API_VERSION + "/admin/products")
             .then().log().all()
             .extract();
     }

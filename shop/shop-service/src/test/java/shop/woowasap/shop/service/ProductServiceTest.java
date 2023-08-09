@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.service.dto.RegisterProductRequest;
 import shop.woowasap.shop.service.repository.ProductRepository;
@@ -25,6 +26,9 @@ class ProductServiceTest {
 
     @Autowired
     private ProductService productService;
+
+    @MockBean
+    private IdGenerator idGenerator;
 
     @MockBean
     private ProductRepository productRepository;
@@ -41,6 +45,7 @@ class ProductServiceTest {
             final RegisterProductRequest registerProductRequest = registerProductRequest();
             final Product product = productBuilder(productId).build();
             when(productRepository.save(any())).thenReturn(product);
+            when(idGenerator.generate()).thenReturn(productId);
 
             // when
             final Long resultProductId = productService.registerProduct(registerProductRequest);

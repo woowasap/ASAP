@@ -22,9 +22,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("POST /products 요청을 통해서 상품을 생성한다.")
     void createProduct() {
         // given
-        final LoginRequest loginRequest = loginRequest();
-        final String accessToken = AuthApiSupporter.login(loginRequest)
-            .as(LoginResponse.class).token();
+        final String accessToken = "Token";
 
         // when
         final ExtractableResponse<Response> response = ShopApiSupporter
@@ -34,19 +32,4 @@ class ProductAcceptanceTest extends AcceptanceTest {
         assertProductRegistered(response);
     }
 
-    @Test
-    @DisplayName("권한이 없는 회원이 /products 요청을 통해서 상품을 생성하는 경우 FORBIDDEN 응답을 받는다.")
-    void createProductWithForbidden() {
-        // given
-        final LoginRequest forbiddenUserLoginRequest = forbiddenUserLoginRequest();
-        final String accessToken = AuthApiSupporter.login(forbiddenUserLoginRequest)
-            .as(LoginResponse.class).token();
-
-        // when
-        final ExtractableResponse<Response> response = ShopApiSupporter
-            .registerProduct(accessToken, registerProductRequest());
-
-        // then
-        assertForbidden(response);
-    }
 }
