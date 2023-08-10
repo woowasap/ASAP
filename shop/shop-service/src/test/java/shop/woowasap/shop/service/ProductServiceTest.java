@@ -19,12 +19,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.app.product.Product;
+import shop.woowasap.shop.app.api.ProductUseCase;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
+import shop.woowasap.shop.app.api.response.ProductResponse;
 import shop.woowasap.shop.app.exception.CannotFindProductException;
+import shop.woowasap.shop.app.product.Product;
 import shop.woowasap.shop.app.spi.ProductRepository;
-import shop.woowasap.shop.service.support.fixture.DomainFixture;
+import shop.woowasap.shop.service.support.fixture.ProductDtoFixture;
+import shop.woowasap.shop.service.support.fixture.ProductFixture;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("ProductService 클래스")
@@ -32,7 +35,7 @@ import shop.woowasap.shop.service.support.fixture.DomainFixture;
 class ProductServiceTest {
 
     @Autowired
-    private ProductService productService;
+    private ProductUseCase productService;
 
     @MockBean
     private IdGenerator idGenerator;
@@ -72,7 +75,7 @@ class ProductServiceTest {
             // given
             final long noExistProductId = 1L;
             final UpdateProductRequest updateProductRequest = updateProductRequest();
-            final Product product = DomainFixture.getDefaultBuilder().build();
+            final Product product = ProductFixture.productBuilder(noExistProductId).build();
 
             when(productRepository.findById(noExistProductId)).thenReturn(Optional.of(product));
 
@@ -100,6 +103,43 @@ class ProductServiceTest {
             // then
             assertThat(exception).isInstanceOf(CannotFindProductException.class);
             assertThat(exception.getMessage()).contains("productId 에 해당하는 Product 가 존재하지 않습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("getById 메소드는")
+    class GetById_Method {
+
+        @Test
+        @DisplayName("id에 해당하는 Product 를 찾을 수 없을경우, CannotFindProductException 을 던진다.")
+        void throwCannotFindProductExceptionWhenCannotFindIdMatchedProduct() {
+            // given
+            final long id = 1L;
+
+            when(productRepository.findById(id)).thenReturn(Optional.empty());
+
+            // when
+            Exception exception = catchException(() -> productService.getById(id));
+
+            // then
+            assertThat(exception).isInstanceOf(CannotFindProductException.class);
+        }
+
+        @Test
+        @DisplayName("id에 해당하는 Product 가 존재한다면, ProductResponse를 반환한다.")
+        void ReturnProductResponseWhenExistsIdMatchedProduct() {
+            // given
+            final long id = 1L;
+            final Product product = ProductFixture.productBuilder(id).build();
+            final ProductResponse expected = ProductDtoFixture.fromProduct(product);
+
+            when(productRepository.findById(id)).thenReturn(Optional.of(product));
+
+            // when
+            ProductResponse result = productService.getById(id);
+
+            // then
+            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
     }
 }
