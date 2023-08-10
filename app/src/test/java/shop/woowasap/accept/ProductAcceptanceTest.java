@@ -89,7 +89,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final RegisterProductRequest registerProductRequest = ProductFixture.registerProductRequest();
 
         ShopApiSupporter.registerProduct(token, registerProductRequest);
-        ProductsResponse productsResponse = ShopApiSupporter.getAllProducts()
+        final ProductsResponse productsResponse = ShopApiSupporter.getAllProducts()
             .as(ProductsResponse.class);
 
         final long anyProductId = productsResponse.products().get(0).productId();
@@ -106,7 +106,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("productId에 해당하는 상품을 찾을 수 없다면, 400 BadRequest가 응답된다.")
     void returnBadRequestWhenCannotFoundProduct() {
         // given
-        final long notFoundProductId = 0L;
+        final long notFoundProductId = 123L;
 
         // when
         ExtractableResponse<Response> result = ShopApiSupporter.getProduct(notFoundProductId);
