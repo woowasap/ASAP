@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import shop.woowasap.mock.dto.ProductsResponse;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
 
 public final class ShopValidator {
 
@@ -26,8 +26,13 @@ public final class ShopValidator {
         HttpValidator.assertOk(result);
 
         ProductsResponse resultResponse = result.as(ProductsResponse.class);
-        assertThat(resultResponse).usingRecursiveComparison().ignoringFields("id")
-            .isEqualTo(expected);
+        assertProducts(resultResponse, expected);
     }
 
+    private static void assertProducts(ProductsResponse result, ProductsResponse expected) {
+        assertThat(result.page()).isEqualTo(expected.page());
+        assertThat(result.totalPage()).isEqualTo(expected.totalPage());
+
+        assertThat(result).usingRecursiveAssertion().ignoringFields("id").isEqualTo(expected);
+    }
 }

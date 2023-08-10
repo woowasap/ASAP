@@ -4,10 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import shop.woowasap.mock.dto.LoginRequest;
-import shop.woowasap.mock.dto.ProductsResponse;
-import shop.woowasap.mock.dto.ProductsResponse.Product;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
-
+import shop.woowasap.shop.app.api.response.ProductsResponse;
 public class ProductFixture {
 
     public static final String FORBIDDEN_USER_ID = "forbiddenUserId";
@@ -47,7 +45,7 @@ public class ProductFixture {
     }
 
     public static ProductsResponse productsResponse(final List<RegisterProductRequest> registerProductRequests) {
-        final List<Product> products = registerProductRequests.stream().map(product -> new Product(
+        final List<ProductsResponse.Product> products = registerProductRequests.stream().map(product -> new ProductsResponse.Product(
             UNKNOWN_ID,
             product.name(),
             Long.valueOf(product.price()),

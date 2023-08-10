@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.fixture.ProductFixture;
 import shop.woowasap.accept.support.valid.ShopValidator;
-import shop.woowasap.mock.dto.ProductsResponse;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
 
 @DisplayName("Product 인수테스트")
 class ProductAcceptanceTest extends AcceptanceTest {
