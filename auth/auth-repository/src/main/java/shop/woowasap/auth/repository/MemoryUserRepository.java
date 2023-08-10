@@ -17,7 +17,7 @@ public class MemoryUserRepository implements UserRepository {
     private static final Map<String, User> userIdIndexes = new TreeMap<>();
 
     @Override
-    public User insertUser(User user) {
+    public User insertUser(final User user) {
         findByUserId(user.getUserId()).ifPresent(u -> {
             throw new DuplicatedUserIdException(user.getUserId());
         });
@@ -27,7 +27,7 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByUserId(String userId) {
+    public Optional<User> findByUserId(final String userId) {
         return Optional.ofNullable(userIdIndexes.get(userId));
     }
 }

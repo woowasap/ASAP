@@ -4,6 +4,6 @@ import shop.woowasap.auth.domain.in.request.UserCreateRequest;
 
 public interface UserUseCase {
 
-    void createUser(UserCreateRequest userCreateRequest);
+    void createUser(final UserCreateRequest userCreateRequest);
 
 }

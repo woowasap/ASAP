@@ -21,13 +21,13 @@ public class AuthService implements UserUseCase {
 
     @Override
     @Transactional
-    public void createUser(UserCreateRequest userCreateRequest) {
+    public void createUser(final UserCreateRequest userCreateRequest) {
         userRepository.findByUserId(userCreateRequest.userId()).ifPresent(user -> {
             throw new DuplicatedUserIdException(userCreateRequest.userId());
         });
-        Long generatedId = idGenerator.generate();
-        String encodedPassword = passwordEncoder.encode(userCreateRequest.password());
-        User user = User.builder()
+        final Long generatedId = idGenerator.generate();
+        final String encodedPassword = passwordEncoder.encode(userCreateRequest.password());
+        final User user = User.builder()
             .id(generatedId)
             .userId(userCreateRequest.userId())
             .password(encodedPassword)

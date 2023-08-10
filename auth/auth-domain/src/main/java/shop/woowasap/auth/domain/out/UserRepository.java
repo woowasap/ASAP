@@ -5,7 +5,7 @@ import shop.woowasap.auth.domain.User;
 
 public interface UserRepository {
 
-    User insertUser(User user);
+    User insertUser(final User user);
 
-    Optional<User> findByUserId(String userId);
+    Optional<User> findByUserId(final String userId);
 }

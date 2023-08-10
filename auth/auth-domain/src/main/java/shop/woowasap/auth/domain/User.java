@@ -9,13 +9,13 @@ public final class User {
     private final Password password;
 
     @Builder
-    public User(Long id, String userId, String password) {
+    public User(final Long id, final String userId, final String password) {
         this.id = id;
         this.userId = UserId.of(userId);
         this.password = Password.of(password);
     }
 
-    public void assertNotDuplicatedUserId(User user) {
+    public void assertNotDuplicatedUserId(final User user) {
         this.userId.assertNotDuplicated(user.userId);
     }
 
