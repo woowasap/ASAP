@@ -9,13 +9,13 @@ final class Password {
     private static final int PASSWORD_MAX_LENGTH = 255;
     private final String value;
 
-    private Password(String value) {
-        validate(value);
-        this.value = value;
+    private Password(String password) {
+        validate(password);
+        this.value = password;
     }
 
-    public static Password of(String digest) {
-        return new Password(digest);
+    public static Password of(String password) {
+        return new Password(password);
     }
 
     private void validate(String digest) {

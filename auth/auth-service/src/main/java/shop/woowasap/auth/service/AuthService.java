@@ -26,11 +26,11 @@ public class AuthService implements UserUseCase {
             throw new DuplicatedUserIdException(userCreateRequest.userId());
         });
         Long generatedId = idGenerator.generate();
-        String digest = passwordEncoder.encode(userCreateRequest.password());
+        String encodedPassword = passwordEncoder.encode(userCreateRequest.password());
         User user = User.builder()
             .id(generatedId)
             .userId(userCreateRequest.userId())
-            .password(digest)
+            .password(encodedPassword)
             .build();
         userRepository.insertUser(user);
     }
