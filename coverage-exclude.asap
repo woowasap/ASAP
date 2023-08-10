@@ -1,5 +1,9 @@
 exclude shop/woowasap/Application
-exclude shop/woowasap/shop/domain/*
 exclude shop/woowasap/auth/domain/*
 exclude shop/woowasap/shop/controller/*
 exclude shop/woowasap/shop/repository/*
+exclude shop/woowasap/*/app/api/request/*
+exclude shop/woowasap/*/app/api/response/*
+exclude shop/woowasap/*/app/spi/request/*
+exclude shop/woowasap/*/app/spi/response/*
+exclude shop/woowasap/*/app/exception/*

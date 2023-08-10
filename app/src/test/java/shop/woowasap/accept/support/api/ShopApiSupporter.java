@@ -6,8 +6,8 @@ import static io.restassured.http.ContentType.JSON;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
-import shop.woowasap.shop.service.dto.RegisterProductRequest;
-import shop.woowasap.mock.dto.UpdateProductRequest;
+import shop.woowasap.shop.app.api.request.RegisterProductRequest;
+import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 
 public final class ShopApiSupporter {
 
@@ -31,6 +31,7 @@ public final class ShopApiSupporter {
     }
 
     public static ExtractableResponse<Response> updateProduct(String token,
+        long productId,
         UpdateProductRequest updateProductRequest) {
 
         return given().log().all()
@@ -39,7 +40,7 @@ public final class ShopApiSupporter {
             .header(HttpHeaders.AUTHORIZATION, token)
             .body(updateProductRequest)
             .when().log().all()
-            .put(API_VERSION + "/products")
+            .put(API_VERSION + "/admin/products/{product-id}", productId)
             .then().log().all()
             .extract();
     }

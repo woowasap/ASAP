@@ -2,8 +2,9 @@ package shop.woowasap.shop.service.support.fixture;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.service.dto.RegisterProductRequest;
+import shop.woowasap.shop.app.product.Product;
+import shop.woowasap.shop.app.api.request.RegisterProductRequest;
+import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 
 public class ProductFixture {
 
@@ -29,4 +30,7 @@ public class ProductFixture {
         return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, START_TIME, END_TIME);
     }
 
+    public static UpdateProductRequest updateProductRequest() {
+        return new UpdateProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, START_TIME, END_TIME);
+    }
 }
