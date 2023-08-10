@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.auth.domain.User;
 import shop.woowasap.auth.domain.exception.DuplicatedUserIdException;
-import shop.woowasap.auth.service.dto.request.UserCreateRequest;
-import shop.woowasap.auth.service.in.UserCreateUseCase;
-import shop.woowasap.auth.service.out.UserRepository;
+import shop.woowasap.auth.domain.in.UserCreateUseCase;
+import shop.woowasap.auth.domain.in.request.UserCreateRequest;
+import shop.woowasap.auth.domain.out.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +21,13 @@ public class AuthService implements UserCreateUseCase {
         userRepository.findByUserId(userCreateRequest.userId()).ifPresent(user -> {
             throw new DuplicatedUserIdException(userCreateRequest.userId());
         });
-        User user = userCreateRequest.toDomain();
+        Long generatedId = 1L;
+        String digest = "a";
+        User user = User.builder()
+            .id(generatedId)
+            .userId(userCreateRequest.userId())
+            .password(digest)
+            .build();
         userRepository.insertUser(user);
     }
 }

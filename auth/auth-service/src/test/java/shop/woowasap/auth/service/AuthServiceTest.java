@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import shop.woowasap.auth.domain.User;
 import shop.woowasap.auth.domain.exception.DuplicatedUserIdException;
-import shop.woowasap.auth.service.dto.request.UserCreateRequest;
+import shop.woowasap.auth.domain.in.request.UserCreateRequest;
 import shop.woowasap.auth.service.out.UserRepository;
 
 @DisplayName("인증 서비스 테스트")

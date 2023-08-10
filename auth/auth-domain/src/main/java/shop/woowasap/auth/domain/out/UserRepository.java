@@ -1,4 +1,4 @@
-package shop.woowasap.auth.service.spi;
+package shop.woowasap.auth.domain.out;
 
 import java.util.Optional;
 import shop.woowasap.auth.domain.User;

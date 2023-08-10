@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.woowasap.auth.domain.User;
 import shop.woowasap.auth.domain.exception.DuplicatedUserIdException;
-import shop.woowasap.auth.service.out.UserRepository;
+import shop.woowasap.auth.domain.out.UserRepository;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,12 +21,9 @@ public class MemoryUserRepository implements UserRepository {
         findByUserId(user.getUserId()).ifPresent(u -> {
             throw new DuplicatedUserIdException(user.getUserId());
         });
-        Long generatedId = 1L;
-        User generatedUser = User.builder().id(generatedId).userId(user.getUserId())
-            .password(user.getPassword()).build();
-        users.put(generatedUser.getId(), generatedUser);
-        userIdIndexes.put(generatedUser.getUserId(), generatedUser);
-        return generatedUser;
+        users.put(user.getId(), user);
+        userIdIndexes.put(user.getUserId(), user);
+        return user;
     }
 
     @Override

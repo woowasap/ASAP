@@ -1,4 +1,4 @@
-package shop.woowasap.auth.service.dto.request;
+package shop.woowasap.auth.domain.in.request;
 
 import lombok.Builder;
 
