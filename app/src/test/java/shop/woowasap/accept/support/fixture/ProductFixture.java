@@ -3,6 +3,7 @@ package shop.woowasap.accept.support.fixture;
 import java.time.LocalDateTime;
 import shop.woowasap.mock.dto.LoginRequest;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
+import shop.woowasap.shop.app.api.response.ProductResponse;
 
 public class ProductFixture {
 
@@ -15,6 +16,7 @@ public class ProductFixture {
     public static final long QUANTITY = 10L;
     public static final LocalDateTime START_TIME = LocalDateTime.of(2023, 8, 5, 12, 30);
     public static final LocalDateTime END_TIME = LocalDateTime.of(2023, 8, 5, 14, 30);
+    public static final long UNKNOWN_ID = 1L;
 
     public static LoginRequest loginRequest() {
         return new LoginRequest(USER_ID, PASSWORD);
@@ -26,5 +28,12 @@ public class ProductFixture {
 
     public static RegisterProductRequest registerProductRequest() {
         return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, START_TIME, END_TIME);
+    }
+
+    public static ProductResponse productResponse(RegisterProductRequest registerProductRequest) {
+        return new ProductResponse(UNKNOWN_ID, registerProductRequest.name(),
+            registerProductRequest.description(), registerProductRequest.price(),
+            registerProductRequest.quantity(), registerProductRequest.startTime(),
+            registerProductRequest.endTime());
     }
 }
