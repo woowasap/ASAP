@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
-import shop.woowasap.shop.app.domain.product.Product;
+import shop.woowasap.shop.app.product.Product;
 import shop.woowasap.shop.app.spi.ProductRepository;
 
 @Repository

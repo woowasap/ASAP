@@ -1,5 +1,5 @@
 dependencies {
-    implementation project(':shop:shop-app')
+    implementation project(':shop:shop-domain')
     implementation project(':shop:shop-service')
     implementation project(':shop:shop-controller')
     implementation project(':shop:shop-repository')
@@ -9,7 +9,7 @@ dependencies {
     implementation project(':auth:auth-controller')
     implementation project(':auth:auth-repository')
 
-    implementation project(':order:order-app')
+    implementation project(':order:order-domain')
     implementation project(':order:order-service')
     implementation project(':order:order-controller')
     implementation project(':order:order-repository')
