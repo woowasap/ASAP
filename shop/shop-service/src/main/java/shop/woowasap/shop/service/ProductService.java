@@ -71,14 +71,14 @@ public class ProductService implements ProductUseCase {
     private List<ProductsResponse.Product> toProductsOrProductsResponse (List<Product> products) {
 
         return products.stream()
-                .map(product -> new ProductsResponse.Product(
-                    product.getId(),
-                    product.getName().getValue(),
-                    product.getPrice().getValue().longValue(),
-                    LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
-                    LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul"))
-                ))
-                .collect(Collectors.toList());
+            .map(product -> new ProductsResponse.Product(
+                product.getId(),
+                product.getName().getValue(),
+                product.getPrice().getValue().longValue(),
+                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
+                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul"))
+            ))
+            .toList();
     }
 
 }
