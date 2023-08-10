@@ -9,6 +9,7 @@ import static shop.woowasap.shop.service.support.fixture.ProductFixture.productB
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.registerProductRequest;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.updateProductRequest;
 
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,7 +25,10 @@ import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 import shop.woowasap.shop.app.exception.CannotFindProductException;
 import shop.woowasap.shop.app.spi.ProductRepository;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
+import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
 import shop.woowasap.shop.service.support.fixture.DomainFixture;
+import shop.woowasap.shop.service.support.fixture.ProductFixture;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("ProductService 클래스")
@@ -100,6 +104,37 @@ class ProductServiceTest {
             // then
             assertThat(exception).isInstanceOf(CannotFindProductException.class);
             assertThat(exception.getMessage()).contains("productId 에 해당하는 Product 가 존재하지 않습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("getValidProducts 메서드는")
+    class GetValidProducts_Method {
+
+        @Test
+        @DisplayName("endTime 이 현재 시간보다 이후인 상품들을 반환한다")
+        void returnValidProducts() {
+            // given
+            final int page = 1;
+            final int pageSize = 4;
+            final int totalPage = 1;
+
+            Product product1 = ProductFixture.validProduct(1L);
+            Product product2 = ProductFixture.validProduct(1L);
+
+            List<Product> products = List.of(product1, product2);
+
+            when(productRepository.findAllValidWithPagination(page, pageSize)).thenReturn(
+                new ProductsPaginationResponse(products, page, totalPage));
+
+            // when
+            ProductsResponse result = productService.getValidProducts(page, pageSize);
+
+            // then
+            ProductsResponse expected = new ProductsResponse(
+                ProductFixture.productsOfProductsResponse(products), page, totalPage);
+
+            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
     }
 }
