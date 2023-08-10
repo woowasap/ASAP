@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
-import shop.woowasap.mock.dto.ProductsResponse;
-import shop.woowasap.mock.dto.ProductsResponse.Product;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
+import shop.woowasap.shop.app.api.response.ProductsResponse.Product;
 
 public final class ShopValidator {
 
