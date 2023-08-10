@@ -40,7 +40,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final UpdateProductRequest updateProductRequest = updateProductRequest();
 
         // when
-        ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
+        final ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
             productId,
             updateProductRequest);
 
@@ -59,7 +59,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final UpdateProductRequest updateProductRequest = updateProductRequest();
 
         // when
-        ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
+        final ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
             invalidProductId,
             updateProductRequest);
 
@@ -87,15 +87,15 @@ class ProductAcceptanceTest extends AcceptanceTest {
         // given
         final String accessToken = "Token";
 
-        RegisterProductRequest invalidRegisterProductRequest1 = ProductFixture.registerProductRequestWithTime(
+        final RegisterProductRequest invalidRegisterProductRequest1 = ProductFixture.registerProductRequestWithTime(
             LocalDateTime.now().minusHours(10),
             LocalDateTime.now().minusHours(5));
 
-        RegisterProductRequest validRegisterProductRequest1 = ProductFixture.registerProductRequestWithTime(
+        final RegisterProductRequest validRegisterProductRequest1 = ProductFixture.registerProductRequestWithTime(
             LocalDateTime.now().plusHours(10),
             LocalDateTime.now().plusHours(15));
 
-        RegisterProductRequest validRegisterProductRequest2 = ProductFixture.registerProductRequestWithTime(
+        final RegisterProductRequest validRegisterProductRequest2 = ProductFixture.registerProductRequestWithTime(
             LocalDateTime.now().plusHours(15),
             LocalDateTime.now().plusHours(120));
 
@@ -103,12 +103,12 @@ class ProductAcceptanceTest extends AcceptanceTest {
         registerProduct(accessToken, validRegisterProductRequest1);
         registerProduct(accessToken, validRegisterProductRequest2);
 
-        List<RegisterProductRequest> registerProductRequests = List.of(validRegisterProductRequest1,
+        final List<RegisterProductRequest> registerProductRequests = List.of(validRegisterProductRequest1,
             validRegisterProductRequest2);
 
         // when
-        ExtractableResponse<Response> response = ShopApiSupporter.getAllProducts();
-        ProductsResponse expected = ProductFixture.productsResponse(registerProductRequests);
+        final ExtractableResponse<Response> response = ShopApiSupporter.getAllProducts();
+        final ProductsResponse expected = ProductFixture.productsResponse(registerProductRequests);
 
         // then
         ShopValidator.assertProductsFound(response, expected);

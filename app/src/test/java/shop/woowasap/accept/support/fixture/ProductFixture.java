@@ -41,8 +41,8 @@ public class ProductFixture {
         return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, startTime, endTime);
     }
 
-    public static ProductsResponse productsResponse(List<RegisterProductRequest> registerProductRequests) {
-        List<Product> products = registerProductRequests.stream().map(product -> new Product(
+    public static ProductsResponse productsResponse(final List<RegisterProductRequest> registerProductRequests) {
+        final List<Product> products = registerProductRequests.stream().map(product -> new Product(
             UNKNOWN_ID,
             product.name(),
             Long.valueOf(product.price()),
