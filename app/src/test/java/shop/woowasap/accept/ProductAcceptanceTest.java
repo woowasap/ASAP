@@ -9,7 +9,6 @@ import static shop.woowasap.accept.support.valid.ShopValidator.assertProductRegi
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,24 +86,14 @@ class ProductAcceptanceTest extends AcceptanceTest {
         // given
         final String accessToken = "Token";
 
-        final RegisterProductRequest invalidRegisterProductRequest1 = ProductFixture.registerProductRequestWithTime(
-            LocalDateTime.now().minusHours(10),
-            LocalDateTime.now().minusHours(5));
+        final RegisterProductRequest invalidRegisterProductRequest = ProductFixture.registerInvalidProductRequest();
+        final RegisterProductRequest validRegisterProductRequest = ProductFixture.registerValidProductRequest();
 
-        final RegisterProductRequest validRegisterProductRequest1 = ProductFixture.registerProductRequestWithTime(
-            LocalDateTime.now().plusHours(10),
-            LocalDateTime.now().plusHours(15));
+        registerProduct(accessToken, invalidRegisterProductRequest);
+        registerProduct(accessToken, validRegisterProductRequest);
+        registerProduct(accessToken, validRegisterProductRequest);
 
-        final RegisterProductRequest validRegisterProductRequest2 = ProductFixture.registerProductRequestWithTime(
-            LocalDateTime.now().plusHours(15),
-            LocalDateTime.now().plusHours(120));
-
-        registerProduct(accessToken, invalidRegisterProductRequest1);
-        registerProduct(accessToken, validRegisterProductRequest1);
-        registerProduct(accessToken, validRegisterProductRequest2);
-
-        final List<RegisterProductRequest> registerProductRequests = List.of(validRegisterProductRequest1,
-            validRegisterProductRequest2);
+        final List<RegisterProductRequest> registerProductRequests = List.of(validRegisterProductRequest, validRegisterProductRequest);
 
         // when
         final ExtractableResponse<Response> response = ShopApiSupporter.getAllProducts();
