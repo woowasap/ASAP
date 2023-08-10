@@ -6,7 +6,6 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +13,10 @@ import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.app.api.ProductUseCase;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
-import shop.woowasap.shop.app.product.Product;
-import shop.woowasap.shop.app.exception.CannotFindProductException;
-import shop.woowasap.shop.app.spi.ProductRepository;
 import shop.woowasap.shop.app.api.response.ProductsResponse;
+import shop.woowasap.shop.app.exception.CannotFindProductException;
+import shop.woowasap.shop.app.product.Product;
+import shop.woowasap.shop.app.spi.ProductRepository;
 import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
 
 @Service
