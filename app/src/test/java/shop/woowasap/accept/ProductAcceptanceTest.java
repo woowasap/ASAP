@@ -9,12 +9,15 @@ import static shop.woowasap.accept.support.valid.ShopValidator.assertProductRegi
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.fixture.ProductFixture;
+import shop.woowasap.accept.support.valid.ShopValidator;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
 
 @DisplayName("Product 인수테스트")
 class ProductAcceptanceTest extends AcceptanceTest {
@@ -36,7 +39,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final UpdateProductRequest updateProductRequest = updateProductRequest();
 
         // when
-        ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
+        final ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
             productId,
             updateProductRequest);
 
@@ -55,7 +58,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final UpdateProductRequest updateProductRequest = updateProductRequest();
 
         // when
-        ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
+        final ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
             invalidProductId,
             updateProductRequest);
 
@@ -75,5 +78,28 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         // then
         assertProductRegistered(response);
+    }
+
+    @Test
+    @DisplayName("기한이 유효한 상품의 목록을 조회한다.")
+    void findValidProducts() {
+        // given
+        final String accessToken = "Token";
+
+        final RegisterProductRequest invalidRegisterProductRequest = ProductFixture.registerInvalidProductRequest();
+        final RegisterProductRequest validRegisterProductRequest = ProductFixture.registerValidProductRequest();
+
+        registerProduct(accessToken, invalidRegisterProductRequest);
+        registerProduct(accessToken, validRegisterProductRequest);
+        registerProduct(accessToken, validRegisterProductRequest);
+
+        final List<RegisterProductRequest> registerProductRequests = List.of(validRegisterProductRequest, validRegisterProductRequest);
+
+        // when
+        final ExtractableResponse<Response> response = ShopApiSupporter.getAllProducts();
+        final ProductsResponse expected = ProductFixture.productsResponse(registerProductRequests);
+
+        // then
+        ShopValidator.assertProductsFound(response, expected);
     }
 }

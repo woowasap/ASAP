@@ -18,7 +18,8 @@ public class ProductFixture {
     public static final long QUANTITY = 10L;
     public static final LocalDateTime START_TIME = LocalDateTime.of(2023, 8, 5, 12, 30);
     public static final LocalDateTime END_TIME = LocalDateTime.of(2023, 8, 5, 14, 30);
-    public static final LocalDateTime INFINITE_TIME = LocalDateTime.of(9999, 12, 31, 23, 59);
+    public static final LocalDateTime INFINITE_START_TIME = LocalDateTime.of(99_999, 12, 31, 23, 59);
+    public static final LocalDateTime INFINITE_END_TIME = LocalDateTime.of(999_999, 12, 31, 23, 59);
 
     public static Product.ProductBuilder productBuilder(final Long id) {
         return Product.builder()
@@ -38,8 +39,8 @@ public class ProductFixture {
             .description(DESCRIPTION)
             .price(PRICE)
             .quantity(QUANTITY)
-            .startTime(INFINITE_TIME.toInstant(ZoneOffset.UTC))
-            .endTime(INFINITE_TIME.toInstant(ZoneOffset.UTC))
+            .startTime(INFINITE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(INFINITE_END_TIME.toInstant(ZoneOffset.UTC))
             .build();
     }
 

@@ -120,7 +120,7 @@ class ProductServiceTest {
             final int totalPage = 1;
 
             Product product1 = ProductFixture.validProduct(1L);
-            Product product2 = ProductFixture.validProduct(1L);
+            Product product2 = ProductFixture.validProduct(2L);
 
             List<Product> products = List.of(product1, product2);
 
