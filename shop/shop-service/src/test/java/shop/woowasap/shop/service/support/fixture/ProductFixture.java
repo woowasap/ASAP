@@ -2,7 +2,7 @@ package shop.woowasap.shop.service.support.fixture;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import shop.woowasap.shop.app.domain.product.Product;
+import shop.woowasap.shop.app.product.Product;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 

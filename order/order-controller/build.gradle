@@ -1,3 +1,3 @@
 dependencies {
-    implementation project(':order:order-app')
+    implementation project(':order:order-domain')
 }

@@ -10,7 +10,7 @@ import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.app.api.ProductUseCase;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
-import shop.woowasap.shop.app.domain.product.Product;
+import shop.woowasap.shop.app.product.Product;
 import shop.woowasap.shop.app.exception.CannotFindProductException;
 import shop.woowasap.shop.app.spi.ProductRepository;
 
