@@ -5,8 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
-import shop.woowasap.mock.dto.ProductsResponse;
-import shop.woowasap.mock.dto.ProductsResponse.Product;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
 
 public final class ShopValidator {
 
@@ -39,13 +38,13 @@ public final class ShopValidator {
     }
 
     private static void assertProductsExceptId(ProductsResponse result, ProductsResponse expected) {
-        List<Product> resultList = result.products();
-        List<ProductsResponse.Product> expectedList = expected.products();
+        List<ProductsResponse.ProductResponse> resultList = result.products();
+        List<ProductsResponse.ProductResponse> expectedList = expected.products();
         assertThat(resultList).hasSize(expectedList.size());
 
         for (int i = 0; i < resultList.size(); i++) {
-            ProductsResponse.Product resultElement = resultList.get(i);
-            ProductsResponse.Product expectedElement = expectedList.get(i);
+            ProductsResponse.ProductResponse resultElement = resultList.get(i);
+            ProductsResponse.ProductResponse expectedElement = expectedList.get(i);
 
             assertThat(resultElement.name()).isEqualTo(expectedElement.name());
             assertThat(resultElement.price()).isEqualTo(expectedElement.price());

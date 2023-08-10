@@ -1,8 +1,10 @@
 package shop.woowasap.shop.service;
 
 import static shop.woowasap.shop.service.mapper.ProductMapper.toDomain;
+import static shop.woowasap.shop.service.mapper.ProductMapper.toProductsResponse;
 
 import java.text.MessageFormat;
+import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,9 +12,11 @@ import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.app.api.ProductUseCase;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
-import shop.woowasap.shop.app.product.Product;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
 import shop.woowasap.shop.app.exception.CannotFindProductException;
+import shop.woowasap.shop.app.product.Product;
 import shop.woowasap.shop.app.spi.ProductRepository;
+import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -53,5 +57,13 @@ public class ProductService implements ProductUseCase {
             toDomain(idGenerator, registerProductRequest));
 
         return persistProduct.getId();
+    }
+
+    @Override
+    public ProductsResponse getProductsInAdmin(final int page, final int size) {
+        final ProductsPaginationResponse paginationResponse = productRepository
+            .findAllWithPagination(page, size);
+
+        return toProductsResponse(paginationResponse, ZoneId.of("Asia/Seoul"));
     }
 }

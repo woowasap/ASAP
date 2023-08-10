@@ -1,8 +1,12 @@
 package shop.woowasap.accept.support.fixture;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import shop.woowasap.mock.dto.LoginRequest;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
+import shop.woowasap.shop.app.api.request.UpdateProductRequest;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
+import shop.woowasap.shop.app.api.response.ProductsResponse.ProductResponse;
 
 public class ProductFixture {
 
@@ -26,5 +30,17 @@ public class ProductFixture {
 
     public static RegisterProductRequest registerProductRequest() {
         return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, START_TIME, END_TIME);
+    }
+
+    public static UpdateProductRequest updateProductRequest() {
+        return new UpdateProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, START_TIME, END_TIME);
+    }
+
+    public static ProductsResponse productsResponse(final Long productId) {
+        return new ProductsResponse(
+            List.of(new ProductResponse(productId, NAME, PRICE, START_TIME, END_TIME)),
+            1,
+            1
+        );
     }
 }

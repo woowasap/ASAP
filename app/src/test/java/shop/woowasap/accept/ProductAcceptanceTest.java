@@ -1,9 +1,9 @@
 package shop.woowasap.accept;
 
-import static shop.woowasap.accept.product.ProductFixture.productsResponse;
-import static shop.woowasap.accept.product.ProductFixture.registerProductRequest;
-import static shop.woowasap.accept.product.ProductFixture.updateProductRequest;
 import static shop.woowasap.accept.support.api.ShopApiSupporter.registerProduct;
+import static shop.woowasap.accept.support.fixture.ProductFixture.productsResponse;
+import static shop.woowasap.accept.support.fixture.ProductFixture.registerProductRequest;
+import static shop.woowasap.accept.support.fixture.ProductFixture.updateProductRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertBadRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertOk;
 import static shop.woowasap.accept.support.valid.ShopValidator.assertProductRegistered;
@@ -11,13 +11,9 @@ import static shop.woowasap.accept.support.valid.ShopValidator.assertProductsFou
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
-import shop.woowasap.accept.support.fixture.ProductFixture;
-import shop.woowasap.mock.dto.ProductsResponse;
-import shop.woowasap.mock.dto.ProductsResponse.Product;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 
@@ -76,7 +72,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         // when
         final ExtractableResponse<Response> response = ShopApiSupporter
-            .registerProduct(accessToken, ProductFixture.registerProductRequest());
+            .registerProduct(accessToken, registerProductRequest());
 
         // then
         assertProductRegistered(response);
