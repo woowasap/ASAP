@@ -5,7 +5,7 @@ import java.util.List;
 
 public record ProductsResponse(List<Product> products, int page, int totalPage) {
 
-    public record Product(long productId, String name, long price, LocalDateTime startTime,
+    public record Product(long productId, String name, String price, LocalDateTime startTime,
                           LocalDateTime endTime) {
 
     }
