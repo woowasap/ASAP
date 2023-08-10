@@ -28,13 +28,12 @@ public final class ShopValidator {
         HttpValidator.assertOk(result);
 
         ProductsResponse resultResponse = result.as(ProductsResponse.class);
-        assertProducts(resultResponse, expected);
+        assertThat(resultResponse).usingRecursiveComparison().isEqualTo(expected);
     }
 
     private static void assertProducts(ProductsResponse result, ProductsResponse expected) {
         assertThat(result.page()).isEqualTo(expected.page());
         assertThat(result.totalPage()).isEqualTo(expected.totalPage());
-
         assertProductsExceptId(result, expected);
     }
 

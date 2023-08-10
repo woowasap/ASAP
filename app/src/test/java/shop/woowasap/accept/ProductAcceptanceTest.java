@@ -9,10 +9,14 @@ import static shop.woowasap.accept.support.valid.ShopValidator.assertProductRegi
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.fixture.ProductFixture;
+import shop.woowasap.accept.support.valid.ShopValidator;
+import shop.woowasap.mock.dto.ProductsResponse;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 
@@ -75,5 +79,38 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         // then
         assertProductRegistered(response);
+    }
+
+    @Test
+    @DisplayName("기한이 유효한 상품의 목록을 조회한다.")
+    void findValidProducts() {
+        // given
+        final String accessToken = "Token";
+
+        RegisterProductRequest invalidRegisterProductRequest1 = ProductFixture.registerProductRequestWithTime(
+            LocalDateTime.now().minusHours(10),
+            LocalDateTime.now().minusHours(5));
+
+        RegisterProductRequest validRegisterProductRequest1 = ProductFixture.registerProductRequestWithTime(
+            LocalDateTime.now().plusHours(10),
+            LocalDateTime.now().plusHours(15));
+
+        RegisterProductRequest validRegisterProductRequest2 = ProductFixture.registerProductRequestWithTime(
+            LocalDateTime.now().plusHours(15),
+            LocalDateTime.now().plusHours(120));
+
+        registerProduct(accessToken, invalidRegisterProductRequest1);
+        registerProduct(accessToken, validRegisterProductRequest1);
+        registerProduct(accessToken, validRegisterProductRequest2);
+
+        List<RegisterProductRequest> registerProductRequests = List.of(validRegisterProductRequest1,
+            validRegisterProductRequest2);
+
+        // when
+        ExtractableResponse<Response> response = ShopApiSupporter.getAllProducts();
+        ProductsResponse expected = ProductFixture.productsResponse(registerProductRequests);
+
+        // then
+        ShopValidator.assertProductsFound(response, expected);
     }
 }
