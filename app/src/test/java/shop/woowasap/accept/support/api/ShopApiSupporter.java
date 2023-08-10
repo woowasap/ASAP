@@ -67,7 +67,7 @@ public final class ShopApiSupporter {
         return given().log().all()
             .accept(JSON)
             .when().log().all()
-            .get(API_VERSION + "/products/details/{product-id}", productId)
+            .get(API_VERSION + "/products/{product-id}", productId)
             .then().log().all()
             .extract();
     }
