@@ -2,7 +2,7 @@ package shop.woowasap.auth.domain.in;
 
 import shop.woowasap.auth.domain.in.request.UserCreateRequest;
 
-public interface UserCreateUseCase {
+public interface UserUseCase {
 
     void createUser(UserCreateRequest userCreateRequest);
 

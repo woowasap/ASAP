@@ -7,3 +7,4 @@ exclude shop/woowasap/*/app/api/response/*
 exclude shop/woowasap/*/app/spi/request/*
 exclude shop/woowasap/*/app/spi/response/*
 exclude shop/woowasap/*/app/exception/*
+exclude shop/woowasap/auth/service/configuration/*
