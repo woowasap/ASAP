@@ -18,7 +18,7 @@ import shop.woowasap.shop.app.exception.CannotFindProductException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/admin/products")
-public class ProductController {
+public class ProductAdminController {
 
     private final ProductUseCase productUseCase;
 
