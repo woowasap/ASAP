@@ -16,8 +16,8 @@ public final class ShopApiSupporter {
     private ShopApiSupporter() {
     }
 
-    public static ExtractableResponse<Response> registerProduct(String token,
-        RegisterProductRequest registerProductRequest) {
+    public static ExtractableResponse<Response> registerProduct(final String token,
+        final RegisterProductRequest registerProductRequest) {
 
         return given().log().all()
             .contentType(JSON)
@@ -30,9 +30,9 @@ public final class ShopApiSupporter {
             .extract();
     }
 
-    public static ExtractableResponse<Response> updateProduct(String token,
-        long productId,
-        UpdateProductRequest updateProductRequest) {
+    public static ExtractableResponse<Response> updateProduct(final String token,
+        final long productId,
+        final UpdateProductRequest updateProductRequest) {
 
         return given().log().all()
             .contentType(JSON)
@@ -54,7 +54,7 @@ public final class ShopApiSupporter {
             .extract();
     }
 
-    public static ExtractableResponse<Response> getRegisteredProducts(String token) {
+    public static ExtractableResponse<Response> getRegisteredProducts(final String token) {
         return given().log().all()
             .accept(JSON)
             .header(HttpHeaders.AUTHORIZATION, token)
@@ -64,11 +64,22 @@ public final class ShopApiSupporter {
             .extract();
     }
 
-    public static ExtractableResponse<Response> getProduct(long productId) {
+    public static ExtractableResponse<Response> getProduct(final long productId) {
         return given().log().all()
             .accept(JSON)
             .when().log().all()
             .get(API_VERSION + "/products/{product-id}", productId)
+            .then().log().all()
+            .extract();
+    }
+
+    public static ExtractableResponse<Response> getProductWithAdmin(final String token,
+        final long productId) {
+        return given().log().all()
+            .accept(JSON)
+            .header(HttpHeaders.AUTHORIZATION, token)
+            .when().log().all()
+            .get(API_VERSION + "/admin/products/{product-id}", productId)
             .then().log().all()
             .extract();
     }
