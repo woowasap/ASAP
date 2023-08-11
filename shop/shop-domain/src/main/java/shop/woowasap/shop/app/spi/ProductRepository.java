@@ -6,13 +6,13 @@ import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
 
 public interface ProductRepository {
 
-    Product persist(Product product);
+    Product persist(final Product product);
 
-    Optional<Product> findById(long productId);
+    Optional<Product> findById(final long productId);
 
-    Optional<Product> findByIdAndValidSaleTime(long productId);
+    Optional<Product> findByIdAndValidSaleTime(final long productId);
 
-    ProductsPaginationResponse findAllValidWithPagination(int page, int size);
+    ProductsPaginationResponse findAllValidWithPagination(final int page, final int size);
 
     ProductsPaginationResponse findAllWithPagination(final int page, final int size);
 }
