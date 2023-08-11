@@ -24,8 +24,8 @@ public final class ProductMapper {
             .description(registerProductRequest.description())
             .price(registerProductRequest.price())
             .quantity(registerProductRequest.quantity())
-            .startTime(registerProductRequest.startTime().toInstant(ZoneOffset.UTC))
-            .endTime(registerProductRequest.endTime().toInstant(ZoneOffset.UTC))
+            .startTime(registerProductRequest.startTime().toInstant(ZoneOffset.of("+09:00")))
+            .endTime(registerProductRequest.endTime().toInstant(ZoneOffset.of("+09:00")))
             .build();
     }
 
