@@ -29,6 +29,7 @@ import shop.woowasap.shop.app.exception.CannotFindProductException;
 import shop.woowasap.shop.app.spi.ProductRepository;
 import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
 import shop.woowasap.shop.service.support.fixture.DomainFixture;
+import shop.woowasap.shop.service.support.fixture.ProductFixture;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("ProductService 클래스")
@@ -130,6 +131,37 @@ class ProductServiceTest {
 
             // then
             assertThat(productsResponse).usingRecursiveComparison().isEqualTo(expectedProductsResponse);
+        }
+    }
+
+    @Nested
+    @DisplayName("getValidProducts 메서드는")
+    class GetValidProducts_Method {
+
+        @Test
+        @DisplayName("endTime 이 현재 시간보다 이후인 상품들을 반환한다")
+        void returnValidProducts() {
+            // given
+            final int page = 1;
+            final int pageSize = 4;
+            final int totalPage = 1;
+
+            Product product1 = ProductFixture.validProduct(1L);
+            Product product2 = ProductFixture.validProduct(2L);
+
+            List<Product> products = List.of(product1, product2);
+
+            when(productRepository.findAllValidWithPagination(page, pageSize)).thenReturn(
+                new ProductsPaginationResponse(products, page, totalPage));
+
+            // when
+            ProductsResponse result = productService.getValidProducts(page, pageSize);
+
+            // then
+            ProductsResponse expected = new ProductsResponse(
+                ProductFixture.productsOfProductsResponse(products), page, totalPage);
+
+            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
     }
 }
