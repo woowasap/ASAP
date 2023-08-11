@@ -44,6 +44,21 @@ public class MockProductRepository implements ProductRepository {
     }
 
     @Override
+    public Optional<Product> findByIdAndValidSaleTime(final long productId) {
+        if (productId == 123L || productId == 122L) {
+            return Optional.empty();
+        }
+        return Optional.of(Product.builder()
+            .id(productId)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(QUANTITY)
+            .startTime(START_TIME.toInstant(ZoneOffset.of(OFFSET_ID)))
+            .endTime(END_TIME.toInstant(ZoneOffset.of(OFFSET_ID))).build());
+    }
+
+    @Override
     public ProductsPaginationResponse findAllValidWithPagination(int page, int size) {
         ProductBuilder productBuilder = Product.builder()
             .id(1L)
