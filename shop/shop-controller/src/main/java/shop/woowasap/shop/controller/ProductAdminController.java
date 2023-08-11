@@ -43,7 +43,7 @@ public class ProductAdminController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductsResponse> readProductsInAdmin(
+    public ResponseEntity<ProductsResponse> readProducts(
         @RequestParam(defaultValue = "1") final int page,
         @RequestParam(defaultValue = "20") final int size
     ) {
@@ -53,7 +53,8 @@ public class ProductAdminController {
     }
 
     @GetMapping("/{product-id}")
-    public ResponseEntity<ProductResponse> readProductInAdmin(@PathVariable("product-id") final Long productId) {
+    public ResponseEntity<ProductResponse> readProduct(
+        @PathVariable("product-id") final Long productId) {
         final ProductResponse productResponse = productUseCase.getByIdWithAdmin(productId);
 
         return ResponseEntity.ok(productResponse);
