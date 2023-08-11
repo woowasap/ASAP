@@ -48,6 +48,9 @@ public final class ShopValidator {
         ProductResponse expected) {
         HttpValidator.assertOk(result);
 
-        assertThat(result).usingRecursiveComparison(IGNORE_ID_COMPARISON).isEqualTo(expected);
+        ProductResponse productResponse = result.as(ProductResponse.class);
+
+        assertThat(productResponse).usingRecursiveComparison(IGNORE_ID_COMPARISON)
+            .isEqualTo(expected);
     }
 }

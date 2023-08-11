@@ -28,12 +28,13 @@ import shop.woowasap.shop.service.mapper.ProductMapper;
 @Transactional(readOnly = true)
 public class ProductService implements ProductUseCase {
 
-    private static final String ASIA_SEOUL = "Asia/Seoul";
     private final ProductRepository productRepository;
     private final IdGenerator idGenerator;
 
     @Value("${shop.woowasap.locale:Asia/Seoul}")
     private String locale;
+    @Value("${shop.woowasap.offsetid:+09:00}")
+    private String offsetId;
 
     @Override
     @Transactional
@@ -63,7 +64,7 @@ public class ProductService implements ProductUseCase {
     @Transactional
     public Long registerProduct(final RegisterProductRequest registerProductRequest) {
         final Product persistProduct = productRepository.persist(
-            toDomain(idGenerator, registerProductRequest));
+            toDomain(idGenerator, registerProductRequest, offsetId));
 
         return persistProduct.getId();
     }
@@ -82,8 +83,8 @@ public class ProductService implements ProductUseCase {
                 product.getId(),
                 product.getName().getValue(),
                 product.getPrice().getValue().toString(),
-                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of(ASIA_SEOUL)),
-                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of(ASIA_SEOUL))
+                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of(locale)),
+                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of(locale))
             ))
             .toList();
     }
@@ -93,7 +94,7 @@ public class ProductService implements ProductUseCase {
         final ProductsPaginationResponse paginationResponse = productRepository
             .findAllWithPagination(page, size);
 
-        return toProductsResponse(paginationResponse, ZoneId.of(ASIA_SEOUL));
+        return toProductsResponse(paginationResponse, ZoneId.of(locale));
     }
 
     @Override

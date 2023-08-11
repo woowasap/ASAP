@@ -17,15 +17,15 @@ public final class ProductMapper {
     }
 
     public static Product toDomain(final IdGenerator idGenerator,
-        final RegisterProductRequest registerProductRequest) {
+        final RegisterProductRequest registerProductRequest, final String offsetId) {
         return Product.builder()
             .id(idGenerator.generate())
             .name(registerProductRequest.name())
             .description(registerProductRequest.description())
             .price(registerProductRequest.price())
             .quantity(registerProductRequest.quantity())
-            .startTime(registerProductRequest.startTime().toInstant(ZoneOffset.of("+09:00")))
-            .endTime(registerProductRequest.endTime().toInstant(ZoneOffset.of("+09:00")))
+            .startTime(registerProductRequest.startTime().toInstant(ZoneOffset.of(offsetId)))
+            .endTime(registerProductRequest.endTime().toInstant(ZoneOffset.of(offsetId)))
             .build();
     }
 
