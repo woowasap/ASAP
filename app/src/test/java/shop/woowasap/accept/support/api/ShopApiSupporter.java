@@ -54,11 +54,12 @@ public final class ShopApiSupporter {
             .extract();
     }
 
-    public static ExtractableResponse<Response> getRegisteredProducts(String token, long userId) {
+    public static ExtractableResponse<Response> getRegisteredProducts(String token) {
         return given().log().all()
             .accept(JSON)
+            .header(HttpHeaders.AUTHORIZATION, token)
             .when().log().all()
-            .get(API_VERSION + "/products/{user-id}", userId)
+            .get(API_VERSION + "/admin/products")
             .then().log().all()
             .extract();
     }

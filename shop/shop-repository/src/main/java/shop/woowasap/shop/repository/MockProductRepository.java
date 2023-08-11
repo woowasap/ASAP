@@ -2,10 +2,12 @@ package shop.woowasap.shop.repository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import shop.woowasap.shop.app.product.Product;
 import shop.woowasap.shop.app.spi.ProductRepository;
+import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
 
 @Repository
 public class MockProductRepository implements ProductRepository {
@@ -35,5 +37,18 @@ public class MockProductRepository implements ProductRepository {
             .quantity(QUANTITY)
             .startTime(START_TIME.toInstant(ZoneOffset.UTC))
             .endTime(END_TIME.toInstant(ZoneOffset.UTC)).build());
+    }
+
+    @Override
+    public ProductsPaginationResponse findAllWithPagination(final int page, final int size) {
+        final List<Product> products = List.of(Product.builder()
+            .id(1L)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(QUANTITY)
+            .startTime(START_TIME.toInstant(ZoneOffset.of("+09:00")))
+            .endTime(END_TIME.toInstant(ZoneOffset.of("+09:00"))).build());
+        return new ProductsPaginationResponse(products, page, 1);
     }
 }
