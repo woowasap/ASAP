@@ -1,6 +1,7 @@
 package shop.woowasap.shop.service;
 
 import static shop.woowasap.shop.service.mapper.ProductMapper.toDomain;
+import static shop.woowasap.shop.service.mapper.ProductMapper.toProductsResponse;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
 @Transactional(readOnly = true)
 public class ProductService implements ProductUseCase {
 
+    private static final String ASIA_SEOUL = "Asia/Seoul";
     private final ProductRepository productRepository;
     private final IdGenerator idGenerator;
 
@@ -67,17 +69,24 @@ public class ProductService implements ProductUseCase {
             pagination.totalPage());
     }
 
-    private List<ProductsResponse.Product> toProductsOrProductsResponse (List<Product> products) {
+    private List<ProductsResponse.ProductResponse> toProductsOrProductsResponse (List<Product> products) {
 
         return products.stream()
-            .map(product -> new ProductsResponse.Product(
+            .map(product -> new ProductsResponse.ProductResponse(
                 product.getId(),
                 product.getName().getValue(),
-                product.getPrice().getValue().longValue(),
-                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
-                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul"))
+                product.getPrice().getValue().toString(),
+                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of(ASIA_SEOUL)),
+                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of(ASIA_SEOUL))
             ))
             .toList();
     }
 
+    @Override
+    public ProductsResponse getProductsInAdmin(final int page, final int size) {
+        final ProductsPaginationResponse paginationResponse = productRepository
+            .findAllWithPagination(page, size);
+
+        return toProductsResponse(paginationResponse, ZoneId.of(ASIA_SEOUL));
+    }
 }

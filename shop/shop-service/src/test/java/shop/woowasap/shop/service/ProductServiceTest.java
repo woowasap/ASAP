@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.productBuilder;
+import static shop.woowasap.shop.service.support.fixture.ProductFixture.productsResponse;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.registerProductRequest;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.updateProductRequest;
 
@@ -20,12 +21,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
 import shop.woowasap.shop.app.product.Product;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 import shop.woowasap.shop.app.exception.CannotFindProductException;
 import shop.woowasap.shop.app.spi.ProductRepository;
-import shop.woowasap.shop.app.api.response.ProductsResponse;
 import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
 import shop.woowasap.shop.service.support.fixture.DomainFixture;
 import shop.woowasap.shop.service.support.fixture.ProductFixture;
@@ -104,6 +105,32 @@ class ProductServiceTest {
             // then
             assertThat(exception).isInstanceOf(CannotFindProductException.class);
             assertThat(exception.getMessage()).contains("productId 에 해당하는 Product 가 존재하지 않습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("getProductsInAdmin 메소드는")
+    class getProductsInAdmin_Method {
+
+        @Test
+        @DisplayName("Product 들을 반환한다.")
+        void getProductsInAdmin() {
+            // given
+            final int page = 1;
+            final int totalPage = 1;
+            final int size = 10;
+            final List<Product> products = List.of(
+                productBuilder(1L).build(), productBuilder(2L).build());
+
+            when(productRepository.findAllWithPagination(page, size))
+                .thenReturn(new ProductsPaginationResponse(products, page, totalPage));
+            final ProductsResponse expectedProductsResponse = productsResponse(products);
+
+            // when
+            final ProductsResponse productsResponse = productService.getProductsInAdmin(page, size);
+
+            // then
+            assertThat(productsResponse).usingRecursiveComparison().isEqualTo(expectedProductsResponse);
         }
     }
 

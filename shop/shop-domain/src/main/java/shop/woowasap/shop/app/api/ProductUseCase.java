@@ -11,4 +11,6 @@ public interface ProductUseCase {
     Long registerProduct(final RegisterProductRequest registerProductRequest);
 
     ProductsResponse getValidProducts(final int page, final int size);
+
+    ProductsResponse getProductsInAdmin(final int page, final int size);
 }

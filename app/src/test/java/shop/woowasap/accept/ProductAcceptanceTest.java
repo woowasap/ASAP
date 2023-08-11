@@ -1,11 +1,13 @@
 package shop.woowasap.accept;
 
-import static shop.woowasap.accept.product.ProductFixture.registerProductRequest;
-import static shop.woowasap.accept.product.ProductFixture.updateProductRequest;
 import static shop.woowasap.accept.support.api.ShopApiSupporter.registerProduct;
+import static shop.woowasap.accept.support.fixture.ProductFixture.productsResponse;
+import static shop.woowasap.accept.support.fixture.ProductFixture.registerProductRequest;
+import static shop.woowasap.accept.support.fixture.ProductFixture.updateProductRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertBadRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertOk;
 import static shop.woowasap.accept.support.valid.ShopValidator.assertProductRegistered;
+import static shop.woowasap.accept.support.valid.ShopValidator.assertProductsFound;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -39,7 +41,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final UpdateProductRequest updateProductRequest = updateProductRequest();
 
         // when
-        final ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
+        ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
             productId,
             updateProductRequest);
 
@@ -58,7 +60,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final UpdateProductRequest updateProductRequest = updateProductRequest();
 
         // when
-        final ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
+        ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
             invalidProductId,
             updateProductRequest);
 
@@ -101,5 +103,23 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         // then
         ShopValidator.assertProductsFound(response, expected);
+    }
+
+    @Test
+    @DisplayName("GET /v1/admin/products 요청을 통해서 등록 되어 있는 전체 상품을 조회할 수 있다.")
+    void getAdminProducts() {
+        // given
+        final String accessToken = "Token";
+        final RegisterProductRequest registerProductRequest = registerProductRequest();
+        final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
+            registerProductRequest);
+        final long productId = Long.parseLong(registerResponse.header("Location").split("/")[4]);
+
+        // when
+        final ExtractableResponse<Response> response = ShopApiSupporter
+            .getRegisteredProducts(accessToken);
+
+        // then
+        assertProductsFound(response, productsResponse(productId));
     }
 }

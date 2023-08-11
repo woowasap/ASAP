@@ -19,8 +19,9 @@ public class MockProductRepository implements ProductRepository {
     public static final long QUANTITY = 10L;
     public static final LocalDateTime START_TIME = LocalDateTime.of(2023, 8, 5, 12, 30);
     public static final LocalDateTime END_TIME = LocalDateTime.of(2023, 8, 5, 14, 30);
-    public static final LocalDateTime INFINITE_START_TIME = LocalDateTime.of(99_999, 12, 31, 23, 59);
-    public static final LocalDateTime INFINITE_END_TIME = LocalDateTime.of(999_999, 12, 31, 23, 59);
+    public static final LocalDateTime INFINITE_START_TIME = LocalDateTime.of(2030, 12, 1, 23, 59);
+    public static final LocalDateTime INFINITE_END_TIME = LocalDateTime.of(2030, 12, 31, 23, 59);
+    private static final String OFFSET_ID = "+09:00";
 
     @Override
     public Product persist(final Product product) {
@@ -38,8 +39,8 @@ public class MockProductRepository implements ProductRepository {
             .description(DESCRIPTION)
             .price(PRICE)
             .quantity(QUANTITY)
-            .startTime(START_TIME.toInstant(ZoneOffset.UTC))
-            .endTime(END_TIME.toInstant(ZoneOffset.UTC)).build());
+            .startTime(START_TIME.toInstant(ZoneOffset.of(OFFSET_ID)))
+            .endTime(END_TIME.toInstant(ZoneOffset.of(OFFSET_ID))).build());
     }
 
     @Override
@@ -48,11 +49,25 @@ public class MockProductRepository implements ProductRepository {
             .id(1L)
             .name(NAME)
             .price(PRICE)
+            .description(DESCRIPTION)
             .quantity(QUANTITY)
-            .startTime(INFINITE_START_TIME.toInstant(ZoneOffset.UTC))
-            .endTime(INFINITE_END_TIME.toInstant(ZoneOffset.UTC));
+            .startTime(INFINITE_START_TIME.toInstant(ZoneOffset.of(OFFSET_ID)))
+            .endTime(INFINITE_END_TIME.toInstant(ZoneOffset.of(OFFSET_ID)));
 
         List<Product> products = List.of(productBuilder.id(1L).build(), productBuilder.id(2L).build());
         return new ProductsPaginationResponse(products, 1, 1);
+    }
+
+    @Override
+    public ProductsPaginationResponse findAllWithPagination(final int page, final int size) {
+        final List<Product> products = List.of(Product.builder()
+            .id(1L)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(QUANTITY)
+            .startTime(START_TIME.toInstant(ZoneOffset.of(OFFSET_ID)))
+            .endTime(END_TIME.toInstant(ZoneOffset.of(OFFSET_ID))).build());
+        return new ProductsPaginationResponse(products, page, 1);
     }
 }

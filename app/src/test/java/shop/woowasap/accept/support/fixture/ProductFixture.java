@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import shop.woowasap.mock.dto.LoginRequest;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
+import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 import shop.woowasap.shop.app.api.response.ProductsResponse;
+import shop.woowasap.shop.app.api.response.ProductsResponse.ProductResponse;
+
 public class ProductFixture {
 
     public static final String FORBIDDEN_USER_ID = "forbiddenUserId";
@@ -17,8 +20,8 @@ public class ProductFixture {
     public static final long QUANTITY = 10L;
     public static final LocalDateTime START_TIME = LocalDateTime.of(2023, 8, 5, 12, 30);
     public static final LocalDateTime END_TIME = LocalDateTime.of(2023, 8, 5, 14, 30);
-    public static final LocalDateTime INFINITE_START_TIME = LocalDateTime.of(99_999, 12, 31, 23, 59);
-    public static final LocalDateTime INFINITE_END_TIME = LocalDateTime.of(999_999, 12, 31, 23, 59);
+    public static final LocalDateTime INFINITE_START_TIME = LocalDateTime.of(2030, 12, 1, 23, 59);
+    public static final LocalDateTime INFINITE_END_TIME = LocalDateTime.of(2030, 12, 31, 23, 59);
     public static final long UNKNOWN_ID = 1L;
     public static final int PAGE = 1;
     public static final int TOTAL_PAGE = 1;
@@ -36,6 +39,18 @@ public class ProductFixture {
         return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, START_TIME, END_TIME);
     }
 
+    public static UpdateProductRequest updateProductRequest() {
+        return new UpdateProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, START_TIME, END_TIME);
+    }
+
+    public static ProductsResponse productsResponse(final Long productId) {
+        return new ProductsResponse(
+            List.of(new ProductResponse(productId, NAME, PRICE, START_TIME, END_TIME)),
+            1,
+            1
+        );
+    }
+
     public static RegisterProductRequest registerValidProductRequest() {
         return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, INFINITE_START_TIME, INFINITE_END_TIME);
     }
@@ -45,10 +60,10 @@ public class ProductFixture {
     }
 
     public static ProductsResponse productsResponse(final List<RegisterProductRequest> registerProductRequests) {
-        final List<ProductsResponse.Product> products = registerProductRequests.stream().map(product -> new ProductsResponse.Product(
+        final List<ProductsResponse.ProductResponse> products = registerProductRequests.stream().map(product -> new ProductsResponse.ProductResponse(
             UNKNOWN_ID,
             product.name(),
-            Long.valueOf(product.price()),
+            product.price(),
             product.startTime(),
             product.endTime()
         )).collect(Collectors.toList());
