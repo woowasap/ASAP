@@ -48,8 +48,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void givenWrongUserIdWhenSignUpThenReturnBadRequest() {
         // given
+        String userId = "USERIDWITHUPPER";
         String password = "testPassword";
-        SignUpRequest wrongUserIdSignUpRequest = new SignUpRequest(null, password);
+        SignUpRequest wrongUserIdSignUpRequest = new SignUpRequest(userId, password);
 
         // when
         ExtractableResponse<Response> response = signUp(wrongUserIdSignUpRequest);

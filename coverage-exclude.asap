@@ -10,3 +10,4 @@ exclude shop/woowasap/*/app/exception/*
 exclude shop/woowasap/*/domain/*/request/*
 exclude shop/woowasap/*/domain/*/response/*
 exclude shop/woowasap/auth/service/configuration/*
+exclude shop/woowasap/infra/*/*
