@@ -13,6 +13,8 @@ public interface ProductUseCase {
 
     ProductResponse getById(final long id);
 
+    ProductResponse getByIdWithAdmin(final long id);
+
     ProductsResponse getValidProducts(final int page, final int size);
 
     ProductsResponse getProductsInAdmin(final int page, final int size);

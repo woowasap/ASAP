@@ -78,7 +78,7 @@ class ProductServiceTest {
             // given
             final long noExistProductId = 1L;
             final UpdateProductRequest updateProductRequest = updateProductRequest();
-            final Product product = ProductFixture.productBuilder(noExistProductId).build();
+            final Product product = productBuilder(noExistProductId).build();
 
             when(productRepository.findById(noExistProductId)).thenReturn(Optional.of(product));
 
@@ -119,7 +119,7 @@ class ProductServiceTest {
             // given
             final long id = 1L;
 
-            when(productRepository.findById(id)).thenReturn(Optional.empty());
+            when(productRepository.findByIdAndValidSaleTime(id)).thenReturn(Optional.empty());
 
             // when
             Exception exception = catchException(() -> productService.getById(id));
@@ -133,10 +133,10 @@ class ProductServiceTest {
         void ReturnProductResponseWhenExistsIdMatchedProduct() {
             // given
             final long id = 1L;
-            final Product product = ProductFixture.productBuilder(id).build();
+            final Product product = productBuilder(id).build();
             final ProductResponse expected = ProductDtoFixture.fromProduct(product);
 
-            when(productRepository.findById(id)).thenReturn(Optional.of(product));
+            when(productRepository.findByIdAndValidSaleTime(id)).thenReturn(Optional.of(product));
 
             // when
             ProductResponse result = productService.getById(id);
@@ -200,6 +200,44 @@ class ProductServiceTest {
             ProductsResponse expected = new ProductsResponse(
                 ProductFixture.productsOfProductsResponse(products), page, totalPage);
 
+            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+        }
+    }
+
+    @Nested
+    @DisplayName("getByIdWithAdmin 메소드는")
+    class GetByIdWithAdmin_Method {
+
+        @Test
+        @DisplayName("productId에 해당하는 Product 를 찾을 수 없을 경우, CannotFindProductException 을 던진다.")
+        void throwCannotFindProductExceptionWhenCannotFindIdMatchedProduct() {
+            // given
+            final long productId = 1L;
+
+            when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+            // when
+            final Exception exception = catchException(
+                () -> productService.getByIdWithAdmin(productId));
+
+            // then
+            assertThat(exception).isInstanceOf(CannotFindProductException.class);
+        }
+
+        @Test
+        @DisplayName("productId에 해당하는 Product 가 존재한다면, ProductResponse를 반환한다.")
+        void ReturnProductResponseWhenExistsIdMatchedProduct() {
+            // given
+            final long productId = 1L;
+            final Product product = productBuilder(productId).build();
+            final ProductResponse expected = ProductDtoFixture.fromProduct(product);
+
+            when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+            // when
+            final ProductResponse result = productService.getByIdWithAdmin(productId);
+
+            // then
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
     }
