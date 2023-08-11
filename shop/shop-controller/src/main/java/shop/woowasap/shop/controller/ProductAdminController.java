@@ -23,8 +23,8 @@ public class ProductAdminController {
     private final ProductUseCase productUseCase;
 
     @PutMapping("/{product-id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable("product-id") Long productId,
-        @RequestBody UpdateProductRequest request) {
+    public ResponseEntity<Void> updateProduct(@PathVariable("product-id") final Long productId,
+        @RequestBody final UpdateProductRequest request) {
         productUseCase.update(productId, request);
         return ResponseEntity.ok().build();
     }
