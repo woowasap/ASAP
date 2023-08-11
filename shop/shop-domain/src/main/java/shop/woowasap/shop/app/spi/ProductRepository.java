@@ -10,6 +10,8 @@ public interface ProductRepository {
 
     Optional<Product> findById(long productId);
 
+    Optional<Product> findByIdAndValidSaleTime(long productId);
+
     ProductsPaginationResponse findAllValidWithPagination(int page, int size);
 
     ProductsPaginationResponse findAllWithPagination(final int page, final int size);
