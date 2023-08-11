@@ -17,12 +17,12 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void givenNormalWhenSignUpThenReturnCreated() {
         // given
-        String userId = "testuserid";
-        String password = "testPassword";
-        SignUpRequest signUpRequest = new SignUpRequest(userId, password);
+        final String userId = "testuserid";
+        final String password = "testPassword";
+        final SignUpRequest signUpRequest = new SignUpRequest(userId, password);
 
         // when
-        ExtractableResponse<Response> response = signUp(signUpRequest);
+        final ExtractableResponse<Response> response = signUp(signUpRequest);
 
         // then
         assertCreated(response);
@@ -32,13 +32,13 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void givenDuplicatedUserIdWhenSignUpThenReturnConflict() {
         // given
-        String userId = "testuserid";
-        String password = "testPassword";
-        SignUpRequest duplicatedSignUpRequest = new SignUpRequest(userId, password);
+        final String userId = "testuserid";
+        final String password = "testPassword";
+        final SignUpRequest duplicatedSignUpRequest = new SignUpRequest(userId, password);
 
         signUp(duplicatedSignUpRequest);
         // when
-        ExtractableResponse<Response> response = signUp(duplicatedSignUpRequest);
+        final ExtractableResponse<Response> response = signUp(duplicatedSignUpRequest);
 
         // then
         assertConflict(response);
@@ -48,12 +48,12 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void givenWrongUserIdWhenSignUpThenReturnBadRequest() {
         // given
-        String userId = "USERIDWITHUPPER";
-        String password = "testPassword";
-        SignUpRequest wrongUserIdSignUpRequest = new SignUpRequest(userId, password);
+        final String userId = "USERIDWITHUPPER";
+        final String password = "testPassword";
+        final SignUpRequest wrongUserIdSignUpRequest = new SignUpRequest(userId, password);
 
         // when
-        ExtractableResponse<Response> response = signUp(wrongUserIdSignUpRequest);
+        final ExtractableResponse<Response> response = signUp(wrongUserIdSignUpRequest);
 
         // then
         assertBadRequest(response);
@@ -63,11 +63,11 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void givenWrongPasswordIdWhenSignUpThenReturnBadRequest() {
         // given
-        String userId = "testuserid";
-        SignUpRequest signUpRequest = new SignUpRequest(userId, null);
+        final String userId = "testuserid";
+        final SignUpRequest signUpRequest = new SignUpRequest(userId, null);
 
         // when
-        ExtractableResponse<Response> response = signUp(signUpRequest);
+        final ExtractableResponse<Response> response = signUp(signUpRequest);
 
         // then
         assertBadRequest(response);
