@@ -17,7 +17,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void givenNormalWhenSignUpThenReturnCreated() {
         // given
-        String userId = "testUserId";
+        String userId = "testuserid";
         String password = "testPassword";
         SignUpRequest signUpRequest = new SignUpRequest(userId, password);
 
@@ -32,7 +32,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void givenDuplicatedUserIdWhenSignUpThenReturnConflict() {
         // given
-        String userId = "testUserId";
+        String userId = "testuserid";
         String password = "testPassword";
         SignUpRequest duplicatedSignUpRequest = new SignUpRequest(userId, password);
 
@@ -62,7 +62,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void givenWrongPasswordIdWhenSignUpThenReturnBadRequest() {
         // given
-        String userId = "testUserId";
+        String userId = "testuserid";
         SignUpRequest signUpRequest = new SignUpRequest(userId, null);
 
         // when
