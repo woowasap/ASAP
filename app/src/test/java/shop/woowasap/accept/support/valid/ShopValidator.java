@@ -4,18 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.List;
-import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
-import shop.woowasap.mock.dto.ProductsResponse;
-import shop.woowasap.mock.dto.ProductsResponse.Product;
 import shop.woowasap.shop.app.api.response.ProductResponse;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
 
 public final class ShopValidator {
 
     private static final RecursiveComparisonConfiguration IGNORE_ID_COMPARISON = RecursiveComparisonConfiguration.builder()
         .withIgnoredFields("id")
-            .build();
+        .build();
 
     private ShopValidator() {
     }
@@ -42,23 +39,9 @@ public final class ShopValidator {
         assertThat(result.page()).isEqualTo(expected.page());
         assertThat(result.totalPage()).isEqualTo(expected.totalPage());
 
-        assertProductsExceptId(result, expected);
-    }
-
-    private static void assertProductsExceptId(ProductsResponse result, ProductsResponse expected) {
-        List<Product> resultList = result.products();
-        List<ProductsResponse.Product> expectedList = expected.products();
-        assertThat(resultList).hasSize(expectedList.size());
-
-        for (int i = 0; i < resultList.size(); i++) {
-            ProductsResponse.Product resultElement = resultList.get(i);
-            ProductsResponse.Product expectedElement = expectedList.get(i);
-
-            assertThat(resultElement.name()).isEqualTo(expectedElement.name());
-            assertThat(resultElement.price()).isEqualTo(expectedElement.price());
-            assertThat(resultElement.endTime()).isEqualTo(expectedElement.endTime());
-            assertThat(resultElement.startTime()).isEqualTo(expectedElement.startTime());
-        }
+        assertThat(result).usingRecursiveComparison(RecursiveComparisonConfiguration.builder()
+            .withIgnoredFields("products.productId")
+            .build()).isEqualTo(expected);
     }
 
     public static void assertProduct(ExtractableResponse<Response> result,

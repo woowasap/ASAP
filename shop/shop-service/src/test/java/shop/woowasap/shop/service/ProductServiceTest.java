@@ -6,9 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.productBuilder;
+import static shop.woowasap.shop.service.support.fixture.ProductFixture.productsResponse;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.registerProductRequest;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.updateProductRequest;
 
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -19,13 +21,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.app.api.ProductUseCase;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 import shop.woowasap.shop.app.api.response.ProductResponse;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
 import shop.woowasap.shop.app.exception.CannotFindProductException;
 import shop.woowasap.shop.app.product.Product;
 import shop.woowasap.shop.app.spi.ProductRepository;
+import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
 import shop.woowasap.shop.service.support.fixture.ProductDtoFixture;
 import shop.woowasap.shop.service.support.fixture.ProductFixture;
 
@@ -35,7 +38,7 @@ import shop.woowasap.shop.service.support.fixture.ProductFixture;
 class ProductServiceTest {
 
     @Autowired
-    private ProductUseCase productService;
+    private ProductService productService;
 
     @MockBean
     private IdGenerator idGenerator;
@@ -139,6 +142,64 @@ class ProductServiceTest {
             ProductResponse result = productService.getById(id);
 
             // then
+            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+        }
+    }
+
+    @Nested
+    @DisplayName("getProductsInAdmin 메소드는")
+    class getProductsInAdmin_Method {
+
+        @Test
+        @DisplayName("Product 들을 반환한다.")
+        void getProductsInAdmin() {
+            // given
+            final int page = 1;
+            final int totalPage = 1;
+            final int size = 10;
+            final List<Product> products = List.of(
+                productBuilder(1L).build(), productBuilder(2L).build());
+
+            when(productRepository.findAllWithPagination(page, size))
+                .thenReturn(new ProductsPaginationResponse(products, page, totalPage));
+            final ProductsResponse expectedProductsResponse = productsResponse(products);
+
+            // when
+            final ProductsResponse productsResponse = productService.getProductsInAdmin(page, size);
+
+            // then
+            assertThat(productsResponse).usingRecursiveComparison()
+                .isEqualTo(expectedProductsResponse);
+        }
+    }
+
+    @Nested
+    @DisplayName("getValidProducts 메서드는")
+    class GetValidProducts_Method {
+
+        @Test
+        @DisplayName("endTime 이 현재 시간보다 이후인 상품들을 반환한다")
+        void returnValidProducts() {
+            // given
+            final int page = 1;
+            final int pageSize = 4;
+            final int totalPage = 1;
+
+            Product product1 = ProductFixture.validProduct(1L);
+            Product product2 = ProductFixture.validProduct(2L);
+
+            List<Product> products = List.of(product1, product2);
+
+            when(productRepository.findAllValidWithPagination(page, pageSize)).thenReturn(
+                new ProductsPaginationResponse(products, page, totalPage));
+
+            // when
+            ProductsResponse result = productService.getValidProducts(page, pageSize);
+
+            // then
+            ProductsResponse expected = new ProductsResponse(
+                ProductFixture.productsOfProductsResponse(products), page, totalPage);
+
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
     }
