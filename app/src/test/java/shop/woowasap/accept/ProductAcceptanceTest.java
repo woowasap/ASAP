@@ -43,7 +43,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final UpdateProductRequest updateProductRequest = updateProductRequest();
 
         // when
-        ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
+        final ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
             productId,
             updateProductRequest);
 
@@ -62,7 +62,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final UpdateProductRequest updateProductRequest = updateProductRequest();
 
         // when
-        ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
+        final ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
             invalidProductId,
             updateProductRequest);
 
@@ -140,10 +140,10 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         final long anyProductId = productsResponse.products().get(0).productId();
 
-        ProductResponse expected = ProductFixture.productResponse(registerProductRequest);
+        final ProductResponse expected = ProductFixture.productResponse(registerProductRequest);
 
         // when
-        ExtractableResponse<Response> result = ShopApiSupporter.getProduct(anyProductId);
+        final ExtractableResponse<Response> result = ShopApiSupporter.getProduct(anyProductId);
 
         // then
         ShopValidator.assertProduct(result, expected);
@@ -156,7 +156,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final long notFoundProductId = 123L;
 
         // when
-        ExtractableResponse<Response> result = ShopApiSupporter.getProduct(notFoundProductId);
+        final ExtractableResponse<Response> result = ShopApiSupporter.getProduct(notFoundProductId);
 
         // then
         HttpValidator.assertBadRequest(result);
@@ -176,10 +176,10 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         final long anyProductId = productsResponse.products().get(0).productId();
 
-        ProductResponse expected = ProductFixture.productResponse(registerProductRequest);
+        final ProductResponse expected = ProductFixture.productResponse(registerProductRequest);
 
         // when
-        ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(token,
+        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(token,
             anyProductId);
 
         // then
@@ -194,7 +194,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final long notFoundProductId = 123L;
 
         // when
-        ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(token, notFoundProductId);
+        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(token, notFoundProductId);
 
         // then
         HttpValidator.assertBadRequest(result);
