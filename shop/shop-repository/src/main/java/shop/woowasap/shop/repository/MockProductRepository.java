@@ -47,8 +47,8 @@ public class MockProductRepository implements ProductRepository {
             .description(DESCRIPTION)
             .price(PRICE)
             .quantity(QUANTITY)
-            .startTime(START_TIME.toInstant(ZoneOffset.UTC))
-            .endTime(END_TIME.toInstant(ZoneOffset.UTC)).build());
+            .startTime(START_TIME.toInstant(ZoneOffset.of("+09:00")))
+            .endTime(END_TIME.toInstant(ZoneOffset.of("+09:00"))).build());
         return new ProductsPaginationResponse(products, page, 1);
     }
 }
