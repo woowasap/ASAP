@@ -5,9 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
+import shop.woowasap.shop.app.api.response.ProductResponse;
 import shop.woowasap.shop.app.api.response.ProductsResponse;
 
 public final class ShopValidator {
+
+    private static final RecursiveComparisonConfiguration IGNORE_ID_COMPARISON = RecursiveComparisonConfiguration.builder()
+        .withIgnoredFields("id")
+        .build();
 
     private ShopValidator() {
     }
@@ -37,5 +42,15 @@ public final class ShopValidator {
         assertThat(result).usingRecursiveComparison(RecursiveComparisonConfiguration.builder()
             .withIgnoredFields("products.productId")
             .build()).isEqualTo(expected);
+    }
+
+    public static void assertProduct(ExtractableResponse<Response> result,
+        ProductResponse expected) {
+        HttpValidator.assertOk(result);
+
+        ProductResponse productResponse = result.as(ProductResponse.class);
+
+        assertThat(productResponse).usingRecursiveComparison(IGNORE_ID_COMPARISON)
+            .isEqualTo(expected);
     }
 }

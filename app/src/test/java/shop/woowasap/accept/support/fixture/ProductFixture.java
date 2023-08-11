@@ -7,7 +7,7 @@ import shop.woowasap.mock.dto.LoginRequest;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 import shop.woowasap.shop.app.api.response.ProductsResponse;
-import shop.woowasap.shop.app.api.response.ProductsResponse.ProductResponse;
+import shop.woowasap.shop.app.api.response.ProductResponse;
 
 public class ProductFixture {
 
@@ -45,7 +45,7 @@ public class ProductFixture {
 
     public static ProductsResponse productsResponse(final Long productId) {
         return new ProductsResponse(
-            List.of(new ProductResponse(productId, NAME, PRICE, START_TIME, END_TIME)),
+            List.of(new ProductsResponse.ProductResponse(productId, NAME, PRICE, START_TIME, END_TIME)),
             1,
             1
         );
@@ -69,5 +69,12 @@ public class ProductFixture {
         )).collect(Collectors.toList());
 
         return new ProductsResponse(products, PAGE, TOTAL_PAGE);
+    }
+
+    public static ProductResponse productResponse(RegisterProductRequest registerProductRequest) {
+        return new ProductResponse(UNKNOWN_ID, registerProductRequest.name(),
+            registerProductRequest.description(), registerProductRequest.price(),
+            registerProductRequest.quantity(), registerProductRequest.startTime(),
+            registerProductRequest.endTime());
     }
 }

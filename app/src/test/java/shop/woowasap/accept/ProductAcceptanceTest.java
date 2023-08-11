@@ -16,9 +16,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.fixture.ProductFixture;
+import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.ShopValidator;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
+import shop.woowasap.shop.app.api.response.ProductResponse;
 import shop.woowasap.shop.app.api.response.ProductsResponse;
 
 @DisplayName("Product 인수테스트")
@@ -121,5 +123,41 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         // then
         assertProductsFound(response, productsResponse(productId));
+    }
+
+    @Test
+    @DisplayName("저장되어있는 특정 상품을 조회할경우, 상품의 정보가 응답된다.")
+    void findSpecificProduct() {
+        // given
+        final String token = "MOCK TOKEN";
+        final RegisterProductRequest registerProductRequest = ProductFixture.registerProductRequest();
+
+        ShopApiSupporter.registerProduct(token, registerProductRequest);
+
+        final ProductsResponse productsResponse = ShopApiSupporter.getAllProducts()
+            .as(ProductsResponse.class);
+
+        final long anyProductId = productsResponse.products().get(0).productId();
+
+        ProductResponse expected = ProductFixture.productResponse(registerProductRequest);
+
+        // when
+        ExtractableResponse<Response> result = ShopApiSupporter.getProduct(anyProductId);
+
+        // then
+        ShopValidator.assertProduct(result, expected);
+    }
+
+    @Test
+    @DisplayName("productId에 해당하는 상품을 찾을 수 없다면, 400 BadRequest가 응답된다.")
+    void returnBadRequestWhenCannotFoundProduct() {
+        // given
+        final long notFoundProductId = 123L;
+
+        // when
+        ExtractableResponse<Response> result = ShopApiSupporter.getProduct(notFoundProductId);
+
+        // then
+        HttpValidator.assertBadRequest(result);
     }
 }

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
@@ -15,19 +16,25 @@ import shop.woowasap.shop.app.api.ProductUseCase;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 import shop.woowasap.shop.app.api.response.ProductsResponse;
+import shop.woowasap.shop.app.api.response.ProductResponse;
 import shop.woowasap.shop.app.exception.CannotFindProductException;
 import shop.woowasap.shop.app.product.Product;
 import shop.woowasap.shop.app.spi.ProductRepository;
 import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
+import shop.woowasap.shop.service.mapper.ProductMapper;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProductService implements ProductUseCase {
 
-    private static final String ASIA_SEOUL = "Asia/Seoul";
     private final ProductRepository productRepository;
     private final IdGenerator idGenerator;
+
+    @Value("${shop.woowasap.locale:Asia/Seoul}")
+    private String locale;
+    @Value("${shop.woowasap.offsetid:+09:00}")
+    private String offsetId;
 
     @Override
     @Transactional
@@ -57,7 +64,7 @@ public class ProductService implements ProductUseCase {
     @Transactional
     public Long registerProduct(final RegisterProductRequest registerProductRequest) {
         final Product persistProduct = productRepository.persist(
-            toDomain(idGenerator, registerProductRequest));
+            toDomain(idGenerator, registerProductRequest, offsetId));
 
         return persistProduct.getId();
     }
@@ -76,8 +83,8 @@ public class ProductService implements ProductUseCase {
                 product.getId(),
                 product.getName().getValue(),
                 product.getPrice().getValue().toString(),
-                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of(ASIA_SEOUL)),
-                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of(ASIA_SEOUL))
+                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of(locale)),
+                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of(locale))
             ))
             .toList();
     }
@@ -87,6 +94,16 @@ public class ProductService implements ProductUseCase {
         final ProductsPaginationResponse paginationResponse = productRepository
             .findAllWithPagination(page, size);
 
-        return toProductsResponse(paginationResponse, ZoneId.of(ASIA_SEOUL));
+        return toProductsResponse(paginationResponse, ZoneId.of(locale));
+    }
+
+    @Override
+    public ProductResponse getById(final long id) {
+        final Product persistProduct = productRepository.findById(id)
+            .orElseThrow(() -> new CannotFindProductException(
+                MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
+                    id)));
+
+        return ProductMapper.toProductResponse(persistProduct, ZoneId.of(locale));
     }
 }
