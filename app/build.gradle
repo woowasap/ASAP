@@ -14,6 +14,11 @@ dependencies {
     implementation project(':order:order-controller')
     implementation project(':order:order-repository')
 
+    implementation project(':infra')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
     testImplementation 'io.rest-assured:rest-assured:5.3.0'
     runtimeOnly 'com.h2database:h2'
 }
