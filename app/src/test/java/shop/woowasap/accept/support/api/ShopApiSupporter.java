@@ -72,4 +72,15 @@ public final class ShopApiSupporter {
             .then().log().all()
             .extract();
     }
+
+    public static ExtractableResponse<Response> getProductWithAdmin(final String token,
+        final long productId) {
+        return given().log().all()
+            .accept(JSON)
+            .header(HttpHeaders.AUTHORIZATION, token)
+            .when().log().all()
+            .get(API_VERSION + "/admin/products/{product-id}", productId)
+            .then().log().all()
+            .extract();
+    }
 }
