@@ -5,10 +5,10 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
-import shop.woowasap.shop.app.product.Product;
-import shop.woowasap.shop.app.product.Product.ProductBuilder;
-import shop.woowasap.shop.app.spi.ProductRepository;
-import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.product.Product.ProductBuilder;
+import shop.woowasap.shop.domain.spi.ProductRepository;
+import shop.woowasap.shop.domain.spi.response.ProductsPaginationResponse;
 
 @Repository
 public class MockProductRepository implements ProductRepository {

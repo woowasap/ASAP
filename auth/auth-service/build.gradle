@@ -2,5 +2,7 @@ dependencies {
     implementation project(':core:id-gen')
 
     implementation project(':auth:auth-domain')
-    implementation project(':auth:auth-repository')
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }

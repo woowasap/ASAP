@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import shop.woowasap.shop.app.api.ProductUseCase;
-import shop.woowasap.shop.app.api.response.ProductResponse;
-import shop.woowasap.shop.app.api.response.ProductsResponse;
-import shop.woowasap.shop.app.exception.CannotFindProductException;
+import shop.woowasap.shop.domain.api.product.ProductUseCase;
+import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.exception.CannotFindProductException;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,10 +21,10 @@ public class ProductController {
     private final ProductUseCase productUseCase;
 
     @GetMapping("/{product-id}")
-    public ResponseEntity<ProductResponse> getByProductId(
+    public ResponseEntity<ProductDetailsResponse> getByProductId(
         @PathVariable("product-id") long productId) {
 
-        return ResponseEntity.ok(productUseCase.getById(productId));
+        return ResponseEntity.ok(productUseCase.getByProductId(productId));
     }
 
     @GetMapping

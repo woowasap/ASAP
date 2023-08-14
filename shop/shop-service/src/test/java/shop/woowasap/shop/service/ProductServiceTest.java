@@ -21,14 +21,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.app.api.request.RegisterProductRequest;
-import shop.woowasap.shop.app.api.request.UpdateProductRequest;
-import shop.woowasap.shop.app.api.response.ProductResponse;
-import shop.woowasap.shop.app.api.response.ProductsResponse;
-import shop.woowasap.shop.app.exception.CannotFindProductException;
-import shop.woowasap.shop.app.product.Product;
-import shop.woowasap.shop.app.spi.ProductRepository;
-import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
+import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.exception.CannotFindProductException;
+import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.spi.ProductRepository;
+import shop.woowasap.shop.domain.spi.response.ProductsPaginationResponse;
 import shop.woowasap.shop.service.support.fixture.ProductDtoFixture;
 import shop.woowasap.shop.service.support.fixture.ProductFixture;
 
@@ -117,12 +117,12 @@ class ProductServiceTest {
         @DisplayName("id에 해당하는 Product 를 찾을 수 없을경우, CannotFindProductException 을 던진다.")
         void throwCannotFindProductExceptionWhenCannotFindIdMatchedProduct() {
             // given
-            final long id = 1L;
+            final long productId = 1L;
 
-            when(productRepository.findByIdAndValidSaleTime(id)).thenReturn(Optional.empty());
+            when(productRepository.findByIdAndValidSaleTime(productId)).thenReturn(Optional.empty());
 
             // when
-            Exception exception = catchException(() -> productService.getById(id));
+            Exception exception = catchException(() -> productService.getByProductId(productId));
 
             // then
             assertThat(exception).isInstanceOf(CannotFindProductException.class);
@@ -132,14 +132,14 @@ class ProductServiceTest {
         @DisplayName("id에 해당하는 Product 가 존재한다면, ProductResponse를 반환한다.")
         void ReturnProductResponseWhenExistsIdMatchedProduct() {
             // given
-            final long id = 1L;
-            final Product product = productBuilder(id).build();
-            final ProductResponse expected = ProductDtoFixture.fromProduct(product);
+            final long productId = 1L;
+            final Product product = productBuilder(productId).build();
+            final ProductDetailsResponse expected = ProductDtoFixture.fromProduct(product);
 
-            when(productRepository.findByIdAndValidSaleTime(id)).thenReturn(Optional.of(product));
+            when(productRepository.findByIdAndValidSaleTime(productId)).thenReturn(Optional.of(product));
 
             // when
-            ProductResponse result = productService.getById(id);
+            ProductDetailsResponse result = productService.getByProductId(productId);
 
             // then
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
@@ -218,7 +218,7 @@ class ProductServiceTest {
 
             // when
             final Exception exception = catchException(
-                () -> productService.getByIdWithAdmin(productId));
+                () -> productService.getByProductIdWithAdmin(productId));
 
             // then
             assertThat(exception).isInstanceOf(CannotFindProductException.class);
@@ -230,12 +230,12 @@ class ProductServiceTest {
             // given
             final long productId = 1L;
             final Product product = productBuilder(productId).build();
-            final ProductResponse expected = ProductDtoFixture.fromProduct(product);
+            final ProductDetailsResponse expected = ProductDtoFixture.fromProduct(product);
 
             when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
             // when
-            final ProductResponse result = productService.getByIdWithAdmin(productId);
+            final ProductDetailsResponse result = productService.getByProductIdWithAdmin(productId);
 
             // then
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
