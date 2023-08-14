@@ -10,3 +10,4 @@ exclude shop/woowasap/*/app/exception/*
 exclude shop/woowasap/order/domain/exception/*
 exclude shop/woowasap/order/domain/in/request/*
 exclude shop/woowasap/order/repository/*
+exclude shop/woowasap/order/payment/random/RandomOrderPayment

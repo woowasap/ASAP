@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'asap'
+rootProject.name = 'ASAP'
 
 include 'app'
 
@@ -30,7 +30,9 @@ include 'core'
 include 'core:id-gen'
 
 include 'order'
+include 'order:order-infra'
 include 'order:order-domain'
 include 'order:order-service'
 include 'order:order-controller'
 include 'order:order-repository'
+
