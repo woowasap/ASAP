@@ -5,7 +5,7 @@ import static shop.woowasap.accept.support.api.CartApiSupporter.getCartProducts;
 import static shop.woowasap.accept.support.api.ShopApiSupporter.registerProduct;
 import static shop.woowasap.accept.support.fixture.CartFixture.cartResponse;
 import static shop.woowasap.accept.support.fixture.ProductFixture.registerProductRequest;
-import static shop.woowasap.accept.support.valid.CartValidator.assertCartFound;
+import static shop.woowasap.accept.support.valid.CartValidator.assertCartProductsFound;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -40,7 +40,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = getCartProducts(accessToken);
 
         // then
-        assertCartFound(response, expected);
+        assertCartProductsFound(response, expected);
     }
 
 }

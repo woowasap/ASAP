@@ -11,7 +11,7 @@ public class CartValidator {
     private CartValidator() {
     }
 
-    public static void assertCartFound(ExtractableResponse<Response> result,
+    public static void assertCartProductsFound(ExtractableResponse<Response> result,
         CartResponse expected) {
         HttpValidator.assertOk(result);
 
