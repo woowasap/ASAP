@@ -39,9 +39,8 @@ public final class ShopValidator {
         assertThat(result.page()).isEqualTo(expected.page());
         assertThat(result.totalPage()).isEqualTo(expected.totalPage());
 
-        assertThat(result).usingRecursiveComparison(RecursiveComparisonConfiguration.builder()
-            .withIgnoredFields("products.productId")
-            .build()).isEqualTo(expected);
+        assertThat(result).usingRecursiveComparison().ignoringFields("products.productId")
+            .isEqualTo(expected);
     }
 
     public static void assertProduct(ExtractableResponse<Response> result,
