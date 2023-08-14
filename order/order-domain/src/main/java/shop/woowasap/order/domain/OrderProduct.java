@@ -20,7 +20,7 @@ public class OrderProduct {
         validQuantity(quantity);
         this.productId = productId;
         this.quantity = quantity;
-        this.price = new BigInteger(price);
+        this.price = new BigInteger(price).multiply(BigInteger.valueOf(quantity));
     }
 
     private void validPrice(final String price) {
@@ -46,9 +46,5 @@ public class OrderProduct {
         if (quantity <= 0) {
             throw new InvalidQuantityException(quantity);
         }
-    }
-
-    public String totalPrice() {
-        return price.multiply(BigInteger.valueOf(quantity)).toString();
     }
 }

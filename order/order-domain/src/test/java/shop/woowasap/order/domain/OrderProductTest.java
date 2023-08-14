@@ -3,7 +3,6 @@ package shop.woowasap.order.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 
-import java.math.BigInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -83,32 +82,6 @@ class OrderProductTest {
 
             // then
             assertThat(exception).isInstanceOf(InvalidQuantityException.class);
-        }
-    }
-
-    @Nested
-    @DisplayName("totalPrice 메소드는")
-    class totalPriceMethod {
-
-        @Test
-        @DisplayName("orderProduct 의 총 가격을 반환한다.")
-        void returnOrderProductsTotalPrice() {
-            // given
-            final int quantity = 10;
-            final String price = "100";
-
-            final OrderProduct orderProduct = OrderProductFixture.defaultBuilder()
-                    .quantity(quantity)
-                    .price(price)
-                    .build();
-
-            String expected = BigInteger.valueOf(quantity).multiply(new BigInteger(price)).toString();
-
-            // when
-            String result = orderProduct.totalPrice();
-
-            // then
-            assertThat(result).isEqualTo(expected);
         }
     }
 }

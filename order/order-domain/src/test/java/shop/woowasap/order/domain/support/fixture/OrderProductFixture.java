@@ -12,6 +12,10 @@ public final class OrderProductFixture {
         throw new UnsupportedOperationException("Cannot invoke constructor \"OrderProductFixture()\"");
     }
 
+    public static OrderProduct defaultProduct() {
+        return defaultBuilder().build();
+    }
+
     public static OrderProduct.OrderProductBuilder defaultBuilder() {
         return OrderProduct.builder()
                 .productId(DEFAULT_PRODUCT_ID)
