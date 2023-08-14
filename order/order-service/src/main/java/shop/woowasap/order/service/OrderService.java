@@ -27,7 +27,7 @@ public class OrderService implements OrderUseCase {
     @Override
     @Transactional
     public long orderProduct(final OrderProductRequest orderProductRequest) {
-        final Product product = productConnector.getById(orderProductRequest.productId());
+        final Product product = productConnector.getByProductId(orderProductRequest.productId());
         final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest.userId(), product);
 
         if (!payment.pay(orderProductRequest.userId())) {
