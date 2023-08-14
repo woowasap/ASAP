@@ -15,14 +15,14 @@ public class Order {
     private final BigInteger totalPrice;
 
     @Builder
-    private Order(long id, List<OrderProduct> orderProducts) {
+    private Order(final long id, final List<OrderProduct> orderProducts) {
         validOrderProducts(orderProducts);
         this.id = id;
         this.orderProducts = orderProducts;
         this.totalPrice = calculatePrice();
     }
 
-    private void validOrderProducts(List<OrderProduct> orderProducts) {
+    private void validOrderProducts(final List<OrderProduct> orderProducts) {
         if (Objects.isNull(orderProducts) || orderProducts.isEmpty()) {
             throw new InvalidOrderProductException(orderProducts);
         }
