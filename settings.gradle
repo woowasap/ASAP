@@ -25,6 +25,7 @@ include 'auth:auth-domain'
 include 'auth:auth-service'
 include 'auth:auth-controller'
 include 'auth:auth-repository'
+include 'auth:auth-infra'
 
 include 'core'
 include 'core:id-gen'
@@ -35,5 +36,4 @@ include 'order:order-service'
 include 'order:order-controller'
 include 'order:order-repository'
 
-include 'infra'
 

@@ -8,13 +8,12 @@ dependencies {
     implementation project(':auth:auth-service')
     implementation project(':auth:auth-controller')
     implementation project(':auth:auth-repository')
+    implementation project(':auth:auth-infra')
 
     implementation project(':order:order-domain')
     implementation project(':order:order-service')
     implementation project(':order:order-controller')
     implementation project(':order:order-repository')
-
-    implementation project(':infra')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'

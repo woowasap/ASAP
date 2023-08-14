@@ -1,4 +1,4 @@
-package shop.woowasap.infra.filter;
+package shop.woowasap.auth.infra;
 
 import shop.woowasap.auth.domain.in.response.UserResponse;
 
