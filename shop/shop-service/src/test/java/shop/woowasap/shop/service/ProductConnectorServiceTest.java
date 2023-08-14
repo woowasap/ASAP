@@ -20,6 +20,7 @@ import shop.woowasap.shop.app.spi.ProductRepository;
 import shop.woowasap.shop.service.support.fixture.ProductFixture;
 
 @ExtendWith(SpringExtension.class)
+@DisplayName("ProductConnectorService 클래스")
 @ContextConfiguration(classes = ProductConnectorService.class)
 class ProductConnectorServiceTest {
 
