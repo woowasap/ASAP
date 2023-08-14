@@ -29,10 +29,9 @@ public class Order {
     }
 
     private BigInteger calculatePrice() {
-        BigInteger ans = BigInteger.ZERO;
-        for (OrderProduct orderProduct : orderProducts) {
-            ans = ans.add(orderProduct.getPrice());
-        }
-        return ans;
+        return orderProducts.stream()
+                .map(OrderProduct::getPrice)
+                .reduce(BigInteger::add)
+                .orElseThrow(IllegalStateException::new);
     }
 }
