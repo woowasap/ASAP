@@ -5,7 +5,7 @@ import lombok.Builder;
 public final class User {
 
     private final Long id;
-    private final UserName username;
+    private final Username username;
     private final Password password;
     private final UserType userType;
 
@@ -13,7 +13,7 @@ public final class User {
     public User(final Long id, final String username, final String password,
         final UserType userType) {
         this.id = id;
-        this.username = UserName.of(username);
+        this.username = Username.of(username);
         this.password = Password.of(password);
         this.userType = userType;
     }

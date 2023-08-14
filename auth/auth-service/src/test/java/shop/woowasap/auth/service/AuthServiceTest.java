@@ -60,7 +60,7 @@ class AuthServiceTest {
 
         @Test
         @DisplayName("유저 아이디 중복 시 실패")
-        void duplicatedUserIdThenFail() {
+        void duplicatedUsernameThenFail() {
             // given
             final UserCreateRequest request = new UserCreateRequest("usersid", "userspassword");
             when(userRepository.findByUsername("usersid")).thenReturn(Optional.of(

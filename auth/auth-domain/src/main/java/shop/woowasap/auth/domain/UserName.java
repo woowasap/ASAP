@@ -8,7 +8,7 @@ import shop.woowasap.auth.domain.exception.UsernameValidateException;
 
 @Getter
 @EqualsAndHashCode
-final class UserName {
+final class Username {
 
     private static final int USER_NAME_MIN_LENGTH = 5;
     private static final int USER_NAME_MAX_LENGTH = 25;
@@ -18,13 +18,13 @@ final class UserName {
 
     private final String value;
 
-    private UserName(final String value) {
+    private Username(final String value) {
         validate(value);
         this.value = value;
     }
 
-    public static UserName of(final String value) {
-        return new UserName(value);
+    public static Username of(final String value) {
+        return new Username(value);
     }
 
     private void validate(final String value) {
@@ -38,9 +38,9 @@ final class UserName {
         }
     }
 
-    public void assertNotDuplicated(final UserName userName) {
-        if (this.value.equals(userName.value)) {
-            throw new DuplicatedUsernameException(userName.value);
+    public void assertNotDuplicated(final Username username) {
+        if (this.value.equals(username.value)) {
+            throw new DuplicatedUsernameException(username.value);
         }
     }
 }

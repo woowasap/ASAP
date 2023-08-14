@@ -1,5 +1,5 @@
 package shop.woowasap.mock.dto;
 
-public record SignUpResponse(String userId, String password) {
+public record SignUpResponse(String username, String password) {
 
 }

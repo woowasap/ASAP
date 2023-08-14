@@ -21,9 +21,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 가입 정상 성공 시 201 CREATED 반환")
     void givenNormalWhenSignUpThenReturnCreated() {
         // given
-        final String userId = "testuserid";
+        final String username = "testusername";
         final String password = "testPassword";
-        final SignUpRequest signUpRequest = new SignUpRequest(userId, password);
+        final SignUpRequest signUpRequest = new SignUpRequest(username, password);
 
         // when
         final ExtractableResponse<Response> response = signUp(signUpRequest);
@@ -34,11 +34,11 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @Test
     @DisplayName("회원 가입 아이디 중복 시 409 Conflict 반환")
-    void givenDuplicatedUserIdWhenSignUpThenReturnConflict() {
+    void givenDuplicatedUsernameWhenSignUpThenReturnConflict() {
         // given
-        final String userId = "testuserid";
+        final String username = "testusername";
         final String password = "testPassword";
-        final SignUpRequest duplicatedSignUpRequest = new SignUpRequest(userId, password);
+        final SignUpRequest duplicatedSignUpRequest = new SignUpRequest(username, password);
 
         signUp(duplicatedSignUpRequest);
         // when
@@ -50,14 +50,14 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @Test
     @DisplayName("회원 가입 아이디 잘못되었을시 400 Bad Request 반환")
-    void givenWrongUserIdWhenSignUpThenReturnBadRequest() {
+    void givenWrongUsernameWhenSignUpThenReturnBadRequest() {
         // given
-        final String userId = "USERIDWITHUPPER";
+        final String username = "USERIDWITHUPPER";
         final String password = "testPassword";
-        final SignUpRequest wrongUserIdSignUpRequest = new SignUpRequest(userId, password);
+        final SignUpRequest wrongUsernameSignUpRequest = new SignUpRequest(username, password);
 
         // when
-        final ExtractableResponse<Response> response = signUp(wrongUserIdSignUpRequest);
+        final ExtractableResponse<Response> response = signUp(wrongUsernameSignUpRequest);
 
         // then
         assertBadRequest(response);
@@ -67,8 +67,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 가입 비밀번호 잘못되었을 시 400 Bad Request 반환")
     void givenWrongPasswordIdWhenSignUpThenReturnBadRequest() {
         // given
-        final String userId = "testuserid";
-        final SignUpRequest signUpRequest = new SignUpRequest(userId, null);
+        final String username = "testusername";
+        final SignUpRequest signUpRequest = new SignUpRequest(username, null);
 
         // when
         final ExtractableResponse<Response> response = signUp(signUpRequest);
@@ -81,13 +81,13 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인 정상 성공 시 200 OK 및 액세스 토큰 반환")
     void givenNormalWhenLoginThenReturnOkAndAccessToken() {
         // given
-        final String userId = "testuserid";
+        final String username = "testusername";
         final String password = "testpassword";
-        final SignUpRequest signUpRequest = new SignUpRequest(userId, password);
+        final SignUpRequest signUpRequest = new SignUpRequest(username, password);
 
         signUp(signUpRequest);
 
-        final LoginRequest loginRequest = new LoginRequest(userId, password);
+        final LoginRequest loginRequest = new LoginRequest(username, password);
 
         // when
         final ExtractableResponse<Response> response = login(loginRequest);
@@ -100,14 +100,14 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인 실패 시 400 Bad Request 반환")
     void givenWrongWhenLoginThenReturnBadRequest() {
         // given
-        final String userId = "testuserid";
+        final String username = "testusername";
         final String password = "testpassword";
-        final SignUpRequest signUpRequest = new SignUpRequest(userId, password);
+        final SignUpRequest signUpRequest = new SignUpRequest(username, password);
 
         signUp(signUpRequest);
 
         final String wrongPassword = "wrongPassword";
-        final LoginRequest loginRequest = new LoginRequest(userId, wrongPassword);
+        final LoginRequest loginRequest = new LoginRequest(username, wrongPassword);
 
         // when
         final ExtractableResponse<Response> response = login(loginRequest);

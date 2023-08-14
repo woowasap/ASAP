@@ -11,8 +11,8 @@ import shop.woowasap.shop.app.api.response.ProductsResponse;
 
 public class ProductFixture {
 
-    public static final String FORBIDDEN_USER_ID = "forbiddenUserId";
-    public static final String USER_ID = "username";
+    public static final String FORBIDDEN_USERNAME = "forbiddenUsername";
+    public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String NAME = "productName";
     public static final String DESCRIPTION = "productDescription";
@@ -28,11 +28,11 @@ public class ProductFixture {
 
 
     public static LoginRequest loginRequest() {
-        return new LoginRequest(USER_ID, PASSWORD);
+        return new LoginRequest(USERNAME, PASSWORD);
     }
 
     public static LoginRequest forbiddenUserLoginRequest() {
-        return new LoginRequest(FORBIDDEN_USER_ID, PASSWORD);
+        return new LoginRequest(FORBIDDEN_USERNAME, PASSWORD);
     }
 
     public static RegisterProductRequest registerProductRequest() {

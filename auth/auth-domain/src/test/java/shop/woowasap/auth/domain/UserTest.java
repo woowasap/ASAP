@@ -13,17 +13,17 @@ class UserTest {
 
     @Nested
     @DisplayName("User.assertNotDuplicatedUsername 메소드")
-    class UserAssertNotDuplicatedUserNameMethod {
+    class UserAssertNotDuplicatedUsernameMethod {
 
         @Test
         @DisplayName("유저 아이디 같으면 예외 발생")
         void duplicateThenThrow() {
             // given
-            String userId = "helloworld";
+            String username = "helloworld";
             String password = "{bcrypt}encryptedhelloworldpassword";
-            User user1 = User.builder().username(userId).password(password)
+            User user1 = User.builder().username(username).password(password)
                 .userType(UserType.ROLE_USER).build();
-            User user2 = User.builder().username(userId).password(password)
+            User user2 = User.builder().username(username).password(password)
                 .userType(UserType.ROLE_USER).build();
 
             // when
@@ -35,11 +35,11 @@ class UserTest {
         @DisplayName("유저 아이디 다르면 통과")
         void notDuplicateThenSuccess() {
             // given
-            String userId = "helloworld";
+            String username = "helloworld";
             String password = "{bcrypt}encryptedhelloworldpassword";
-            User user1 = User.builder().username(userId).password(password)
+            User user1 = User.builder().username(username).password(password)
                 .userType(UserType.ROLE_USER).build();
-            User user2 = User.builder().username(userId + "1").password(password)
+            User user2 = User.builder().username(username + "1").password(password)
                 .userType(UserType.ROLE_USER).build();
 
             // when
