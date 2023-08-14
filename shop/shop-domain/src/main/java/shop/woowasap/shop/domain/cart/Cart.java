@@ -10,7 +10,7 @@ public class Cart {
     private final List<CartProduct> cartProducts;
 
     @Builder
-    public Cart(Long id, Long userId, List<CartProduct> cartProducts) {
+    public Cart(final Long id, final Long userId, final List<CartProduct> cartProducts) {
         this.id = id;
         this.userId = userId;
         this.cartProducts = cartProducts;

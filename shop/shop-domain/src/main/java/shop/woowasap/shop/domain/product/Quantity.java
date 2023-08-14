@@ -12,7 +12,7 @@ public final class Quantity {
 
     private final Long value;
 
-    public Quantity(Long value) {
+    public Quantity(final Long value) {
         validate(value);
         this.value = value;
     }

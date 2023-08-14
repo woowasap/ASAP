@@ -9,7 +9,7 @@ public class CartProduct {
     private final Quantity quantity;
 
     @Builder
-    public CartProduct(Product product, Quantity quantity) {
+    public CartProduct(final Product product, final Quantity quantity) {
         this.product = product;
         this.quantity = quantity;
     }
