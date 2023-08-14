@@ -9,4 +9,6 @@ exclude shop/woowasap/*/app/spi/response/*
 exclude shop/woowasap/*/app/exception/*
 exclude shop/woowasap/order/domain/exception/*
 exclude shop/woowasap/order/domain/in/request/*
+exclude shop/woowasap/order/controller/*
+exclude shop/woowasap/order/controller/request/*
 exclude shop/woowasap/order/repository/*

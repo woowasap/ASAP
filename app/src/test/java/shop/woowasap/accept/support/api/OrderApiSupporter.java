@@ -6,7 +6,7 @@ import static io.restassured.http.ContentType.JSON;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
-import shop.woowasap.mock.dto.OrderProductRequest;
+import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 
 
 public final class OrderApiSupporter {
@@ -18,7 +18,7 @@ public final class OrderApiSupporter {
     }
 
     public static ExtractableResponse<Response> orderProduct(final long productId,
-            final OrderProductRequest orderProductRequest, final String token) {
+            final OrderProductQuantityRequest orderProductRequest, final String token) {
 
         return given().log().all()
                 .contentType(JSON)
