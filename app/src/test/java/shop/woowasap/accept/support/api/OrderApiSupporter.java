@@ -10,7 +10,7 @@ import shop.woowasap.mock.dto.OrderProductRequest;
 
 public final class OrderApiSupporter {
 
-    private static final String API_VERSION = "V1";
+    private static final String API_VERSION = "v1";
 
     private OrderApiSupporter() {
         throw new UnsupportedOperationException("Cannot invoke constructor \"OrderApiSupporter()\"");
