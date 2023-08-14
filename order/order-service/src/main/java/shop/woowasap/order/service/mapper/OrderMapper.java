@@ -4,7 +4,7 @@ import java.util.List;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.OrderProduct;
-import shop.woowasap.shop.app.product.Product;
+import shop.woowasap.shop.domain.product.Product;
 
 public final class OrderMapper {
 

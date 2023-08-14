@@ -21,7 +21,7 @@ import shop.woowasap.order.domain.in.request.OrderProductRequest;
 import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.Payment;
 import shop.woowasap.order.service.support.fixture.ProductFixture;
-import shop.woowasap.shop.app.api.ProductConnector;
+import shop.woowasap.shop.domain.api.product.ProductConnector;
 
 @DisplayName("OrderService 클래스")
 @ExtendWith(SpringExtension.class)

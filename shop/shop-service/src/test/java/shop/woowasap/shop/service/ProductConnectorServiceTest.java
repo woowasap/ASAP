@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import shop.woowasap.shop.app.api.ProductConnector;
-import shop.woowasap.shop.app.product.Product;
-import shop.woowasap.shop.app.spi.ProductRepository;
+import shop.woowasap.shop.domain.api.product.ProductConnector;
+import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.spi.ProductRepository;
 import shop.woowasap.shop.service.support.fixture.ProductFixture;
 
 @ExtendWith(SpringExtension.class)

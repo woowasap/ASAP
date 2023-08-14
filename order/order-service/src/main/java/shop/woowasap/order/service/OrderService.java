@@ -12,8 +12,8 @@ import shop.woowasap.order.domain.in.request.OrderProductRequest;
 import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.Payment;
 import shop.woowasap.order.service.mapper.OrderMapper;
-import shop.woowasap.shop.app.api.ProductConnector;
-import shop.woowasap.shop.app.product.Product;
+import shop.woowasap.shop.domain.api.product.ProductConnector;
+import shop.woowasap.shop.domain.product.Product;
 
 @Service
 @RequiredArgsConstructor

@@ -1,7 +1,7 @@
-package shop.woowasap.shop.app.api;
+package shop.woowasap.shop.domain.api.product;
 
 import java.util.Optional;
-import shop.woowasap.shop.app.product.Product;
+import shop.woowasap.shop.domain.product.Product;
 
 public interface ProductConnector {
 

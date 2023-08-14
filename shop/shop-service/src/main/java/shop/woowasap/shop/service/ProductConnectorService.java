@@ -3,9 +3,9 @@ package shop.woowasap.shop.service;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import shop.woowasap.shop.app.api.ProductConnector;
-import shop.woowasap.shop.app.product.Product;
-import shop.woowasap.shop.app.spi.ProductRepository;
+import shop.woowasap.shop.domain.api.product.ProductConnector;
+import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.spi.ProductRepository;
 
 @Service
 @RequiredArgsConstructor
