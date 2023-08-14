@@ -16,7 +16,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import shop.woowasap.auth.domain.User;
-import shop.woowasap.auth.domain.exception.DuplicatedUserIdException;
+import shop.woowasap.auth.domain.UserType;
+import shop.woowasap.auth.domain.exception.DuplicatedUsernameException;
 import shop.woowasap.auth.domain.in.request.UserCreateRequest;
 import shop.woowasap.auth.domain.out.UserRepository;
 import shop.woowasap.core.id.api.IdGenerator;
@@ -45,8 +46,8 @@ class AuthServiceTest {
         @DisplayName("정상 입력 시 성공")
         void createUserSuccess() {
             // given
-            final UserCreateRequest request = new UserCreateRequest("usersid", "userspassword");
-            when(userRepository.findByUserId("usersid")).thenReturn(Optional.empty());
+            final UserCreateRequest request = new UserCreateRequest("username", "userspassword");
+            when(userRepository.findByUsername("username")).thenReturn(Optional.empty());
             when(passwordEncoder.encode(anyString())).thenReturn("{bcrypt}cryptedpassword");
             when(idGenerator.generate()).thenReturn(1L);
 
@@ -59,15 +60,16 @@ class AuthServiceTest {
 
         @Test
         @DisplayName("유저 아이디 중복 시 실패")
-        void duplicatedUserIdThenFail() {
+        void duplicatedUsernameThenFail() {
             // given
-            final UserCreateRequest request = new UserCreateRequest("usersid", "userspassword");
-            when(userRepository.findByUserId("usersid")).thenReturn(Optional.of(
-                User.builder().id(1L).userId("usersid").password("hashedpassword").build()));
+            final UserCreateRequest request = new UserCreateRequest("username", "userspassword");
+            when(userRepository.findByUsername("username")).thenReturn(Optional.of(
+                User.builder().id(1L).username("username").password("hashedpassword")
+                    .userType(UserType.ROLE_USER).build()));
 
             // when, then
             assertThatCode(() -> authService.createUser(request))
-                .isInstanceOf(DuplicatedUserIdException.class);
+                .isInstanceOf(DuplicatedUsernameException.class);
         }
     }
 }

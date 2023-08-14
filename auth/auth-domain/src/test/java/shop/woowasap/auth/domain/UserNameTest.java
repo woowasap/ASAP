@@ -9,35 +9,35 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import shop.woowasap.auth.domain.exception.DuplicatedUserIdException;
-import shop.woowasap.auth.domain.exception.UserIdValidateException;
+import shop.woowasap.auth.domain.exception.DuplicatedUsernameException;
+import shop.woowasap.auth.domain.exception.UsernameValidateException;
 
 @DisplayName("유저 아이디 테스트")
-class UserIdTest {
+class UsernameTest {
 
     @Nested
-    @DisplayName("UserId.of 메소드")
-    class UserIdOfMethod {
+    @DisplayName("Username.of 메소드")
+    class UsernameOfMethod {
 
         @Test
         @DisplayName("유저 아이디 정상 생성 테스트")
-        void userIdCreateSuccess() {
+        void usernameCreateSuccess() {
             // given
-            final String value = "thisisuserid12";
+            final String value = "thisisusername12";
 
             // when
-            final UserId userId = UserId.of(value);
+            final Username username = Username.of(value);
 
             // then
-            assertEquals(userId.getValue(), value);
+            assertEquals(username.getValue(), value);
         }
 
         @Test
         @DisplayName("유저 아이디 null 생성 실패 테스트")
-        void nullUserIdCreateFail() {
+        void nullUsernameCreateFail() {
             // when
-            final UserIdValidateException e = assertThrows(UserIdValidateException.class,
-                () -> UserId.of(null));
+            final UsernameValidateException e = assertThrows(UsernameValidateException.class,
+                () -> Username.of(null));
 
             // then
             assertEquals("유저의 아이디는 있어야 합니다.", e.getMessage());
@@ -47,11 +47,11 @@ class UserIdTest {
         @DisplayName("유저 아이디 값 비정상시 생성 실패 테스트")
         @ValueSource(strings = {"   ", "aaaa", "a1234567789b123456789c123456789", "Asdafsdgwer",
             "#@!$%^&asd"})
-        void wrongValueUserIdCreateFail(String value) {
+        void wrongValueUsernameCreateFail(String value) {
 
             // when
-            final UserIdValidateException e = assertThrows(UserIdValidateException.class,
-                () -> UserId.of(value));
+            final UsernameValidateException e = assertThrows(UsernameValidateException.class,
+                () -> Username.of(value));
 
             // then
             assertEquals("유저의 아이디는 " + 5 + "이상, " + 25 + "자 이하의 소문자와 숫자만 가능합니다.", e.getMessage());
@@ -59,34 +59,34 @@ class UserIdTest {
     }
 
     @Nested
-    @DisplayName("UserId.assertNotDuplicated 메소드")
-    class UserIdAssertNotDuplicatedMethod {
+    @DisplayName("Username.assertNotDuplicated 메소드")
+    class UsernameAssertNotDuplicatedMethod {
 
         @Test
         @DisplayName("유저간 아이디가 같으면 예외 발생")
-        void duplicatedUserIdThenThrow() {
+        void duplicatedUsernameThenThrow() {
             // given
             final String value = "helloworld";
 
-            UserId userId1 = UserId.of(value);
-            UserId userId2 = UserId.of(value);
+            Username username1 = Username.of(value);
+            Username username2 = Username.of(value);
 
             // when, then
-            assertThrows(DuplicatedUserIdException.class,
-                () -> userId1.assertNotDuplicated(userId2));
+            assertThrows(DuplicatedUsernameException.class,
+                () -> username1.assertNotDuplicated(username2));
         }
 
         @Test
         @DisplayName("유저간 아이디가 다르면 예외 발생 안함")
-        void notDuplicatedUserIdThenVoid() {
+        void notDuplicatedUsernameThenVoid() {
             // given
             final String value = "helloworld";
 
-            UserId userId1 = UserId.of(value);
-            UserId userId2 = UserId.of(value + "a");
+            Username username1 = Username.of(value);
+            Username username2 = Username.of(value + "a");
 
             // when, then
-            assertDoesNotThrow(() -> userId1.assertNotDuplicated(userId2));
+            assertDoesNotThrow(() -> username1.assertNotDuplicated(username2));
         }
     }
 }

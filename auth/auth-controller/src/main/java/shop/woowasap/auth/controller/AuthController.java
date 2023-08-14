@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shop.woowasap.auth.controller.request.SignUpRequest;
 import shop.woowasap.auth.domain.exception.AuthDomainBaseException;
-import shop.woowasap.auth.domain.exception.DuplicatedUserIdException;
+import shop.woowasap.auth.domain.exception.DuplicatedUsernameException;
 import shop.woowasap.auth.domain.in.UserUseCase;
 import shop.woowasap.auth.domain.in.request.UserCreateRequest;
 
@@ -29,17 +29,17 @@ public class AuthController {
     public ResponseEntity<Void> signUp(@RequestBody @Valid final SignUpRequest signUpRequest) {
 
         userUseCase.createUser(
-            new UserCreateRequest(signUpRequest.userId(), signUpRequest.password()));
+            new UserCreateRequest(signUpRequest.username(), signUpRequest.password()));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @ExceptionHandler(DuplicatedUserIdException.class)
+    @ExceptionHandler(DuplicatedUsernameException.class)
     public ResponseEntity<String> handleAuthExceptions(
-        final DuplicatedUserIdException duplicatedUserIdException) {
+        final DuplicatedUsernameException duplicatedUsernameException) {
 
-        log.info(duplicatedUserIdException.getMessage());
+        log.info(duplicatedUsernameException.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
-            .body(duplicatedUserIdException.getMessage());
+            .body(duplicatedUsernameException.getMessage());
     }
 
     @ExceptionHandler(AuthDomainBaseException.class)

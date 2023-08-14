@@ -6,13 +6,13 @@ import java.util.stream.Collectors;
 import shop.woowasap.mock.dto.LoginRequest;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
-import shop.woowasap.shop.app.api.response.ProductsResponse;
 import shop.woowasap.shop.app.api.response.ProductResponse;
+import shop.woowasap.shop.app.api.response.ProductsResponse;
 
 public class ProductFixture {
 
-    public static final String FORBIDDEN_USER_ID = "forbiddenUserId";
-    public static final String USER_ID = "userId";
+    public static final String FORBIDDEN_USERNAME = "forbiddenUsername";
+    public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String NAME = "productName";
     public static final String DESCRIPTION = "productDescription";
@@ -28,11 +28,11 @@ public class ProductFixture {
 
 
     public static LoginRequest loginRequest() {
-        return new LoginRequest(USER_ID, PASSWORD);
+        return new LoginRequest(USERNAME, PASSWORD);
     }
 
     public static LoginRequest forbiddenUserLoginRequest() {
-        return new LoginRequest(FORBIDDEN_USER_ID, PASSWORD);
+        return new LoginRequest(FORBIDDEN_USERNAME, PASSWORD);
     }
 
     public static RegisterProductRequest registerProductRequest() {
@@ -45,28 +45,33 @@ public class ProductFixture {
 
     public static ProductsResponse productsResponse(final Long productId) {
         return new ProductsResponse(
-            List.of(new ProductsResponse.ProductResponse(productId, NAME, PRICE, START_TIME, END_TIME)),
+            List.of(
+                new ProductsResponse.ProductResponse(productId, NAME, PRICE, START_TIME, END_TIME)),
             1,
             1
         );
     }
 
     public static RegisterProductRequest registerValidProductRequest() {
-        return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, INFINITE_START_TIME, INFINITE_END_TIME);
+        return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, INFINITE_START_TIME,
+            INFINITE_END_TIME);
     }
 
     public static RegisterProductRequest registerInvalidProductRequest() {
-        return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, LocalDateTime.now().minusHours(3), LocalDateTime.now().minusHours(2));
+        return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY,
+            LocalDateTime.now().minusHours(3), LocalDateTime.now().minusHours(2));
     }
 
-    public static ProductsResponse productsResponse(final List<RegisterProductRequest> registerProductRequests) {
-        final List<ProductsResponse.ProductResponse> products = registerProductRequests.stream().map(product -> new ProductsResponse.ProductResponse(
-            UNKNOWN_ID,
-            product.name(),
-            product.price(),
-            product.startTime(),
-            product.endTime()
-        )).collect(Collectors.toList());
+    public static ProductsResponse productsResponse(
+        final List<RegisterProductRequest> registerProductRequests) {
+        final List<ProductsResponse.ProductResponse> products = registerProductRequests.stream()
+            .map(product -> new ProductsResponse.ProductResponse(
+                UNKNOWN_ID,
+                product.name(),
+                product.price(),
+                product.startTime(),
+                product.endTime()
+            )).collect(Collectors.toList());
 
         return new ProductsResponse(products, PAGE, TOTAL_PAGE);
     }
