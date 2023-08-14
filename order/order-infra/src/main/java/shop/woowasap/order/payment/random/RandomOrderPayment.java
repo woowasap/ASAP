@@ -11,7 +11,7 @@ public class RandomOrderPayment implements Payment {
     private static final Random random = new Random();
 
     @Override
-    public boolean pay(long userId) {
+    public boolean pay(final long userId) {
         try {
             Thread.sleep(random.nextInt(MAX_SLEEP_BOUND));
         } catch (InterruptedException interruptedException) {
