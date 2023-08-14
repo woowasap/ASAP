@@ -22,12 +22,12 @@ public class OrderController {
     private final OrderUseCase orderUseCase;
 
     @PostMapping("/products/{product-id}")
-    public ResponseEntity<Void> orderProduct(@PathVariable("product-id") long productId,
-        @RequestBody OrderProductQuantityRequest orderProductQuantityRequest) {
+    public ResponseEntity<Void> orderProduct(@PathVariable("product-id") final long productId,
+        @RequestBody final OrderProductQuantityRequest orderProductQuantityRequest) {
 
-        OrderProductRequest orderProductRequest = new OrderProductRequest(MOCK_USER_ID, productId,
+        final OrderProductRequest orderProductRequest = new OrderProductRequest(MOCK_USER_ID, productId,
             orderProductQuantityRequest.quantity());
-        long orderId = orderUseCase.orderProduct(orderProductRequest);
+        final long orderId = orderUseCase.orderProduct(orderProductRequest);
 
         return ResponseEntity.created(URI.create("/v1/orders/" + orderId))
             .build();
