@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.auth.domain.User;
+import shop.woowasap.auth.domain.UserType;
 import shop.woowasap.auth.domain.exception.DuplicatedUsernameException;
 import shop.woowasap.auth.domain.in.UserUseCase;
 import shop.woowasap.auth.domain.in.request.UserCreateRequest;
@@ -22,7 +23,7 @@ public class AuthService implements UserUseCase {
     @Override
     @Transactional
     public void createUser(final UserCreateRequest userCreateRequest) {
-        userRepository.findByUserId(userCreateRequest.username()).ifPresent(user -> {
+        userRepository.findByUsername(userCreateRequest.username()).ifPresent(user -> {
             throw new DuplicatedUsernameException(userCreateRequest.username());
         });
         final Long generatedId = idGenerator.generate();
@@ -31,6 +32,7 @@ public class AuthService implements UserUseCase {
             .id(generatedId)
             .username(userCreateRequest.username())
             .password(encodedPassword)
+            .userType(UserType.ROLE_USER)
             .build();
         userRepository.insertUser(user);
     }

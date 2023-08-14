@@ -21,8 +21,10 @@ class UserTest {
             // given
             String userId = "helloworld";
             String password = "{bcrypt}encryptedhelloworldpassword";
-            User user1 = User.builder().username(userId).password(password).build();
-            User user2 = User.builder().username(userId).password(password).build();
+            User user1 = User.builder().username(userId).password(password)
+                .userType(UserType.ROLE_USER).build();
+            User user2 = User.builder().username(userId).password(password)
+                .userType(UserType.ROLE_USER).build();
 
             // when
             assertThrows(DuplicatedUsernameException.class,
@@ -35,8 +37,10 @@ class UserTest {
             // given
             String userId = "helloworld";
             String password = "{bcrypt}encryptedhelloworldpassword";
-            User user1 = User.builder().username(userId).password(password).build();
-            User user2 = User.builder().username(userId + "1").password(password).build();
+            User user1 = User.builder().username(userId).password(password)
+                .userType(UserType.ROLE_USER).build();
+            User user2 = User.builder().username(userId + "1").password(password)
+                .userType(UserType.ROLE_USER).build();
 
             // when
             assertDoesNotThrow(() -> user1.assertNotDuplicatedUsername(user2));

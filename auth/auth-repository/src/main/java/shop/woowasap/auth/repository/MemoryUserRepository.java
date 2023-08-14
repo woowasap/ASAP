@@ -18,7 +18,7 @@ public class MemoryUserRepository implements UserRepository {
 
     @Override
     public User insertUser(final User user) {
-        findByUserId(user.getUsername()).ifPresent(u -> {
+        findByUsername(user.getUsername()).ifPresent(u -> {
             throw new DuplicatedUsernameException(user.getUsername());
         });
         users.put(user.getId(), user);
@@ -27,7 +27,7 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByUserId(final String userId) {
-        return Optional.ofNullable(usernameIndexes.get(userId));
+    public Optional<User> findByUsername(final String username) {
+        return Optional.ofNullable(usernameIndexes.get(username));
     }
 }
