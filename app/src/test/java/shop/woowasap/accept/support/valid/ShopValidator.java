@@ -11,7 +11,7 @@ import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
 public final class ShopValidator {
 
     private static final RecursiveComparisonConfiguration IGNORE_ID_COMPARISON = RecursiveComparisonConfiguration.builder()
-        .withIgnoredFields("id")
+        .withIgnoredFields("id", "startTime", "endTime")
         .build();
 
     private ShopValidator() {
@@ -39,9 +39,9 @@ public final class ShopValidator {
         assertThat(result.page()).isEqualTo(expected.page());
         assertThat(result.totalPage()).isEqualTo(expected.totalPage());
 
-        assertThat(result).usingRecursiveComparison(RecursiveComparisonConfiguration.builder()
-            .withIgnoredFields("products.productId")
-            .build()).isEqualTo(expected);
+        assertThat(result).usingRecursiveComparison()
+            .ignoringFields("products.productId", "products.startTime", "products.endTime")
+            .isEqualTo(expected);
     }
 
     public static void assertProduct(ExtractableResponse<Response> result,

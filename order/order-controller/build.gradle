@@ -1,3 +1,5 @@
 dependencies {
     implementation project(':order:order-domain')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
