@@ -24,7 +24,7 @@ class OrderProductTest {
         void createSuccessWhenReceiveProductInfoAndQuantity() {
             // given
             final long productId = 1L;
-            final int quantity = 2;
+            final long quantity = 2L;
             final String price = "10000";
             final Instant startTime = Instant.now().minusSeconds(100);
             final Instant endTime = Instant.now().plusSeconds(100);
@@ -78,7 +78,7 @@ class OrderProductTest {
         @DisplayName("quantity가 0 이하라면, InvalidQuantityException을 던진다.")
         void throwInvalidQuantityExceptionWhenQuantityUnderZero() {
             // given
-            final int zeroQuantity = 0;
+            final long zeroQuantity = 0L;
             final OrderProduct.OrderProductBuilder defaultOrderProductBuilder = OrderProductFixture.defaultBuilder();
 
             // when

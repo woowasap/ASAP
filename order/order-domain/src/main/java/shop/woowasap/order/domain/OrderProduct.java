@@ -13,11 +13,11 @@ import shop.woowasap.order.domain.exception.InvalidQuantityException;
 public class OrderProduct {
 
     private final long productId;
-    private final int quantity;
+    private final long quantity;
     private final BigInteger price;
 
     @Builder
-    private OrderProduct(final long productId, final int quantity, final String price,
+    private OrderProduct(final long productId, final long quantity, final String price,
             final Instant startTime, final Instant endTime) {
         validPrice(price);
         validQuantity(quantity);
@@ -46,7 +46,7 @@ public class OrderProduct {
         }
     }
 
-    private void validQuantity(final int quantity) {
+    private void validQuantity(final long quantity) {
         if (quantity <= 0) {
             throw new InvalidQuantityException(quantity);
         }
