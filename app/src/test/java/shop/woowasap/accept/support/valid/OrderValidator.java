@@ -15,6 +15,6 @@ public final class OrderValidator {
     public static void assertOrdered(ExtractableResponse<Response> result) {
         HttpValidator.assertCreated(result);
 
-        assertThat(result.header(HttpHeaders.AUTHORIZATION)).contains("/v1/orders/");
+        assertThat(result.header(HttpHeaders.LOCATION)).contains("/v1/orders/");
     }
 }
