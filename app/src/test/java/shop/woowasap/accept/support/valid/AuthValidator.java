@@ -11,11 +11,15 @@ public final class AuthValidator {
     private AuthValidator() {
     }
 
-    public static void assertLogin(ExtractableResponse<Response> result) {
+    public static void assertLoginSuccess(ExtractableResponse<Response> result) {
         HttpValidator.assertOk(result);
 
         String token = result.jsonPath().getString("token");
         assertThat(token).isNotBlank();
+    }
+
+    public static void assertLoginFail(ExtractableResponse<Response> result) {
+        HttpValidator.assertBadRequest(result);
     }
 
     public static void assertSigned(ExtractableResponse<Response> result, SignUpResponse expected) {

@@ -5,8 +5,8 @@ import static io.restassured.http.ContentType.JSON;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import shop.woowasap.auth.controller.request.SignUpRequest;
 import shop.woowasap.mock.dto.LoginRequest;
-import shop.woowasap.mock.dto.SignUpRequest;
 
 public final class AuthApiSupporter {
 
