@@ -18,13 +18,14 @@ public final class OrderProductFixture {
     }
 
     public static OrderProduct.OrderProductBuilder defaultBuilder() {
-        Instant currentTime = Instant.now();
+        Instant startTime = Instant.now().minusSeconds(100);
+        Instant endTime = Instant.now().plusSeconds(100);
         return OrderProduct.builder()
                 .productId(DEFAULT_PRODUCT_ID)
                 .quantity(DEFAULT_QUANTITY)
                 .price(DEFAULT_PRICE)
-                .startTime(currentTime)
-                .endTime(currentTime);
+                .startTime(startTime)
+                .endTime(endTime);
     }
 
 }
