@@ -26,7 +26,7 @@ public class AuthController {
     private final UserUseCase userUseCase;
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
+    public ResponseEntity<Void> signUp(@RequestBody @Valid final SignUpRequest signUpRequest) {
 
         userUseCase.createUser(
             new UserCreateRequest(signUpRequest.userId(), signUpRequest.password()));
@@ -35,7 +35,7 @@ public class AuthController {
 
     @ExceptionHandler(DuplicatedUserIdException.class)
     public ResponseEntity<String> handleAuthExceptions(
-        DuplicatedUserIdException duplicatedUserIdException) {
+        final DuplicatedUserIdException duplicatedUserIdException) {
 
         log.info(duplicatedUserIdException.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -44,7 +44,7 @@ public class AuthController {
 
     @ExceptionHandler(AuthDomainBaseException.class)
     public ResponseEntity<String> handleAuthExceptions(
-        AuthDomainBaseException authDomainBaseException) {
+        final AuthDomainBaseException authDomainBaseException) {
 
         log.info(authDomainBaseException.getMessage());
         return ResponseEntity.badRequest().body(authDomainBaseException.getMessage());
@@ -52,7 +52,7 @@ public class AuthController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(
-        MethodArgumentNotValidException methodArgumentNotValidException) {
+        final MethodArgumentNotValidException methodArgumentNotValidException) {
 
         String defaultMessage = methodArgumentNotValidException
             .getBindingResult()
