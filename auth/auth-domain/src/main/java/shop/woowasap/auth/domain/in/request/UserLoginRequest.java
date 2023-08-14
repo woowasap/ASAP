@@ -1,10 +1,9 @@
 package shop.woowasap.auth.domain.in.request;
 
-public record UserCreateRequest(
+public record UserLoginRequest(
 
     String username,
     String password
-
 ) {
 
 }

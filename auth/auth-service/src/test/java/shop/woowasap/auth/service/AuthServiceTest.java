@@ -16,7 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import shop.woowasap.auth.domain.User;
-import shop.woowasap.auth.domain.exception.DuplicatedUserIdException;
+import shop.woowasap.auth.domain.exception.DuplicatedUsernameException;
 import shop.woowasap.auth.domain.in.request.UserCreateRequest;
 import shop.woowasap.auth.domain.out.UserRepository;
 import shop.woowasap.core.id.api.IdGenerator;
@@ -63,11 +63,11 @@ class AuthServiceTest {
             // given
             final UserCreateRequest request = new UserCreateRequest("usersid", "userspassword");
             when(userRepository.findByUserId("usersid")).thenReturn(Optional.of(
-                User.builder().id(1L).userId("usersid").password("hashedpassword").build()));
+                User.builder().id(1L).username("usersid").password("hashedpassword").build()));
 
             // when, then
             assertThatCode(() -> authService.createUser(request))
-                .isInstanceOf(DuplicatedUserIdException.class);
+                .isInstanceOf(DuplicatedUsernameException.class);
         }
     }
 }

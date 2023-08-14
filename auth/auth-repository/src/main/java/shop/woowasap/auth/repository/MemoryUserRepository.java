@@ -1,33 +1,33 @@
 package shop.woowasap.auth.repository;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.woowasap.auth.domain.User;
-import shop.woowasap.auth.domain.exception.DuplicatedUserIdException;
+import shop.woowasap.auth.domain.exception.DuplicatedUsernameException;
 import shop.woowasap.auth.domain.out.UserRepository;
 
 @Repository
 @RequiredArgsConstructor
 public class MemoryUserRepository implements UserRepository {
 
-    private static final Map<Long, User> users = new TreeMap<>();
-    private static final Map<String, User> userIdIndexes = new TreeMap<>();
+    private final ConcurrentMap<Long, User> users = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, User> usernameIndexes = new ConcurrentHashMap<>();
 
     @Override
     public User insertUser(final User user) {
-        findByUserId(user.getUserId()).ifPresent(u -> {
-            throw new DuplicatedUserIdException(user.getUserId());
+        findByUserId(user.getUsername()).ifPresent(u -> {
+            throw new DuplicatedUsernameException(user.getUsername());
         });
         users.put(user.getId(), user);
-        userIdIndexes.put(user.getUserId(), user);
+        usernameIndexes.put(user.getUsername(), user);
         return user;
     }
 
     @Override
     public Optional<User> findByUserId(final String userId) {
-        return Optional.ofNullable(userIdIndexes.get(userId));
+        return Optional.ofNullable(usernameIndexes.get(userId));
     }
 }

@@ -5,26 +5,26 @@ import lombok.Builder;
 public final class User {
 
     private final Long id;
-    private final UserId userId;
+    private final UserName username;
     private final Password password;
 
     @Builder
-    public User(final Long id, final String userId, final String password) {
+    public User(final Long id, final String username, final String password) {
         this.id = id;
-        this.userId = UserId.of(userId);
+        this.username = UserName.of(username);
         this.password = Password.of(password);
     }
 
-    public void assertNotDuplicatedUserId(final User user) {
-        this.userId.assertNotDuplicated(user.userId);
+    public void assertNotDuplicatedUsername(final User user) {
+        this.username.assertNotDuplicated(user.username);
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getUserId() {
-        return userId.getValue();
+    public String getUsername() {
+        return username.getValue();
     }
 
     public String getPassword() {

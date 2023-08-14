@@ -9,15 +9,15 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import shop.woowasap.auth.domain.exception.DuplicatedUserIdException;
-import shop.woowasap.auth.domain.exception.UserIdValidateException;
+import shop.woowasap.auth.domain.exception.DuplicatedUsernameException;
+import shop.woowasap.auth.domain.exception.UsernameValidateException;
 
 @DisplayName("유저 아이디 테스트")
-class UserIdTest {
+class UserNameTest {
 
     @Nested
-    @DisplayName("UserId.of 메소드")
-    class UserIdOfMethod {
+    @DisplayName("UserName.of 메소드")
+    class UserNameOfMethod {
 
         @Test
         @DisplayName("유저 아이디 정상 생성 테스트")
@@ -26,18 +26,18 @@ class UserIdTest {
             final String value = "thisisuserid12";
 
             // when
-            final UserId userId = UserId.of(value);
+            final UserName userName = UserName.of(value);
 
             // then
-            assertEquals(userId.getValue(), value);
+            assertEquals(userName.getValue(), value);
         }
 
         @Test
         @DisplayName("유저 아이디 null 생성 실패 테스트")
         void nullUserIdCreateFail() {
             // when
-            final UserIdValidateException e = assertThrows(UserIdValidateException.class,
-                () -> UserId.of(null));
+            final UsernameValidateException e = assertThrows(UsernameValidateException.class,
+                () -> UserName.of(null));
 
             // then
             assertEquals("유저의 아이디는 있어야 합니다.", e.getMessage());
@@ -50,8 +50,8 @@ class UserIdTest {
         void wrongValueUserIdCreateFail(String value) {
 
             // when
-            final UserIdValidateException e = assertThrows(UserIdValidateException.class,
-                () -> UserId.of(value));
+            final UsernameValidateException e = assertThrows(UsernameValidateException.class,
+                () -> UserName.of(value));
 
             // then
             assertEquals("유저의 아이디는 " + 5 + "이상, " + 25 + "자 이하의 소문자와 숫자만 가능합니다.", e.getMessage());
@@ -59,8 +59,8 @@ class UserIdTest {
     }
 
     @Nested
-    @DisplayName("UserId.assertNotDuplicated 메소드")
-    class UserIdAssertNotDuplicatedMethod {
+    @DisplayName("UserName.assertNotDuplicated 메소드")
+    class UserNameAssertNotDuplicatedMethod {
 
         @Test
         @DisplayName("유저간 아이디가 같으면 예외 발생")
@@ -68,12 +68,12 @@ class UserIdTest {
             // given
             final String value = "helloworld";
 
-            UserId userId1 = UserId.of(value);
-            UserId userId2 = UserId.of(value);
+            UserName userName1 = UserName.of(value);
+            UserName userName2 = UserName.of(value);
 
             // when, then
-            assertThrows(DuplicatedUserIdException.class,
-                () -> userId1.assertNotDuplicated(userId2));
+            assertThrows(DuplicatedUsernameException.class,
+                () -> userName1.assertNotDuplicated(userName2));
         }
 
         @Test
@@ -82,11 +82,11 @@ class UserIdTest {
             // given
             final String value = "helloworld";
 
-            UserId userId1 = UserId.of(value);
-            UserId userId2 = UserId.of(value + "a");
+            UserName userName1 = UserName.of(value);
+            UserName userName2 = UserName.of(value + "a");
 
             // when, then
-            assertDoesNotThrow(() -> userId1.assertNotDuplicated(userId2));
+            assertDoesNotThrow(() -> userName1.assertNotDuplicated(userName2));
         }
     }
 }
