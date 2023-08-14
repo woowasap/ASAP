@@ -46,8 +46,8 @@ class AuthServiceTest {
         @DisplayName("정상 입력 시 성공")
         void createUserSuccess() {
             // given
-            final UserCreateRequest request = new UserCreateRequest("usersid", "userspassword");
-            when(userRepository.findByUsername("usersid")).thenReturn(Optional.empty());
+            final UserCreateRequest request = new UserCreateRequest("username", "userspassword");
+            when(userRepository.findByUsername("username")).thenReturn(Optional.empty());
             when(passwordEncoder.encode(anyString())).thenReturn("{bcrypt}cryptedpassword");
             when(idGenerator.generate()).thenReturn(1L);
 
@@ -62,9 +62,9 @@ class AuthServiceTest {
         @DisplayName("유저 아이디 중복 시 실패")
         void duplicatedUsernameThenFail() {
             // given
-            final UserCreateRequest request = new UserCreateRequest("usersid", "userspassword");
-            when(userRepository.findByUsername("usersid")).thenReturn(Optional.of(
-                User.builder().id(1L).username("usersid").password("hashedpassword")
+            final UserCreateRequest request = new UserCreateRequest("username", "userspassword");
+            when(userRepository.findByUsername("username")).thenReturn(Optional.of(
+                User.builder().id(1L).username("username").password("hashedpassword")
                     .userType(UserType.ROLE_USER).build()));
 
             // when, then
