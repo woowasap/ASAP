@@ -25,7 +25,8 @@ public class OrderController {
     public ResponseEntity<Void> orderProduct(@PathVariable("product-id") final long productId,
         @RequestBody final OrderProductQuantityRequest orderProductQuantityRequest) {
 
-        final OrderProductRequest orderProductRequest = new OrderProductRequest(MOCK_USER_ID, productId,
+        final OrderProductRequest orderProductRequest = new OrderProductRequest(MOCK_USER_ID,
+            productId,
             orderProductQuantityRequest.quantity());
         final long orderId = orderUseCase.orderProduct(orderProductRequest);
 

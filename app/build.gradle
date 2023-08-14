@@ -9,6 +9,7 @@ dependencies {
     implementation project(':auth:auth-controller')
     implementation project(':auth:auth-repository')
 
+    implementation project(':order:order-infra')
     implementation project(':order:order-domain')
     implementation project(':order:order-service')
     implementation project(':order:order-controller')

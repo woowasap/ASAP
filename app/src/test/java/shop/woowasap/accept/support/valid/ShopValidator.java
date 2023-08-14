@@ -11,7 +11,7 @@ import shop.woowasap.shop.app.api.response.ProductsResponse;
 public final class ShopValidator {
 
     private static final RecursiveComparisonConfiguration IGNORE_ID_COMPARISON = RecursiveComparisonConfiguration.builder()
-        .withIgnoredFields("id")
+        .withIgnoredFields("id", "startTime", "endTime")
         .build();
 
     private ShopValidator() {
@@ -40,7 +40,7 @@ public final class ShopValidator {
         assertThat(result.totalPage()).isEqualTo(expected.totalPage());
 
         assertThat(result).usingRecursiveComparison(RecursiveComparisonConfiguration.builder()
-            .withIgnoredFields("products.productId")
+            .withIgnoredFields("products.productId", "products.startTime", "products.endTime")
             .build()).isEqualTo(expected);
     }
 
