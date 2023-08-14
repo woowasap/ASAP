@@ -11,13 +11,15 @@ import shop.woowasap.order.domain.exception.InvalidOrderProductException;
 public class Order {
 
     private final long id;
+    private final long userId;
     private final List<OrderProduct> orderProducts;
     private final BigInteger totalPrice;
 
     @Builder
-    private Order(final long id, final List<OrderProduct> orderProducts) {
+    private Order(final long id, final long userId, final List<OrderProduct> orderProducts) {
         validOrderProducts(orderProducts);
         this.id = id;
+        this.userId = userId;
         this.orderProducts = orderProducts;
         this.totalPrice = calculatePrice();
     }

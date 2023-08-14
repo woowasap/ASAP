@@ -1,11 +1,12 @@
 package shop.woowasap.order.domain.support.fixture;
 
+import java.time.Instant;
 import shop.woowasap.order.domain.OrderProduct;
 
 public final class OrderProductFixture {
 
     private static final long DEFAULT_PRODUCT_ID = 1L;
-    private static final int DEFAULT_QUANTITY = 1;
+    private static final long DEFAULT_QUANTITY = 1L;
     private static final String DEFAULT_PRICE = "1";
 
     private OrderProductFixture() {
@@ -17,10 +18,14 @@ public final class OrderProductFixture {
     }
 
     public static OrderProduct.OrderProductBuilder defaultBuilder() {
+        Instant startTime = Instant.now().minusSeconds(100);
+        Instant endTime = Instant.now().plusSeconds(100);
         return OrderProduct.builder()
                 .productId(DEFAULT_PRODUCT_ID)
                 .quantity(DEFAULT_QUANTITY)
-                .price(DEFAULT_PRICE);
+                .price(DEFAULT_PRICE)
+                .startTime(startTime)
+                .endTime(endTime);
     }
 
 }
