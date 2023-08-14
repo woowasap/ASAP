@@ -47,7 +47,9 @@ public class OrderController {
         InvalidPriceException.class,
         InvalidProductSaleTimeException.class,
         InvalidQuantityException.class})
-    private ResponseEntity<Void> handleBadRequest() {
+    private ResponseEntity<Void> handleBadRequest(RuntimeException runtimeException) {
+        System.out.println(">>> " + runtimeException.getMessage());
+        runtimeException.printStackTrace();
         return ResponseEntity.badRequest().build();
     }
 }
