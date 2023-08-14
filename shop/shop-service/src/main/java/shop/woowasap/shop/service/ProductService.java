@@ -10,15 +10,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.app.api.ProductUseCase;
-import shop.woowasap.shop.app.api.request.RegisterProductRequest;
-import shop.woowasap.shop.app.api.request.UpdateProductRequest;
-import shop.woowasap.shop.app.api.response.ProductResponse;
-import shop.woowasap.shop.app.api.response.ProductsResponse;
-import shop.woowasap.shop.app.exception.CannotFindProductException;
-import shop.woowasap.shop.app.product.Product;
-import shop.woowasap.shop.app.spi.ProductRepository;
-import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.api.product.ProductUseCase;
+import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
+import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.exception.CannotFindProductException;
+import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.spi.ProductRepository;
+import shop.woowasap.shop.domain.spi.response.ProductsPaginationResponse;
 import shop.woowasap.shop.service.mapper.ProductMapper;
 
 @Service
@@ -76,17 +76,17 @@ public class ProductService implements ProductUseCase {
     }
 
     @Override
-    public ProductResponse getById(final long id) {
-        final Product persistProduct = productRepository.findByIdAndValidSaleTime(id)
+    public ProductDetailsResponse getByProductId(final long productId) {
+        final Product persistProduct = productRepository.findByIdAndValidSaleTime(productId)
             .orElseThrow(() -> new CannotFindProductException(
                 MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
-                    id)));
+                    productId)));
 
         return ProductMapper.toProductResponse(persistProduct, ZoneId.of(locale));
     }
 
     @Override
-    public ProductResponse getByIdWithAdmin(final long productId) {
+    public ProductDetailsResponse getByProductIdWithAdmin(final long productId) {
         final Product persistProduct = getProduct(productId);
 
         return ProductMapper.toProductResponse(persistProduct, ZoneId.of(locale));
