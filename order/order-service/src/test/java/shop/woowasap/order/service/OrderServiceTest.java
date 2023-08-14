@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
+import shop.woowasap.order.domain.exception.DoesNotFindProductException;
 import shop.woowasap.order.domain.exception.DoesNotOrderedException;
 import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
@@ -56,8 +58,8 @@ class OrderServiceTest {
 
             final long orderId = 1L;
             when(idGenerator.generate()).thenReturn(orderId);
-            when(productConnector.getByProductId(productId)).thenReturn(ProductFixture.getDefaultBuilder()
-                    .build());
+            when(productConnector.findByProductId(productId)).thenReturn(Optional.of(ProductFixture.getDefaultBuilder()
+                    .build()));
             when(payment.pay(userId)).thenReturn(true);
 
             // when
@@ -78,8 +80,8 @@ class OrderServiceTest {
 
             final long orderId = 1L;
             when(idGenerator.generate()).thenReturn(orderId);
-            when(productConnector.getByProductId(productId)).thenReturn(ProductFixture.getDefaultBuilder()
-                    .build());
+            when(productConnector.findByProductId(productId)).thenReturn(Optional.of(ProductFixture.getDefaultBuilder()
+                    .build()));
             when(payment.pay(userId)).thenReturn(false);
 
             // when
@@ -87,6 +89,24 @@ class OrderServiceTest {
 
             // then
             assertThat(exception).isInstanceOf(DoesNotOrderedException.class);
+        }
+
+        @Test
+        @DisplayName("productId에 해당하는 Product를 찾을 수 없으면 DoesNotFindProductException을 던진다.")
+        void throwDoesNotFindProductExceptionWhenCannotFindMatchedProduct() {
+            // given
+            final long userId = 1L;
+            final long productId = 2L;
+            final int quantity = 3;
+            final OrderProductRequest orderProductRequest = new OrderProductRequest(userId, productId, quantity);
+
+            when(productConnector.findByProductId(productId)).thenReturn(Optional.empty());
+
+            // when
+            final Exception exception = catchException(() -> orderUseCase.orderProduct(orderProductRequest));
+
+            // then
+            assertThat(exception).isInstanceOf(DoesNotFindProductException.class);
         }
     }
 }

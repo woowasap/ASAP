@@ -47,22 +47,4 @@ class OrderAcceptanceTest extends AcceptanceTest {
         // then
         HttpValidator.assertBadRequest(result);
     }
-
-    @Test
-    @DisplayName("상품 바로 구매 API는 product를 구매할 돈이 없으면, 400 BadRequest를 응답한다.")
-    void returnBadRequestWhenDoesNotHaveEnoughMoneyToBuyProduct() {
-        // given
-        final String token = "TOKEN";
-
-        final long notExistProductId = 1L;
-        final int quantity = 2;
-        final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(quantity);
-
-        // when
-        final ExtractableResponse<Response> result = OrderApiSupporter.orderProduct(notExistProductId,
-                orderProductRequest, token);
-
-        // then
-        HttpValidator.assertBadRequest(result);
-    }
 }
