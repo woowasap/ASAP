@@ -6,7 +6,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import shop.woowasap.shop.domain.api.cart.response.CartResponse;
 
-public class CartValidator {
+public final class CartValidator {
 
     private CartValidator() {
     }
