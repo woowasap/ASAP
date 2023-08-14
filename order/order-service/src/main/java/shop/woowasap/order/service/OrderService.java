@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.order.domain.Order;
+import shop.woowasap.order.domain.exception.DoesNotFindProductException;
 import shop.woowasap.order.domain.exception.DoesNotOrderedException;
 import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
@@ -27,7 +28,8 @@ public class OrderService implements OrderUseCase {
     @Override
     @Transactional
     public long orderProduct(final OrderProductRequest orderProductRequest) {
-        final Product product = productConnector.getByProductId(orderProductRequest.productId());
+        final Product product = productConnector.findByProductId(orderProductRequest.productId())
+            .orElseThrow(() -> new DoesNotFindProductException(orderProductRequest.productId()));
         final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest.userId(), product);
 
         if (!payment.pay(orderProductRequest.userId())) {
