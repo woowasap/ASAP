@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.OrderApiSupporter;
 import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.OrderValidator;
-import shop.woowasap.mock.dto.OrderProductRequest;
+import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 
 @DisplayName("Order 인수테스트")
 class OrderAcceptanceTest extends AcceptanceTest {
@@ -20,7 +20,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         final long productId = 1L;
         final int quantity = 2;
-        final OrderProductRequest orderProductRequest = new OrderProductRequest(quantity);
+        final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(quantity);
 
         // when
         final ExtractableResponse<Response> result = OrderApiSupporter.orderProduct(productId, orderProductRequest,
@@ -38,7 +38,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         final long notExistProductId = 123L;
         final int quantity = 2;
-        final OrderProductRequest orderProductRequest = new OrderProductRequest(quantity);
+        final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(quantity);
 
         // when
         final ExtractableResponse<Response> result = OrderApiSupporter.orderProduct(notExistProductId,
@@ -56,7 +56,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         final long notExistProductId = 1L;
         final int quantity = 2;
-        final OrderProductRequest orderProductRequest = new OrderProductRequest(quantity);
+        final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(quantity);
 
         // when
         final ExtractableResponse<Response> result = OrderApiSupporter.orderProduct(notExistProductId,
