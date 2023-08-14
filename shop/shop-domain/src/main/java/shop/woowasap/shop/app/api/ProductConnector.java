@@ -4,6 +4,6 @@ import shop.woowasap.shop.app.product.Product;
 
 public interface ProductConnector {
 
-    Product getById(final long id);
+    Product getByProductId(final long productId);
 
 }

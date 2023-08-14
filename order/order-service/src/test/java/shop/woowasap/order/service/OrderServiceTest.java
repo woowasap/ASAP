@@ -56,7 +56,7 @@ class OrderServiceTest {
 
             final long orderId = 1L;
             when(idGenerator.generate()).thenReturn(orderId);
-            when(productConnector.getById(productId)).thenReturn(ProductFixture.getDefaultBuilder()
+            when(productConnector.getByProductId(productId)).thenReturn(ProductFixture.getDefaultBuilder()
                     .build());
             when(payment.pay(userId)).thenReturn(true);
 
@@ -78,7 +78,7 @@ class OrderServiceTest {
 
             final long orderId = 1L;
             when(idGenerator.generate()).thenReturn(orderId);
-            when(productConnector.getById(productId)).thenReturn(ProductFixture.getDefaultBuilder()
+            when(productConnector.getByProductId(productId)).thenReturn(ProductFixture.getDefaultBuilder()
                     .build());
             when(payment.pay(userId)).thenReturn(false);
 
