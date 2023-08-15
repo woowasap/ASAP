@@ -2,8 +2,10 @@ package shop.woowasap.shop.domain.cart;
 
 import java.util.List;
 import lombok.Builder;
+import lombok.Getter;
 
-public class Cart {
+@Getter
+public final class Cart {
 
     private final Long id;
     private final Long userId;

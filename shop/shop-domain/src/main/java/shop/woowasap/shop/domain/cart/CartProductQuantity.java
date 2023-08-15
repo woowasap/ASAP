@@ -8,11 +8,11 @@ import shop.woowasap.shop.domain.exception.InvalidProductQuantityException;
 @Getter
 @ToString
 @EqualsAndHashCode
-public final class Quantity {
+public final class CartProductQuantity {
 
     private final Long value;
 
-    public Quantity(final Long value) {
+    public CartProductQuantity(final Long value) {
         validate(value);
         this.value = value;
     }
