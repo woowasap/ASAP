@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
+import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.exception.DoesNotFindProductException;
 import shop.woowasap.order.domain.exception.DoesNotOrderedException;
 import shop.woowasap.order.domain.exception.InvalidOrderProductException;
@@ -20,6 +21,7 @@ import shop.woowasap.order.domain.exception.InvalidProductSaleTimeException;
 import shop.woowasap.order.domain.exception.InvalidQuantityException;
 import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
+import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 
 @RestController
@@ -45,11 +47,18 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<OrdersResponse> getOrderByUserId(
+    public ResponseEntity<OrdersResponse> getOrdersByUserId(
         @RequestParam(defaultValue = "1") final int page,
         @RequestParam(defaultValue = "20") final int size) {
 
         return ResponseEntity.ok(orderUseCase.getOrderByUserId(MOCK_USER_ID, page, size));
+    }
+
+    @GetMapping("/{order-id}")
+    public ResponseEntity<DetailOrderResponse> getOrderByOrderIdAndUserID(
+        @PathVariable("order-id") final long orderId) {
+
+        return ResponseEntity.ok(orderUseCase.getOrderByOrderIdAndUserId(orderId, MOCK_USER_ID));
     }
 
     @ExceptionHandler({DoesNotFindProductException.class,
@@ -57,7 +66,8 @@ public class OrderController {
         InvalidOrderProductException.class,
         InvalidPriceException.class,
         InvalidProductSaleTimeException.class,
-        InvalidQuantityException.class})
+        InvalidQuantityException.class,
+        DoesNotFindOrderException.class})
     private ResponseEntity<Void> handleBadRequest(RuntimeException runtimeException) {
         return ResponseEntity.badRequest().build();
     }
