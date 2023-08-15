@@ -5,6 +5,7 @@ import static shop.woowasap.accept.support.api.ShopApiSupporter.registerProduct;
 import static shop.woowasap.accept.support.fixture.CartFixture.cartResponse;
 import static shop.woowasap.accept.support.fixture.ProductFixture.registerProductRequest;
 import static shop.woowasap.accept.support.valid.CartValidator.assertCartProductsFound;
+import static shop.woowasap.accept.support.valid.HttpValidator.assertBadRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertOk;
 
 import io.restassured.response.ExtractableResponse;
@@ -111,4 +112,22 @@ class CartAcceptanceTest extends AcceptanceTest {
         assertOk(response);
     }
 
+    @Test
+    @DisplayName("ProductId에 해당하는 상품이 장바구니에 존재하지 않는다면, 400 BadRequest 를 응답한다.")
+    void returnBadRequestWhenCannotFoundProductInCart() {
+        // given
+        final String accessToken = "Token";
+        final long notExitProductId = 517;
+
+        final RegisterProductRequest registerProductRequest = registerProductRequest();
+        final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
+            registerProductRequest);
+
+        // when
+        final ExtractableResponse<Response> response = CartApiSupporter.deleteCartProduct(
+            accessToken, notExitProductId);
+
+        // then
+        assertBadRequest(response);
+    }
 }
