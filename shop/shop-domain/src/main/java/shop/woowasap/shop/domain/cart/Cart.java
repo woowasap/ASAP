@@ -3,6 +3,7 @@ package shop.woowasap.shop.domain.cart;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 
 @Getter
 public final class Cart {
@@ -24,6 +25,16 @@ public final class Cart {
             return;
         }
         cartProducts.add(cartProduct);
+    }
+
+    public void updateCartProduct(final CartProduct cartProduct,
+        final CartProductQuantity quantity) {
+        if (!cartProducts.contains(cartProduct)) {
+            throw new NotExistsCartProductException("해당 상품이 장바구니에 존재하지 않습니다.");
+        }
+        final CartProduct updatedCartProduct = cartProduct.updateQuantity(quantity);
+        cartProducts.remove(cartProduct);
+        cartProducts.add(updatedCartProduct);
     }
 
     private void updateCartProductInCartProducts(final CartProduct cartProduct) {
