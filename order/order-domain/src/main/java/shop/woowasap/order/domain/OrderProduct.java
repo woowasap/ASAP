@@ -18,7 +18,7 @@ public class OrderProduct {
 
     @Builder
     private OrderProduct(final long productId, final long quantity, final String price,
-            final Instant startTime, final Instant endTime) {
+        final Instant startTime, final Instant endTime) {
         validPrice(price);
         validQuantity(quantity);
         validateProductSaleTime(startTime, endTime);

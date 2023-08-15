@@ -35,16 +35,16 @@ public final class OrderMapper {
             .build();
     }
 
-    public static OrderProductResponse toOrderProductResponse(final Product product) {
-        return new OrderProductResponse(product.getId(), product.getName().getValue());
+    public static OrderProductResponse toOrderProductResponse(final Product product, final long quantity) {
+        return new OrderProductResponse(product.getId(), product.getName().getValue(),
+            product.getPrice().getValue().toString(), quantity);
     }
 
     public static OrderResponse toOrderResponse(final Order order,
         final List<OrderProductResponse> orderProductResponses, final String locale) {
 
         return new OrderResponse(order.getId(), orderProductResponses,
-            order.getTotalPrice().toString(), order.getOrderProducts().size(),
-            LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
+            order.getTotalPrice().toString(), LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
     }
 
     public static OrdersResponse toOrdersResponse(final List<OrderResponse> orderResponses,
@@ -60,7 +60,8 @@ public final class OrderMapper {
             LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
     }
 
-    public static DetailOrderProductResponse toDetailOrderProductResponse(final OrderProduct orderProduct, final Product product) {
+    public static DetailOrderProductResponse toDetailOrderProductResponse(final OrderProduct orderProduct,
+        final Product product) {
         return new DetailOrderProductResponse(orderProduct.getProductId(), product.getName().getValue(),
             product.getPrice().getValue().toString(), orderProduct.getQuantity());
     }

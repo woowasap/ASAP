@@ -11,10 +11,10 @@ import shop.woowasap.accept.support.api.OrderApiSupporter;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.OrderValidator;
-import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
-import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.mock.dto.ProductsResponse;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
+import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
+import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
@@ -75,11 +75,10 @@ class OrderAcceptanceTest extends AcceptanceTest {
         OrderApiSupporter.orderProduct(product.productId(), orderProductQuantityRequest, token);
 
         final OrderProductResponse expectedOrderProductResponse = new OrderProductResponse(
-            product.productId(), product.name());
+            product.productId(), product.name(), product.price(), quantity);
         final OrderResponse expectedOrderResponse = new OrderResponse(1L,
             List.of(expectedOrderProductResponse),
-            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(),
-            1, LocalDateTime.now());
+            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(), LocalDateTime.now());
         final OrdersResponse expected = new OrdersResponse(List.of(expectedOrderResponse), 1, 20);
 
         // when
@@ -106,7 +105,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         final DetailOrderProductResponse expectedDetailOrderProductResponse =
             new DetailOrderProductResponse(product.productId(), product.name(), product.price(), quantity);
-        final DetailOrderResponse expectedDetailOrderResponse = new DetailOrderResponse(orderId, List.of(expectedDetailOrderProductResponse),
+        final DetailOrderResponse expectedDetailOrderResponse = new DetailOrderResponse(orderId,
+            List.of(expectedDetailOrderProductResponse),
             new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(), LocalDateTime.now());
 
         // when

@@ -58,10 +58,20 @@ public class OrderService implements OrderUseCase {
             userId, page, size);
         final List<Order> orders = ordersPaginationResponse.orders();
 
-        final List<OrderResponse> orderResponses = getOrderResponse(orders);
+        final List<OrderResponse> orderResponses = orders.stream()
+            .map(order -> OrderMapper.toOrderResponse(order, getOrderProductResponse(order), locale))
+            .toList();
 
         return OrderMapper.toOrdersResponse(orderResponses, ordersPaginationResponse.page(),
             ordersPaginationResponse.totalPage());
+    }
+
+    private List<OrderProductResponse> getOrderProductResponse(final Order order) {
+        return order.getOrderProducts()
+            .stream()
+            .map(orderProduct -> OrderMapper.toOrderProductResponse(getProductByProductId(orderProduct.getProductId()),
+                orderProduct.getQuantity()))
+            .toList();
     }
 
     @Override
@@ -78,21 +88,6 @@ public class OrderService implements OrderUseCase {
             .toList();
 
         return OrderMapper.toDetailOrderResponse(order, detailOrderProductResponses, locale);
-    }
-
-    private List<OrderResponse> getOrderResponse(final List<Order> orders) {
-        return orders.stream()
-            .map(
-                order -> OrderMapper.toOrderResponse(order, getOrderProductResponse(order), locale))
-            .toList();
-    }
-
-    private List<OrderProductResponse> getOrderProductResponse(final Order order) {
-        return order.getOrderProducts()
-            .stream()
-            .map(orderProduct -> OrderMapper.toOrderProductResponse(
-                getProductByProductId(orderProduct.getProductId())))
-            .toList();
     }
 
     private Product getProductByProductId(final long productId) {

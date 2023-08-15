@@ -17,30 +17,30 @@ public final class OrderDtoFixture {
     }
 
     public static OrdersResponse ordersResponse(final List<Order> orders, final String locale, final int page,
-        final int totalPage, final String fixedName) {
+        final int totalPage, final String fixedName, final String fixedPrice) {
 
-        final List<OrderResponse> orderResponses = getOrderResponse(orders, locale, fixedName);
+        final List<OrderResponse> orderResponses = getOrderResponse(orders, locale, fixedName, fixedPrice);
 
         return new OrdersResponse(orderResponses, page, totalPage);
     }
 
     private static List<OrderResponse> getOrderResponse(final List<Order> orders,
-        final String locale, final String fixedName) {
+        final String locale, final String fixedName, final String fixedPrice) {
 
         return orders.stream()
             .map(order -> new OrderResponse(order.getId(),
-                getOrderProductResponse(order, fixedName),
-                order.getTotalPrice().toString(), order.getOrderProducts().size(),
-                LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale))))
+                getOrderProductResponse(order, fixedName, fixedPrice),
+                order.getTotalPrice().toString(), LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale))))
             .toList();
     }
 
     private static List<OrderProductResponse> getOrderProductResponse(final Order order,
-        final String fixedName) {
+        final String fixedName, final String fixedPrice) {
 
         return order.getOrderProducts()
             .stream()
-            .map(orderProduct -> new OrderProductResponse(orderProduct.getProductId(), fixedName))
+            .map(orderProduct -> new OrderProductResponse(orderProduct.getProductId(), fixedName, fixedPrice,
+                orderProduct.getQuantity()))
             .toList();
     }
 
