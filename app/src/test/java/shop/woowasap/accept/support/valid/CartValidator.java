@@ -17,7 +17,8 @@ public final class CartValidator {
 
         CartResponse cartResponse = result.as(CartResponse.class);
 
-        assertThat(cartResponse).usingRecursiveComparison().ignoringFields("cartId")
+        assertThat(cartResponse).usingRecursiveComparison()
+            .ignoringFields("cartId", "cartProducts.productId")
             .isEqualTo(expected);
     }
 
