@@ -5,6 +5,7 @@ import static shop.woowasap.accept.support.api.ShopApiSupporter.registerProduct;
 import static shop.woowasap.accept.support.fixture.CartFixture.cartResponse;
 import static shop.woowasap.accept.support.fixture.ProductFixture.registerProductRequest;
 import static shop.woowasap.accept.support.valid.CartValidator.assertCartProductsFound;
+import static shop.woowasap.accept.support.valid.HttpValidator.assertOk;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.CartApiSupporter;
 import shop.woowasap.accept.support.fixture.CartFixture;
 import shop.woowasap.accept.support.fixture.ProductFixture;
-import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.api.cart.response.CartResponse;
 import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
@@ -36,7 +36,7 @@ class CartAcceptanceTest extends AcceptanceTest {
             .addCartProduct(accessToken, CartFixture.addCartProductRequest(productId, quantity));
 
         // then
-        HttpValidator.assertOk(response);
+        assertOk(response);
     }
 
     @Test
@@ -58,7 +58,7 @@ class CartAcceptanceTest extends AcceptanceTest {
             .addCartProduct(accessToken, CartFixture.addCartProductRequest(productId, addQuantity));
 
         // then
-        HttpValidator.assertOk(response);
+        assertOk(response);
     }
 
     @Test
@@ -84,6 +84,31 @@ class CartAcceptanceTest extends AcceptanceTest {
 
         // then
         assertCartProductsFound(response, expected);
+    }
+
+
+    @Test
+    @DisplayName("장바구니에 있는 상품을 제거한다.")
+    void deleteCartProducts() {
+        // given
+        final String accessToken = "Token";
+        final long quantity = 10L;
+
+        final RegisterProductRequest registerProductRequest = registerProductRequest();
+        final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
+            registerProductRequest);
+        final long productId = Long.parseLong(registerResponse.header("Location").split("/")[4]);
+
+        final AddCartProductRequest addCartProductRequest = new AddCartProductRequest(productId,
+            quantity);
+        CartApiSupporter.addCartProduct(accessToken, addCartProductRequest);
+
+        // when
+        final ExtractableResponse<Response> response = CartApiSupporter.deleteCartProduct(
+            accessToken, productId);
+
+        // then
+        assertOk(response);
     }
 
 }
