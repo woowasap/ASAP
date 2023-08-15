@@ -10,6 +10,7 @@ import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
 import shop.woowasap.shop.domain.cart.CartProductQuantity;
 import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.product.Product.ProductBuilder;
 import shop.woowasap.shop.domain.spi.CartRepository;
 
 @Repository
@@ -27,10 +28,15 @@ public class MockCartRepository implements CartRepository {
 
     private static final String OFFSET_ID = "+09:00";
 
-    public static final LocalDateTime START_TIME = LocalDateTime.ofInstant(Instant.now().minusSeconds(100000),
+    public static final LocalDateTime START_TIME = LocalDateTime.ofInstant(
+        Instant.now().minusSeconds(100000),
         ZoneOffset.UTC);
-    public static final LocalDateTime END_TIME = LocalDateTime.ofInstant(Instant.now().plusSeconds(100000),
+    public static final LocalDateTime END_TIME = LocalDateTime.ofInstant(
+        Instant.now().plusSeconds(100000),
         ZoneOffset.UTC);
+
+    public static final LocalDateTime STATIC_START_TIME = LocalDateTime.of(2023, 8, 5, 12, 30);
+    public static final LocalDateTime STATIC_END_TIME = LocalDateTime.of(2023, 8, 5, 14, 30);
 
     @Override
     public Cart createEmptyCart(final long userId, final long cartId) {
@@ -49,14 +55,22 @@ public class MockCartRepository implements CartRepository {
 
     @Override
     public Cart getByUserId(final long userId) {
-        final Product product = Product.builder()
+
+        final ProductBuilder productBuilder = Product.builder()
             .id(MOCK_PRODUCT_ID)
             .name(NAME)
             .description(DESCRIPTION)
             .price(PRICE)
             .quantity(PRODUCT_QUANTITY)
             .startTime(START_TIME.toInstant(ZoneOffset.of(OFFSET_ID)))
-            .endTime(END_TIME.toInstant(ZoneOffset.of(OFFSET_ID))).build();
+            .endTime(END_TIME.toInstant(ZoneOffset.of(OFFSET_ID)));
+
+        if (userId == 33) {
+            productBuilder.startTime(STATIC_START_TIME.toInstant(ZoneOffset.of(OFFSET_ID)))
+                .endTime(STATIC_END_TIME.toInstant(ZoneOffset.of(OFFSET_ID)));
+        }
+
+        final Product product = productBuilder.build();
 
         final List<CartProduct> cartProducts = new ArrayList<>();
         cartProducts.add(CartProduct.builder()

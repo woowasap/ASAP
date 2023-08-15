@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shop.woowasap.shop.domain.api.cart.CartUseCase;
 import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.api.cart.response.CartResponse;
+import shop.woowasap.shop.domain.exception.CannotFindProductException;
 import shop.woowasap.shop.domain.exception.CannotFindProductInCartException;
 
 @RestController
@@ -20,7 +21,7 @@ import shop.woowasap.shop.domain.exception.CannotFindProductInCartException;
 @RequestMapping("/v1/carts")
 public class CartController {
 
-    private static final long MOCK_USER_ID = 1L;
+    private static final long MOCK_USER_ID = 33L;
 
     private final CartUseCase cartUseCase;
 
@@ -45,7 +46,7 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    @ExceptionHandler(CannotFindProductInCartException.class)
+    @ExceptionHandler({CannotFindProductInCartException.class, CannotFindProductException.class})
     public ResponseEntity<Void> handleException() {
         return ResponseEntity.badRequest().build();
     }
