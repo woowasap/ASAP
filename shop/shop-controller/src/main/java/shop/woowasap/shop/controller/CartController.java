@@ -38,7 +38,8 @@ public class CartController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCartProduct(@RequestParam("product-id") long productId) {
+    public ResponseEntity<Void> deleteCartProduct(
+        @RequestParam("product-id") final long productId) {
         cartUseCase.deleteCartProduct(MOCK_USER_ID, productId);
 
         return ResponseEntity.ok().build();
