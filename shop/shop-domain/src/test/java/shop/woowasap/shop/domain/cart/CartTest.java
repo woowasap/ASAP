@@ -75,13 +75,14 @@ class CartTest {
         @DisplayName("해당 상품이 없으면, 예외를 던진다.")
         void updateCartProductQuantityWithNotExistsCartProductThrowException() {
             // given
-            final CartProduct cartProduct = CartFixture.getCartProductBuilder().build();
             final CartProductQuantity updateCartProductQuantity = new CartProductQuantity(20L);
+            final CartProduct cartProduct = CartFixture.getCartProductBuilder()
+                .quantity(updateCartProductQuantity).build();
             final Cart cart = CartFixture.getEmptyCartBuilder().build();
 
             // when
             final Exception exception = catchException(
-                () -> cart.updateCartProduct(cartProduct, updateCartProductQuantity));
+                () -> cart.updateCartProduct(cartProduct));
 
             // then
             assertThat(exception).isInstanceOf(NotExistsCartProductException.class);
@@ -91,18 +92,20 @@ class CartTest {
         @DisplayName("정상적으로 개수가 변경된다.")
         void updateCartProductQuantityWithExists() {
             // given
-            final CartProduct cartProduct = CartFixture.getCartProductBuilder().build();
             final List<CartProduct> cartProducts = new ArrayList<>();
-            cartProducts.add(cartProduct);
+            cartProducts.add(CartFixture.getCartProductBuilder().build());
             final CartProductQuantity updateCartProductQuantity = new CartProductQuantity(20L);
+            final CartProduct updateCartProduct = CartFixture.getCartProductBuilder()
+                .quantity(updateCartProductQuantity).build();
             final Cart cart = CartFixture.getEmptyCartBuilder().cartProducts(cartProducts).build();
 
             // when
-            cart.updateCartProduct(cartProduct, updateCartProductQuantity);
+            cart.updateCartProduct(updateCartProduct);
 
             // then
             assertThat(cart.getCartProducts()).hasSize(1);
-            assertThat(cart.getCartProducts().get(0).getQuantity()).isEqualTo(updateCartProductQuantity);
+            assertThat(cart.getCartProducts().get(0).getQuantity()).isEqualTo(
+                updateCartProductQuantity);
         }
     }
 }

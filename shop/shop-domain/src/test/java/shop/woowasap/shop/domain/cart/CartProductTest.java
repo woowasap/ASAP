@@ -5,10 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchException;
 import static shop.woowasap.shop.domain.support.CartFixture.getCartProductBuilder;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.shop.domain.exception.InvalidCartProductQuantityException;
+import shop.woowasap.shop.domain.support.CartFixture;
 
 @DisplayName("CartProduct 테스트")
 class CartProductTest {
