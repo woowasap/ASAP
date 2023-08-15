@@ -11,6 +11,8 @@ import shop.woowasap.accept.support.api.OrderApiSupporter;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.OrderValidator;
+import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
+import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.mock.dto.ProductsResponse;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
@@ -85,6 +87,47 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         // then
         OrderValidator.assertOrders(result, expected);
+    }
+
+    @Test
+    @DisplayName("특정 구매내역 조회 API는 사용자의 구매내역을 응답한다.")
+    void returnDetailOrders() {
+        // given
+        final String token = "TOKEN";
+        final ProductsResponse.Product product = getRandomProduct();
+        final long quantity = 10;
+        final OrderProductQuantityRequest orderProductQuantityRequest = new OrderProductQuantityRequest(
+            quantity);
+        OrderApiSupporter.orderProduct(product.productId(), orderProductQuantityRequest, token);
+
+        final OrdersResponse ordersResponse = OrderApiSupporter.getAllProducts(token)
+            .as(OrdersResponse.class);
+        final long orderId = ordersResponse.orders().get(0).orderId();
+
+        final DetailOrderProductResponse expectedDetailOrderProductResponse =
+            new DetailOrderProductResponse(product.productId(), product.name(), product.price(), quantity);
+        final DetailOrderResponse expectedDetailOrderResponse = new DetailOrderResponse(orderId, List.of(expectedDetailOrderProductResponse),
+            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(), LocalDateTime.now());
+
+        // when
+        final ExtractableResponse<Response> result = OrderApiSupporter.getOrderByOrderId(orderId, token);
+
+        // then
+        OrderValidator.assertOrder(result, expectedDetailOrderResponse);
+    }
+
+    @Test
+    @DisplayName("특정 구매내역 조회 API는 orderId에 해당하는 Order를 찾을 수 없는경우 400 Bad Request 를 반환한다.")
+    void returnBadRequestWhenCannotFindMatchedOrderByOrderId() {
+        // given
+        final String token = "TOKEN";
+        final long invalidOrderId = 999L;
+
+        // when
+        final ExtractableResponse<Response> result = OrderApiSupporter.getOrderByOrderId(invalidOrderId, token);
+
+        // then
+        HttpValidator.assertBadRequest(result);
     }
 
     private ProductsResponse.Product getRandomProduct() {
