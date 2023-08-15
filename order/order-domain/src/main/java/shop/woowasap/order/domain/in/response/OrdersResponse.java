@@ -1,4 +1,4 @@
-package shop.woowasap.mock.dto;
+package shop.woowasap.order.domain.in.response;
 
 import java.util.List;
 

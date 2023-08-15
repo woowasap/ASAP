@@ -1,9 +1,14 @@
 package shop.woowasap.order.service.mapper;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.OrderProduct;
+import shop.woowasap.order.domain.in.response.OrderProductResponse;
+import shop.woowasap.order.domain.in.response.OrderResponse;
+import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.shop.domain.product.Product;
 
 public final class OrderMapper {
@@ -12,19 +17,37 @@ public final class OrderMapper {
         throw new UnsupportedOperationException("Cannot invoke constructor \"OrderMapper()\"");
     }
 
-    public static Order toDomain(final IdGenerator idGenerator, final long userId, final Product product) {
+    public static Order toDomain(final IdGenerator idGenerator, final long userId,
+        final Product product) {
         return Order.builder()
-                .id(idGenerator.generate())
-                .userId(userId)
-                .orderProducts(List.of(OrderProduct
-                        .builder()
-                        .productId(product.getId())
-                        .price(product.getPrice().getValue().toString())
-                        .quantity(product.getQuantity().getValue())
-                        .startTime(product.getStartTime())
-                        .endTime(product.getEndTime())
-                        .build()))
-                .build();
+            .id(idGenerator.generate())
+            .userId(userId)
+            .orderProducts(List.of(OrderProduct
+                .builder()
+                .productId(product.getId())
+                .price(product.getPrice().getValue().toString())
+                .quantity(product.getQuantity().getValue())
+                .startTime(product.getStartTime())
+                .endTime(product.getEndTime())
+                .build()))
+            .build();
     }
 
+    public static OrderProductResponse toOrderProductResponse(Product product) {
+        return new OrderProductResponse(product.getId(), product.getName().getValue());
+    }
+
+    public static OrderResponse toOrderResponse(Order order,
+        List<OrderProductResponse> orderProductResponses, String locale) {
+
+        return new OrderResponse(order.getId(), orderProductResponses,
+            order.getTotalPrice().toString(), order.getOrderProducts().size(),
+            LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
+    }
+
+    public static OrdersResponse toOrdersResponse(final List<OrderResponse> orderResponses,
+        final int page, final int totalPage) {
+
+        return new OrdersResponse(orderResponses, page, totalPage);
+    }
 }
