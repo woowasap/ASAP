@@ -54,4 +54,23 @@ class CartProductTest {
             assertThat(exception).isInstanceOf(InvalidCartProductQuantityException.class);
         }
     }
+
+    @Nested
+    @DisplayName("장바구니 상품의 수량을 수정 시")
+    class updateCartProductQuantity {
+
+        @Test
+        @DisplayName("상품의 수량이 변경된 상품이 생성된다.")
+        void update() {
+            // given
+            final CartProductQuantity updateProductQuantity = new CartProductQuantity(20L);
+            final CartProduct cartProduct = getCartProductBuilder().build();
+
+            // when
+            final CartProduct updateCartProduct = cartProduct.updateQuantity(updateProductQuantity);
+
+            // then
+            assertThat(updateCartProduct.getQuantity()).isEqualTo(updateProductQuantity);
+        }
+    }
 }

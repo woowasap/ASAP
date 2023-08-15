@@ -2,14 +2,15 @@ package shop.woowasap.shop.domain.cart;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.catchException;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 import shop.woowasap.shop.domain.support.CartFixture;
-import shop.woowasap.shop.domain.support.DomainFixture;
 
 @DisplayName("Cart 테스트")
 class CartTest {
@@ -35,10 +36,7 @@ class CartTest {
         @DisplayName("해당 상품이 없는 경우 장바구니에 추가된다.")
         void addCartProductWithNotExists() {
             // given
-            final CartProduct cartProduct = CartProduct.builder()
-                .product(DomainFixture.getDefaultBuilder().build())
-                .quantity(new CartProductQuantity(10L))
-                .build();
+            final CartProduct cartProduct = CartFixture.getCartProductBuilder().build();
             final Cart cart = CartFixture.getEmptyCartBuilder().build();
 
             // when
@@ -66,6 +64,45 @@ class CartTest {
             assertThat(cart.getCartProducts()).hasSize(1);
             assertThat(cart.getCartProducts().get(0).getQuantity()).isEqualTo(
                 new CartProductQuantity(quantity + quantity));
+        }
+    }
+
+    @Nested
+    @DisplayName("장바구니에 상품의 수량을 수정하는 경우")
+    class updateCartProductQuantity {
+
+        @Test
+        @DisplayName("해당 상품이 없는 경우 예외를 던진다.")
+        void updateCartProductQuantityWithNotExistsCartProductThrowException() {
+            // given
+            final CartProduct cartProduct = CartFixture.getCartProductBuilder().build();
+            final CartProductQuantity updateCartProductQuantity = new CartProductQuantity(20L);
+            final Cart cart = CartFixture.getEmptyCartBuilder().build();
+
+            // when
+            final Exception exception = catchException(
+                () -> cart.updateCartProduct(cartProduct, updateCartProductQuantity));
+
+            // then
+            assertThat(exception).isInstanceOf(NotExistsCartProductException.class);
+        }
+
+        @Test
+        @DisplayName("정상적으로 개수가 변경된다.")
+        void updateCartProductQuantityWithExists() {
+            // given
+            final CartProduct cartProduct = CartFixture.getCartProductBuilder().build();
+            final List<CartProduct> cartProducts = new ArrayList<>();
+            cartProducts.add(cartProduct);
+            final CartProductQuantity updateCartProductQuantity = new CartProductQuantity(20L);
+            final Cart cart = CartFixture.getEmptyCartBuilder().cartProducts(cartProducts).build();
+
+            // when
+            cart.updateCartProduct(cartProduct, updateCartProductQuantity);
+
+            // then
+            assertThat(cart.getCartProducts()).hasSize(1);
+            assertThat(cart.getCartProducts().get(0).getQuantity()).isEqualTo(updateCartProductQuantity);
         }
     }
 }

@@ -24,4 +24,11 @@ public class CartProduct {
             .quantity(this.quantity.addQuantity(quantity))
             .build();
     }
+
+    public CartProduct updateQuantity(final CartProductQuantity quantity) {
+        return CartProduct.builder()
+            .product(this.product)
+            .quantity(quantity)
+            .build();
+    }
 }
