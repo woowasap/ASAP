@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
-import shop.woowasap.mock.dto.OrdersResponse;
+import shop.woowasap.order.domain.in.response.OrdersResponse;
 
 public final class OrderValidator {
 

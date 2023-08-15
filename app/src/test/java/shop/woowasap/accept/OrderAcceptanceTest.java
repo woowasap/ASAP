@@ -10,9 +10,9 @@ import shop.woowasap.accept.support.api.OrderApiSupporter;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.OrderValidator;
-import shop.woowasap.mock.dto.OrderProductResponse;
-import shop.woowasap.mock.dto.OrderResponse;
-import shop.woowasap.mock.dto.OrdersResponse;
+import shop.woowasap.order.domain.in.response.OrderProductResponse;
+import shop.woowasap.order.domain.in.response.OrderResponse;
+import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.mock.dto.ProductsResponse;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 
