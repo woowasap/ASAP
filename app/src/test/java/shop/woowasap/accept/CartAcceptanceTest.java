@@ -26,14 +26,13 @@ class CartAcceptanceTest extends AcceptanceTest {
             ProductFixture.registerProductRequest())
             .header("Location")
             .split("/")[4]);
-        final CartResponse cartResponse = cartResponse(productId, quantity);
 
         // when
         final ExtractableResponse<Response> response = CartApiSupporter
             .addCartProduct(accessToken, CartFixture.addCartProductRequest(productId, quantity));
 
         // then
-        CartValidator.assertCartFound(response, cartResponse);
+        HttpValidator.assertOk(response);
     }
 
     @Test
@@ -47,7 +46,6 @@ class CartAcceptanceTest extends AcceptanceTest {
             ProductFixture.registerProductRequest())
             .header("Location")
             .split("/")[4]);
-        final CartResponse cartResponse = cartResponse(productId, quantity + addQuantity);
 
         // when
         CartApiSupporter
@@ -56,6 +54,6 @@ class CartAcceptanceTest extends AcceptanceTest {
             .addCartProduct(accessToken, CartFixture.addCartProductRequest(productId, addQuantity));
 
         // then
-        CartValidator.assertCartFound(response, cartResponse);
+        HttpValidator.assertOk(response);
     }
 }

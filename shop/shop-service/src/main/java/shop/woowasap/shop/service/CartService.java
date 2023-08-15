@@ -38,7 +38,7 @@ public class CartService implements CartUseCase {
     public void addCartProduct(final long userId,
         final AddCartProductRequest addCartProductRequest) {
         if (!cartRepository.existCartByUserId(userId)) {
-            cartRepository.createEmptyCart(idGenerator.generate(), userId);
+            cartRepository.createEmptyCart(userId, idGenerator.generate());
         }
 
         final Cart cart = cartRepository.getByUserId(userId);
