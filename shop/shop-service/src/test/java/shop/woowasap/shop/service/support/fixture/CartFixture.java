@@ -10,7 +10,7 @@ import shop.woowasap.shop.domain.cart.CartProduct;
 import shop.woowasap.shop.domain.cart.CartProductQuantity;
 import shop.woowasap.shop.domain.product.Product;
 
-public class CartFixture {
+public final class CartFixture {
 
     private static final long CART_ID = 1L;
     private static final long PRODUCT_ID = 1L;
@@ -20,7 +20,7 @@ public class CartFixture {
     }
 
     public static CartProduct cartProduct() {
-        Product product = productBuilder(PRODUCT_ID).build();
+        final Product product = productBuilder(PRODUCT_ID).build();
 
         return CartProduct.builder()
             .product(product)
@@ -28,7 +28,7 @@ public class CartFixture {
             .build();
     }
 
-    public static Cart Cart(long userId, List<CartProduct> cartProducts) {
+    public static Cart Cart(final long userId, final List<CartProduct> cartProducts) {
         return Cart.builder()
             .id(CART_ID)
             .cartProducts(cartProducts)
@@ -36,7 +36,7 @@ public class CartFixture {
             .build();
     }
 
-    public static CartResponse cartResponse(List<CartProduct> cartProducts) {
+    public static CartResponse cartResponse(final List<CartProduct> cartProducts) {
         final List<CartProductResponse> cartProductResponses = cartProducts.stream()
             .map(CartFixture::cartProductResponse)
             .toList();
@@ -44,7 +44,7 @@ public class CartFixture {
         return new CartResponse(CART_ID, cartProductResponses);
     }
 
-    private static CartProductResponse cartProductResponse(CartProduct cartProduct) {
+    private static CartProductResponse cartProductResponse(final CartProduct cartProduct) {
         return new CartProductResponse(
             cartProduct.getProduct().getId(),
             cartProduct.getProduct().getName().getValue(),
