@@ -220,6 +220,7 @@ class CartServiceTest {
                 Optional.of(product));
             when(cartRepository.createEmptyCart(eq(userId), anyLong())).thenReturn(emptyCart);
             when(cartRepository.getByUserId(userId)).thenReturn(emptyCart);
+
             // when
             final Exception exception = catchException(
                 () -> cartService.deleteCartProduct(userId, productId));
