@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Cart {
+public final class Cart {
 
     private final Long id;
     private final Long userId;

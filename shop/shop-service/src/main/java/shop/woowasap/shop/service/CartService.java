@@ -1,5 +1,7 @@
 package shop.woowasap.shop.service;
 
+import static shop.woowasap.shop.service.mapper.CartMapper.toCartResponse;
+
 import java.text.MessageFormat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,14 +54,18 @@ public class CartService implements CartUseCase {
     }
 
     @Override
-    @Transactional
     public void deleteCartProduct(final long userId, final long productId) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public CartResponse getCartByUserId(final long userId) {
-        return null;
+        if (!cartRepository.existCartByUserId(userId)) {
+            final Cart emptyCart = cartRepository.createEmptyCart(userId, idGenerator.generate());
+            cartRepository.persist(emptyCart);
+        }
+
+        return toCartResponse(cartRepository.getByUserId(userId));
     }
 
     private Product getByProductId(final Long productId) {
