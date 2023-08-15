@@ -40,7 +40,7 @@ public class CartService implements CartUseCase {
 
     @Override
     public CartResponse getCartByUserId(final long userId) {
-        if (cartRepository.existCartByUserId(userId)) {
+        if (!cartRepository.existCartByUserId(userId)) {
             final Cart emptyCart = cartRepository.createEmptyCart(userId, idGenerator.generate());
             cartRepository.persist(emptyCart);
         }

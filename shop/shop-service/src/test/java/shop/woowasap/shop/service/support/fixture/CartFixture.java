@@ -36,6 +36,14 @@ public final class CartFixture {
             .build();
     }
 
+    public static Cart emptyCart(final long userId) {
+        return Cart.builder()
+            .id(CART_ID)
+            .cartProducts(List.of())
+            .userId(userId)
+            .build();
+    }
+
     public static CartResponse cartResponse(final List<CartProduct> cartProducts) {
         final List<CartProductResponse> cartProductResponses = cartProducts.stream()
             .map(CartFixture::cartProductResponse)

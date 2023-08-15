@@ -12,7 +12,7 @@ import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.spi.CartRepository;
 
 @Repository
-public final class MockCartRepository implements CartRepository {
+public class MockCartRepository implements CartRepository {
 
     public static final String NAME = "productName";
     public static final String DESCRIPTION = "productDescription";
