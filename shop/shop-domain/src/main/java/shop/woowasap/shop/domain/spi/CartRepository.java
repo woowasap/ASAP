@@ -6,6 +6,8 @@ public interface CartRepository {
 
     Cart createEmptyCart(final Cart cart);
 
+    Cart createEmptyCart(final long userId, final long cartId);
+
     Cart persist(final Cart cart);
 
     boolean existCartByUserId(final long userId);
