@@ -6,11 +6,13 @@ import java.util.List;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.OrderProduct;
+import shop.woowasap.order.domain.in.request.OrderProductRequest;
 import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
 import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
+import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.product.Product;
 
 public final class OrderMapper {
@@ -19,19 +21,35 @@ public final class OrderMapper {
         throw new UnsupportedOperationException("Cannot invoke constructor \"OrderMapper()\"");
     }
 
-    public static Order toDomain(final IdGenerator idGenerator, final long userId,
+    public static Order toDomain(final IdGenerator idGenerator, final OrderProductRequest orderProductRequest,
         final Product product) {
         return Order.builder()
             .id(idGenerator.generate())
+            .userId(orderProductRequest.userId())
+            .orderProducts(List.of(toOrderProduct(product, orderProductRequest.quantity())))
+            .build();
+    }
+
+    public static Order toDomain(final IdGenerator idGenerator, final long userId, final Cart cart) {
+        final List<OrderProduct> orderProducts = cart.getCartProducts()
+            .stream()
+            .map(cartProduct -> toOrderProduct(cartProduct.getProduct(), cartProduct.getQuantity().getValue()))
+            .toList();
+
+        return Order.builder()
+            .id(idGenerator.generate())
             .userId(userId)
-            .orderProducts(List.of(OrderProduct
-                .builder()
-                .productId(product.getId())
-                .price(product.getPrice().getValue().toString())
-                .quantity(product.getQuantity().getValue())
-                .startTime(product.getStartTime())
-                .endTime(product.getEndTime())
-                .build()))
+            .orderProducts(orderProducts)
+            .build();
+    }
+
+    private static OrderProduct toOrderProduct(final Product product, final long quantity) {
+        return OrderProduct.builder()
+            .productId(product.getId())
+            .price(product.getPrice().getValue().toString())
+            .quantity(quantity)
+            .startTime(product.getStartTime())
+            .endTime(product.getEndTime())
             .build();
     }
 

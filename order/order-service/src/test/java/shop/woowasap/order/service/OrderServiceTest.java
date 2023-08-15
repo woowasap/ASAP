@@ -18,6 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.OrderProduct;
+import shop.woowasap.order.domain.exception.DoesNotFindCartException;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.exception.DoesNotFindProductException;
 import shop.woowasap.order.domain.exception.DoesNotOrderedException;
@@ -28,11 +29,15 @@ import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.Payment;
 import shop.woowasap.order.domain.out.response.OrdersPaginationResponse;
+import shop.woowasap.order.service.support.fixture.CartFixture;
 import shop.woowasap.order.service.support.fixture.OrderDtoFixture;
 import shop.woowasap.order.service.support.fixture.OrderFixture;
 import shop.woowasap.order.service.support.fixture.OrderProductFixture;
 import shop.woowasap.order.service.support.fixture.ProductFixture;
+import shop.woowasap.shop.domain.api.cart.CartConnector;
 import shop.woowasap.shop.domain.api.product.ProductConnector;
+import shop.woowasap.shop.domain.cart.Cart;
+import shop.woowasap.shop.domain.cart.CartProduct;
 import shop.woowasap.shop.domain.product.Product;
 
 @DisplayName("OrderService 클래스")
@@ -50,14 +55,17 @@ class OrderServiceTest {
     private ProductConnector productConnector;
 
     @MockBean
+    private CartConnector cartConnector;
+
+    @MockBean
     private OrderRepository orderRepository;
 
     @MockBean
     private Payment payment;
 
     @Nested
-    @DisplayName("order 메소드는")
-    class orderMethod {
+    @DisplayName("orderProduct 메소드는")
+    class orderProductMethod {
 
         @Test
         @DisplayName("userId, productId, OrderProductRequest 를 받아 주문을 한다.")
@@ -126,6 +134,79 @@ class OrderServiceTest {
 
             // then
             assertThat(exception).isInstanceOf(DoesNotFindProductException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("orderCartByCartIdAndUserId 메소드는")
+    class orderCartByCartIdAndUserIdMethod {
+
+        @Test
+        @DisplayName("cartId와 userId를 받아, 주문에 성공하면, cartId를 반환한다.")
+        void returnCartIdWhenOrderSuccess() {
+            // given
+            final long cartId = 2L;
+            final long userId = 1L;
+            final long orderId = 3L;
+
+            final CartProduct cartProduct = CartFixture.getCartProductBuilder().build();
+            final Cart cart = CartFixture.getEmptyCartBuilder()
+                .id(cartId)
+                .userId(userId)
+                .cartProducts(List.of(cartProduct))
+                .build();
+
+            when(cartConnector.findByCartIdAndUserId(cartId, userId)).thenReturn(Optional.of(cart));
+            when(idGenerator.generate()).thenReturn(orderId);
+            when(payment.pay(userId)).thenReturn(true);
+
+            // when
+            final long result = orderUseCase.orderCartByCartIdAndUserId(cartId, userId);
+
+            // then
+            assertThat(result).isEqualTo(orderId);
+        }
+
+        @Test
+        @DisplayName("cartId와 userId에 해당하는 Cart를 찾을 수 없으면, DoesNotFindCartException을 던진다.")
+        void throwDoesNotFindCartExceptionWhenCannotFindMatchedCart() {
+            // given
+            final long cartId = 2L;
+            final long userId = 1L;
+
+            when(cartConnector.findByCartIdAndUserId(cartId, userId)).thenReturn(Optional.empty());
+
+            // when
+            final Exception result = catchException(() -> orderUseCase.orderCartByCartIdAndUserId(cartId, userId));
+
+            // then
+            assertThat(result).isInstanceOf(DoesNotFindCartException.class);
+        }
+
+        @Test
+        @DisplayName("주문을 실패하면, DoesNotOrderedException을 던진다.")
+        void throwDoesNotOrderedExceptionWhenFailOrder() {
+            // given
+            final long cartId = 2L;
+            final long userId = 1L;
+            final long orderId = 3L;
+
+            final CartProduct cartProduct = CartFixture.getCartProductBuilder().build();
+            final Cart cart = CartFixture.getEmptyCartBuilder()
+                .id(cartId)
+                .userId(userId)
+                .cartProducts(List.of(cartProduct))
+                .build();
+
+            when(cartConnector.findByCartIdAndUserId(cartId, userId)).thenReturn(Optional.of(cart));
+            when(idGenerator.generate()).thenReturn(orderId);
+            when(payment.pay(userId)).thenReturn(false);
+
+            // when
+            final Exception result = catchException(() -> orderUseCase.orderCartByCartIdAndUserId(cartId, userId));
+
+            // then
+            assertThat(result).isInstanceOf(DoesNotOrderedException.class);
         }
     }
 
