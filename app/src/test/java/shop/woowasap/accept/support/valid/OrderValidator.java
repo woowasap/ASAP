@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
+import shop.woowasap.mock.dto.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 
 public final class OrderValidator {
@@ -26,6 +27,18 @@ public final class OrderValidator {
 
         assertThat(ordersResult).usingRecursiveComparison()
             .ignoringFields("orders.createdAt", "orders.orderId")
+            .isEqualTo(expected);
+    }
+
+    public static void assertOrder(ExtractableResponse<Response> result,
+        DetailOrderResponse expected) {
+
+        HttpValidator.assertOk(result);
+
+        DetailOrderResponse detailOrderResult = result.as(DetailOrderResponse.class);
+
+        assertThat(detailOrderResult).usingRecursiveComparison()
+            .ignoringFields("createdAt")
             .isEqualTo(expected);
     }
 }
