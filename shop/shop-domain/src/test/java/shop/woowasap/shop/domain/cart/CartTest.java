@@ -72,7 +72,7 @@ class CartTest {
     class updateCartProductQuantity {
 
         @Test
-        @DisplayName("해당 상품이 없는 경우 예외를 던진다.")
+        @DisplayName("해당 상품이 없으면, 예외를 던진다.")
         void updateCartProductQuantityWithNotExistsCartProductThrowException() {
             // given
             final CartProduct cartProduct = CartFixture.getCartProductBuilder().build();
