@@ -22,6 +22,9 @@ import shop.woowasap.auth.domain.in.response.UserResponse;
 @RequiredArgsConstructor
 public class JwtTokenProvider implements TokenProvider {
 
+    private static final String USER_ID = "userId";
+    private static final String USER_TYPE = "userType";
+
     private final Clock clock;
 
     @Value("${jwt.secret.expiration}")
@@ -43,8 +46,8 @@ public class JwtTokenProvider implements TokenProvider {
     public String createToken(final UserResponse userResponse) {
 
         final Map<String, Object> claims = Map.of(
-            "userId", userResponse.id(),
-            "userType", userResponse.userType()
+            USER_ID, userResponse.id(),
+            USER_TYPE, userResponse.userType()
         );
         final Instant now = Instant.now(clock);
 
