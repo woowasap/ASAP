@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
-import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
 import shop.woowasap.shop.domain.api.product.response.ProductResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
 import shop.woowasap.shop.domain.product.Product;
 
 public class ProductFixture {
@@ -21,7 +21,8 @@ public class ProductFixture {
     public static final LocalDateTime END_TIME = LocalDateTime.of(2023, 8, 5, 14, 30);
     public static final int PAGE = 1;
     public static final int TOTAL_PAGE = 1;
-    public static final LocalDateTime INFINITE_START_TIME = LocalDateTime.of(99_999, 12, 31, 23, 59);
+    public static final LocalDateTime INFINITE_START_TIME = LocalDateTime.of(99_999, 12, 31, 23,
+        59);
     public static final LocalDateTime INFINITE_END_TIME = LocalDateTime.of(999_999, 12, 31, 23, 59);
 
     public static Product.ProductBuilder productBuilder(final Long id) {
@@ -47,13 +48,13 @@ public class ProductFixture {
             .build();
     }
 
-    public static List<ProductResponse> productsOfProductsResponse(List<Product> products) {
+    public static List<ProductResponse> productsOfProductsResponse(final List<Product> products) {
         return products.stream()
             .map(ProductFixture::productOfProductsResponse)
             .collect(Collectors.toList());
     }
 
-    private static ProductResponse productOfProductsResponse(Product product) {
+    private static ProductResponse productOfProductsResponse(final Product product) {
         return new ProductResponse(
             product.getId(),
             product.getName().getValue(),
