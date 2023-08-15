@@ -152,7 +152,7 @@ class OrderServiceTest {
                 Optional.of(product));
 
             final OrdersResponse expected = OrderDtoFixture.ordersResponse(List.of(defaultOrder), "Asia/Seoul",
-                page, size, product.getName().getValue());
+                page, size, product.getName().getValue(), product.getPrice().getValue().toString());
 
             // when
             final OrdersResponse result = orderUseCase.getOrderByUserId(userId, page, size);
