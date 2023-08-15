@@ -31,4 +31,15 @@ public final class OrderApiSupporter {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> getAllProducts(final String token) {
+
+        return given().log().all()
+            .contentType(JSON)
+            .accept(JSON)
+            .header(HttpHeaders.AUTHORIZATION, token)
+            .when().log().all()
+            .get(API_VERSION + "/orders")
+            .then().log().all()
+            .extract();
+    }
 }
