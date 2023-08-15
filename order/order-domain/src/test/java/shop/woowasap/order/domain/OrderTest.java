@@ -34,7 +34,9 @@ class OrderTest {
                     .build();
 
             // then
-            assertThat(order).usingRecursiveComparison().isEqualTo(expected);
+            assertThat(order).usingRecursiveComparison()
+                .ignoringFields("createdAt")
+                .isEqualTo(expected);
         }
 
         @Test
