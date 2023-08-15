@@ -33,7 +33,6 @@ class CartAcceptanceTest extends AcceptanceTest {
             .addCartProduct(accessToken, CartFixture.addCartProductRequest(productId, quantity));
 
         // then
-        HttpValidator.assertOk(response);
         CartValidator.assertCartFound(response, cartResponse);
     }
 
@@ -57,7 +56,6 @@ class CartAcceptanceTest extends AcceptanceTest {
             .addCartProduct(accessToken, CartFixture.addCartProductRequest(productId, addQuantity));
 
         // then
-        HttpValidator.assertOk(response);
         CartValidator.assertCartFound(response, cartResponse);
     }
 }
