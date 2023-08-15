@@ -4,10 +4,12 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 import shop.woowasap.order.domain.exception.DoesNotFindProductException;
@@ -18,6 +20,7 @@ import shop.woowasap.order.domain.exception.InvalidProductSaleTimeException;
 import shop.woowasap.order.domain.exception.InvalidQuantityException;
 import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
+import shop.woowasap.order.domain.in.response.OrdersResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,6 +42,14 @@ public class OrderController {
 
         return ResponseEntity.created(URI.create("/v1/orders/" + orderId))
             .build();
+    }
+
+    @GetMapping
+    public ResponseEntity<OrdersResponse> getOrderByUserId(
+        @RequestParam(defaultValue = "1") final int page,
+        @RequestParam(defaultValue = "20") final int size) {
+
+        return ResponseEntity.ok(orderUseCase.getOrderByUserId(MOCK_USER_ID, page, size));
     }
 
     @ExceptionHandler({DoesNotFindProductException.class,

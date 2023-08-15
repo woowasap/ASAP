@@ -2,12 +2,20 @@ package shop.woowasap.accept;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.OrderApiSupporter;
+import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.OrderValidator;
+import shop.woowasap.mock.dto.ProductsResponse;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
+import shop.woowasap.order.domain.in.response.OrderProductResponse;
+import shop.woowasap.order.domain.in.response.OrderResponse;
+import shop.woowasap.order.domain.in.response.OrdersResponse;
 
 @DisplayName("Order 인수테스트")
 class OrderAcceptanceTest extends AcceptanceTest {
@@ -18,13 +26,15 @@ class OrderAcceptanceTest extends AcceptanceTest {
         // given
         final String token = "TOKEN";
 
-        final long productId = 1L;
+        final long productId = getRandomProduct().productId();
         final int quantity = 2;
-        final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(quantity);
+        final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(
+            quantity);
 
         // when
-        final ExtractableResponse<Response> result = OrderApiSupporter.orderProduct(productId, orderProductRequest,
-                token);
+        final ExtractableResponse<Response> result = OrderApiSupporter.orderProduct(productId,
+            orderProductRequest,
+            token);
 
         // then
         OrderValidator.assertOrdered(result);
@@ -38,13 +48,47 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         final long notExistProductId = 123L;
         final int quantity = 2;
-        final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(quantity);
+        final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(
+            quantity);
 
         // when
-        final ExtractableResponse<Response> result = OrderApiSupporter.orderProduct(notExistProductId,
-                orderProductRequest, token);
+        final ExtractableResponse<Response> result = OrderApiSupporter.orderProduct(
+            notExistProductId,
+            orderProductRequest, token);
 
         // then
         HttpValidator.assertBadRequest(result);
+    }
+
+    @Test
+    @DisplayName("구매내역 전체 조회 API는 사용자의 구매내역을 응답한다")
+    void returnOrders() {
+        // given
+        final String token = "TOKEN";
+        final ProductsResponse.Product product = getRandomProduct();
+        final long quantity = 10;
+        final OrderProductQuantityRequest orderProductQuantityRequest = new OrderProductQuantityRequest(
+            quantity);
+
+        OrderApiSupporter.orderProduct(product.productId(), orderProductQuantityRequest, token);
+
+        final OrderProductResponse expectedOrderProductResponse = new OrderProductResponse(
+            product.productId(), product.name());
+        final OrderResponse expectedOrderResponse = new OrderResponse(1L,
+            List.of(expectedOrderProductResponse),
+            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(),
+            1, LocalDateTime.now());
+        final OrdersResponse expected = new OrdersResponse(List.of(expectedOrderResponse), 1, 20);
+
+        // when
+        final ExtractableResponse<Response> result = OrderApiSupporter.getAllProducts(token);
+
+        // then
+        OrderValidator.assertOrders(result, expected);
+    }
+
+    private ProductsResponse.Product getRandomProduct() {
+        return ShopApiSupporter.getAllProducts().as(ProductsResponse.class)
+            .products().get(0);
     }
 }
