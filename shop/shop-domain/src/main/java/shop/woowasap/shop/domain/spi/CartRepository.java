@@ -4,7 +4,9 @@ import shop.woowasap.shop.domain.cart.Cart;
 
 public interface CartRepository {
 
-    Cart createEmptyCart(final Long cartId, final Long userId);
+    Cart createEmptyCart(final Cart cart);
+
+    Cart createEmptyCart(final long userId, final long cartId);
 
     Cart persist(final Cart cart);
 
