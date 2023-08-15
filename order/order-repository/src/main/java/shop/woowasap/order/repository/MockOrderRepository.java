@@ -29,7 +29,7 @@ public class MockOrderRepository implements OrderRepository {
 
     @Override
     public Optional<Order> findOrderByOrderIdAndUserId(final long orderId, final long userId) {
-        Order order = userIdPerOrderRepository.get(userId);
+        final Order order = userIdPerOrderRepository.get(userId);
         if (order == null || order.getId() != orderId) {
             return Optional.empty();
         }
