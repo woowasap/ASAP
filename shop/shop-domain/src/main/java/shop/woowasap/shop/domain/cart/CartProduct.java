@@ -24,4 +24,8 @@ public class CartProduct {
             .quantity(this.quantity.addQuantity(quantity))
             .build();
     }
+
+    public boolean isSameProduct(final Product product) {
+        return this.product.equals(product);
+    }
 }

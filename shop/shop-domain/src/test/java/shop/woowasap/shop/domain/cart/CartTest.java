@@ -2,14 +2,19 @@ package shop.woowasap.shop.domain.cart;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.catchException;
+import static shop.woowasap.shop.domain.support.CartFixture.getCartProductBuilder;
+import static shop.woowasap.shop.domain.support.CartFixture.getEmptyCartBuilder;
+import static shop.woowasap.shop.domain.support.DomainFixture.getDefaultBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import shop.woowasap.shop.domain.exception.CannotFindProductInCartException;
+import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.support.CartFixture;
-import shop.woowasap.shop.domain.support.DomainFixture;
 
 @DisplayName("Cart 테스트")
 class CartTest {
@@ -36,7 +41,7 @@ class CartTest {
         void addCartProductWithNotExists() {
             // given
             final CartProduct cartProduct = CartProduct.builder()
-                .product(DomainFixture.getDefaultBuilder().build())
+                .product(getDefaultBuilder().build())
                 .quantity(new CartProductQuantity(10L))
                 .build();
             final Cart cart = CartFixture.getEmptyCartBuilder().build();
@@ -53,7 +58,7 @@ class CartTest {
         void addCartProductWithExists() {
             // given
             final long quantity = 10L;
-            final CartProduct cartProduct = CartFixture.getCartProductBuilder().build();
+            final CartProduct cartProduct = getCartProductBuilder().build();
             final List<CartProduct> cartProducts = new ArrayList<>();
             cartProducts.add(cartProduct);
             final Cart cart = CartFixture.getEmptyCartBuilder()
@@ -66,6 +71,42 @@ class CartTest {
             assertThat(cart.getCartProducts()).hasSize(1);
             assertThat(cart.getCartProducts().get(0).getQuantity()).isEqualTo(
                 new CartProductQuantity(quantity + quantity));
+        }
+    }
+
+    @Nested
+    @DisplayName("deleteProduct 메서드는")
+    class DeleteProduct_Method {
+
+        @Test
+        @DisplayName("cart 에 있는 product 를 제거한다.")
+        void deleteProductInCart() {
+            // given
+            final CartProduct deleteCartProduct = getCartProductBuilder().build();
+            final List<CartProduct> cartProducts = new ArrayList<>(List.of(deleteCartProduct));
+            final Cart cart = getEmptyCartBuilder().cartProducts(cartProducts).build();
+
+            // when
+            cart.deleteProduct(deleteCartProduct.getProduct());
+
+            // then
+            assertThat(cart.getCartProducts())
+                .noneMatch(cartProduct -> cartProduct
+                    .isSameProduct(deleteCartProduct.getProduct()));
+        }
+
+        @Test
+        @DisplayName("product 가 Cart 에 존재하지 않으면 CannotFindProductInCartException 을 던진다.")
+        void throwCannotFindProductInCartExceptionWithNotExistInCart() {
+            // given
+            final Product product = getDefaultBuilder().build();
+            final Cart cart = getEmptyCartBuilder().build();
+
+            // when
+            final Exception exception = catchException(() -> cart.deleteProduct(product));
+
+            // then
+            assertThat(exception).isInstanceOf(CannotFindProductInCartException.class);
         }
     }
 }
