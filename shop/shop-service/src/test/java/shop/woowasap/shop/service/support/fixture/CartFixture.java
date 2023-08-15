@@ -3,6 +3,7 @@ package shop.woowasap.shop.service.support.fixture;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.productBuilder;
 
 import java.util.List;
+import shop.woowasap.shop.domain.api.cart.request.UpdateCartProductRequest;
 import shop.woowasap.shop.domain.api.cart.response.CartProductResponse;
 import shop.woowasap.shop.domain.api.cart.response.CartResponse;
 import java.util.ArrayList;
@@ -46,6 +47,10 @@ public final class CartFixture {
 
     public static AddCartProductRequest addCartProductRequest(final Long productId, final Long quantity) {
         return new AddCartProductRequest(productId, quantity);
+    }
+
+    public static UpdateCartProductRequest updateCartProductRequest(final Long productId, final Long quantity) {
+        return new UpdateCartProductRequest(productId, quantity);
     }
 
     public static CartProduct cartProduct() {

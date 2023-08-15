@@ -1,12 +1,12 @@
 package shop.woowasap.shop.domain.api.cart;
 
 import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.api.cart.request.UpdateCartProductRequest;
 import shop.woowasap.shop.domain.api.cart.response.CartResponse;
-import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
 
 public interface CartUseCase {
 
-    void updateCartProduct(final long userId, final UpdateProductRequest updateProductRequest);
+    void updateCartProduct(final long userId, final UpdateCartProductRequest updateCartProductRequest);
 
     void addCartProduct(final long userId, final AddCartProductRequest addCartProductRequest);
 
