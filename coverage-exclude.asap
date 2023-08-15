@@ -5,7 +5,6 @@ exclude shop/woowasap/*/domain/api/*/response/*
 exclude shop/woowasap/*/domain/spi/request/*
 exclude shop/woowasap/*/domain/spi/response/*
 exclude shop/woowasap/*/domain/exception/*
-exclude shop/woowasap/shop/domain/cart/*
 exclude shop/woowasap/*/controller/*
 exclude shop/woowasap/*/repository/*
 exclude shop/woowasap/*/app/api/request/*
@@ -18,3 +17,4 @@ exclude shop/woowasap/*/domain/*/response/*
 exclude shop/woowasap/auth/service/configuration/*
 exclude shop/woowasap/auth/infra/*/*
 exclude shop/woowasap/auth/infra/*
+exclude shop/woowasap/shop/service/CartService
