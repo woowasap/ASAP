@@ -1,5 +1,6 @@
 package shop.woowasap.shop.repository;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -26,8 +27,10 @@ public class MockCartRepository implements CartRepository {
 
     private static final String OFFSET_ID = "+09:00";
 
-    public static final LocalDateTime START_TIME = LocalDateTime.of(2023, 8, 5, 12, 30);
-    public static final LocalDateTime END_TIME = LocalDateTime.of(2023, 8, 5, 14, 30);
+    public static final LocalDateTime START_TIME = LocalDateTime.ofInstant(Instant.now().minusSeconds(100000),
+        ZoneOffset.UTC);
+    public static final LocalDateTime END_TIME = LocalDateTime.ofInstant(Instant.now().plusSeconds(100000),
+        ZoneOffset.UTC);
 
     @Override
     public Cart createEmptyCart(final long userId, final long cartId) {

@@ -56,4 +56,16 @@ public final class OrderApiSupporter {
             .then().log().all()
             .extract();
     }
+
+    public static ExtractableResponse<Response> orderCart(long cartId, String token) {
+
+        return given().log().all()
+            .contentType(JSON)
+            .accept(JSON)
+            .header(HttpHeaders.AUTHORIZATION, token)
+            .when().log().all()
+            .post(API_VERSION + "/orders/carts/{cart-id}", cartId)
+            .then().log().all()
+            .extract();
+    }
 }

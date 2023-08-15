@@ -7,17 +7,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import shop.woowasap.accept.support.api.CartApiSupporter;
 import shop.woowasap.accept.support.api.OrderApiSupporter;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
+import shop.woowasap.accept.support.fixture.ProductFixture;
 import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.OrderValidator;
-import shop.woowasap.mock.dto.ProductsResponse;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
 import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
+import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.api.cart.response.CartResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
 
 @DisplayName("Order 인수테스트")
 class OrderAcceptanceTest extends AcceptanceTest {
@@ -28,7 +33,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
         // given
         final String token = "TOKEN";
 
-        final long productId = getRandomProduct().productId();
+        final long productId = getRandomProduct(token).productId();
         final int quantity = 2;
         final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(
             quantity);
@@ -67,7 +72,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
     void returnOrders() {
         // given
         final String token = "TOKEN";
-        final ProductsResponse.Product product = getRandomProduct();
+        final ProductResponse product = getRandomProduct(token);
         final long quantity = 10;
         final OrderProductQuantityRequest orderProductQuantityRequest = new OrderProductQuantityRequest(
             quantity);
@@ -93,7 +98,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
     void returnDetailOrders() {
         // given
         final String token = "TOKEN";
-        final ProductsResponse.Product product = getRandomProduct();
+        final ProductResponse product = getRandomProduct(token);
         final long quantity = 10;
         final OrderProductQuantityRequest orderProductQuantityRequest = new OrderProductQuantityRequest(
             quantity);
@@ -130,7 +135,45 @@ class OrderAcceptanceTest extends AcceptanceTest {
         HttpValidator.assertBadRequest(result);
     }
 
-    private ProductsResponse.Product getRandomProduct() {
+    @Test
+    @DisplayName("장바구니 상품 구매 API는 장바구니의 상품을 구매한 후, Created와 Location을 응답한다.")
+    void returnCreatedAndLocationWhenSuccessToBuyCart() {
+        // given
+        final String token = "TOKEN";
+
+        final ProductResponse product = getRandomProduct(token);
+        final int quantity = 2;
+        final AddCartProductRequest addCartProductRequest = new AddCartProductRequest(product.productId(), quantity);
+
+        CartApiSupporter.addCartProduct(token, addCartProductRequest);
+
+        final long cartId = CartApiSupporter.getCartProducts(token).as(CartResponse.class).cartId();
+
+        // when
+        final ExtractableResponse<Response> result = OrderApiSupporter.orderCart(cartId, token);
+
+        // then
+        OrderValidator.assertOrdered(result);
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 구매 API는 장바구니를 찾을 수 없는경우, 400 BadRequest를 응답한다.")
+    void returnBadRequestWhenCannotFindOrder() {
+        // given
+        final String token = "TOKEN";
+
+        final long invalidCartId = 999L;
+
+        // when
+        final ExtractableResponse<Response> result = OrderApiSupporter.orderCart(invalidCartId, token);
+
+        // then
+        HttpValidator.assertBadRequest(result);
+    }
+
+    private ProductResponse getRandomProduct(final String token) {
+        ShopApiSupporter.registerProduct(token, ProductFixture.registerProductRequest());
+
         return ShopApiSupporter.getAllProducts().as(ProductsResponse.class)
             .products().get(0);
     }

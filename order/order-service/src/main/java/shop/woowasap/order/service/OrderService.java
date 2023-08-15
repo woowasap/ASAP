@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.order.domain.Order;
+import shop.woowasap.order.domain.exception.DoesNotFindCartException;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.exception.DoesNotFindProductException;
 import shop.woowasap.order.domain.exception.DoesNotOrderedException;
@@ -21,7 +22,9 @@ import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.Payment;
 import shop.woowasap.order.domain.out.response.OrdersPaginationResponse;
 import shop.woowasap.order.service.mapper.OrderMapper;
+import shop.woowasap.shop.domain.api.cart.CartConnector;
 import shop.woowasap.shop.domain.api.product.ProductConnector;
+import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.product.Product;
 
 @Service
@@ -32,6 +35,7 @@ public class OrderService implements OrderUseCase {
     private final Payment payment;
     private final IdGenerator idGenerator;
     private final ProductConnector productConnector;
+    private final CartConnector cartConnector;
     private final OrderRepository orderRepository;
 
     @Value("${shop.woowasap.locale:Asia/Seoul}")
@@ -41,10 +45,25 @@ public class OrderService implements OrderUseCase {
     @Transactional
     public long orderProduct(final OrderProductRequest orderProductRequest) {
         final Product product = getProductByProductId(orderProductRequest.productId());
-        final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest.userId(),
-            product);
+        final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product);
 
         if (!payment.pay(orderProductRequest.userId())) {
+            throw new DoesNotOrderedException();
+        }
+
+        orderRepository.persist(order);
+        return order.getId();
+    }
+
+    @Override
+    @Transactional
+    public long orderCartByCartIdAndUserId(final long cartId, final long userId) {
+        final Cart cart = cartConnector.findByCartIdAndUserId(cartId, userId)
+            .orElseThrow(() -> new DoesNotFindCartException(cartId, userId));
+
+        final Order order = OrderMapper.toDomain(idGenerator, userId, cart);
+
+        if (!payment.pay(userId)) {
             throw new DoesNotOrderedException();
         }
 
