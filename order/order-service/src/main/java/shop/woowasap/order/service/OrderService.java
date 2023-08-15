@@ -7,10 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.order.domain.Order;
+import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.exception.DoesNotFindProductException;
 import shop.woowasap.order.domain.exception.DoesNotOrderedException;
 import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
+import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
+import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
@@ -59,6 +62,22 @@ public class OrderService implements OrderUseCase {
 
         return OrderMapper.toOrdersResponse(orderResponses, ordersPaginationResponse.page(),
             ordersPaginationResponse.totalPage());
+    }
+
+    @Override
+    public DetailOrderResponse getOrderByOrderIdAndUserId(final long orderId, final long userId) {
+        final Order order = orderRepository.findOrderByOrderIdAndUserId(orderId, userId)
+            .orElseThrow(() -> new DoesNotFindOrderException(orderId, userId));
+
+        final List<DetailOrderProductResponse> detailOrderProductResponses = order.getOrderProducts()
+            .stream()
+            .map(orderProduct -> {
+                Product product = getProductByProductId(orderProduct.getProductId());
+                return OrderMapper.toDetailOrderProductResponse(orderProduct, product);
+            })
+            .toList();
+
+        return OrderMapper.toDetailOrderResponse(order, detailOrderProductResponses, locale);
     }
 
     private List<OrderResponse> getOrderResponse(final List<Order> orders) {
