@@ -27,14 +27,12 @@ public final class Cart {
         cartProducts.add(cartProduct);
     }
 
-    public void updateCartProduct(final CartProduct cartProduct,
-        final CartProductQuantity quantity) {
+    public void updateCartProduct(final CartProduct cartProduct) {
         if (!cartProducts.contains(cartProduct)) {
             throw new NotExistsCartProductException("해당 상품이 장바구니에 존재하지 않습니다.");
         }
-        final CartProduct updatedCartProduct = cartProduct.updateQuantity(quantity);
         cartProducts.remove(cartProduct);
-        cartProducts.add(updatedCartProduct);
+        cartProducts.add(cartProduct);
     }
 
     private void updateCartProductInCartProducts(final CartProduct cartProduct) {
