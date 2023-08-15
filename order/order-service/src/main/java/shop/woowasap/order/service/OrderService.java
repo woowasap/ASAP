@@ -1,6 +1,5 @@
 package shop.woowasap.order.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.order.domain.Order;
-import shop.woowasap.order.domain.OrderProduct;
 import shop.woowasap.order.domain.exception.DoesNotFindProductException;
 import shop.woowasap.order.domain.exception.DoesNotOrderedException;
 import shop.woowasap.order.domain.in.OrderUseCase;
@@ -64,29 +62,18 @@ public class OrderService implements OrderUseCase {
     }
 
     private List<OrderResponse> getOrderResponse(final List<Order> orders) {
-        final List<OrderResponse> orderResponses = new ArrayList<>();
-
-        for (Order order : orders) {
-            final List<OrderProductResponse> orderProductResponses = getOrderProductResponse(order);
-
-            final OrderResponse orderResponse = OrderMapper.toOrderResponse(order, orderProductResponses,
-                locale);
-
-            orderResponses.add(orderResponse);
-        }
-
-        return orderResponses;
+        return orders.stream()
+            .map(
+                order -> OrderMapper.toOrderResponse(order, getOrderProductResponse(order), locale))
+            .toList();
     }
 
     private List<OrderProductResponse> getOrderProductResponse(final Order order) {
-        final List<OrderProductResponse> orderProductResponses = new ArrayList<>();
-        for (OrderProduct orderProduct : order.getOrderProducts()) {
-            final Product product = getProductByProductId(orderProduct.getProductId());
-            final OrderProductResponse orderProductResponse = OrderMapper.toOrderProductResponse(
-                product);
-            orderProductResponses.add(orderProductResponse);
-        }
-        return orderProductResponses;
+        return order.getOrderProducts()
+            .stream()
+            .map(orderProduct -> OrderMapper.toOrderProductResponse(
+                getProductByProductId(orderProduct.getProductId())))
+            .toList();
     }
 
     private Product getProductByProductId(final long productId) {

@@ -2,10 +2,8 @@ package shop.woowasap.order.service.support.fixture;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 import shop.woowasap.order.domain.Order;
-import shop.woowasap.order.domain.OrderProduct;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
@@ -24,31 +22,23 @@ public final class OrderDtoFixture {
         return new OrdersResponse(orderResponses, page, totalPage);
     }
 
-    private static List<OrderResponse> getOrderResponse(final List<Order> orders, final String locale, final String fixedName) {
-        final List<OrderResponse> orderResponses = new ArrayList<>();
+    private static List<OrderResponse> getOrderResponse(final List<Order> orders,
+        final String locale, final String fixedName) {
 
-        for (Order order : orders) {
-            final List<OrderProductResponse> orderProductResponses = getOrderProductResponse(order, fixedName);
-
-            final OrderResponse orderResponse = new OrderResponse(order.getId(),
-                orderProductResponses,
+        return orders.stream()
+            .map(order -> new OrderResponse(order.getId(),
+                getOrderProductResponse(order, fixedName),
                 order.getTotalPrice().toString(), order.getOrderProducts().size(),
-                LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
-
-            orderResponses.add(orderResponse);
-        }
-
-        return orderResponses;
+                LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale))))
+            .toList();
     }
 
-    private static List<OrderProductResponse> getOrderProductResponse(final Order order, final String fixedName) {
-        final List<OrderProductResponse> orderProductResponses = new ArrayList<>();
-        for (OrderProduct orderProduct : order.getOrderProducts()) {
-            final OrderProductResponse orderProductResponse = new OrderProductResponse(
-                orderProduct.getProductId(), fixedName);
+    private static List<OrderProductResponse> getOrderProductResponse(final Order order,
+        final String fixedName) {
 
-            orderProductResponses.add(orderProductResponse);
-        }
-        return orderProductResponses;
+        return order.getOrderProducts()
+            .stream()
+            .map(orderProduct -> new OrderProductResponse(orderProduct.getProductId(), fixedName))
+            .toList();
     }
 }
