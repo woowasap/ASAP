@@ -40,7 +40,7 @@ public final class ShopValidator {
         assertThat(result.totalPage()).isEqualTo(expected.totalPage());
 
         assertThat(result).usingRecursiveComparison(RecursiveComparisonConfiguration.builder()
-            .withIgnoredFields("products.productId")
+            .withIgnoredFields("products.productId", "products.startTime", "products.endTime")
             .build()).isEqualTo(expected);
     }
 

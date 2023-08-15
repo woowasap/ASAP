@@ -17,4 +17,18 @@ public final class Cart {
         this.userId = userId;
         this.cartProducts = cartProducts;
     }
+
+    public void addProduct(final CartProduct cartProduct) {
+        if (cartProducts.contains(cartProduct)) {
+            updateCartProductInCartProducts(cartProduct);
+            return;
+        }
+        cartProducts.add(cartProduct);
+    }
+
+    private void updateCartProductInCartProducts(final CartProduct cartProduct) {
+        final CartProduct updatedCartProduct = cartProduct.addQuantity(cartProduct.getQuantity());
+        cartProducts.remove(cartProduct);
+        cartProducts.add(updatedCartProduct);
+    }
 }

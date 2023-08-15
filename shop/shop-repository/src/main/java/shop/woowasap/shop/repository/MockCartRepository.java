@@ -41,7 +41,7 @@ public class MockCartRepository implements CartRepository {
 
     @Override
     public Cart persist(final Cart cart) {
-        return null;
+        return cart;
     }
 
     @Override
@@ -60,15 +60,16 @@ public class MockCartRepository implements CartRepository {
             .startTime(START_TIME.toInstant(ZoneOffset.of(OFFSET_ID)))
             .endTime(END_TIME.toInstant(ZoneOffset.of(OFFSET_ID))).build();
 
-        final CartProduct cartProduct = CartProduct.builder()
+        final List<CartProduct> cartProducts = new ArrayList<>();
+        cartProducts.add(CartProduct.builder()
             .product(product)
             .quantity(new CartProductQuantity(ORDER_QUANTITY))
-            .build();
+            .build());
 
         return Cart.builder()
             .id(MOCK_CART_ID)
             .userId(userId)
-            .cartProducts(List.of(cartProduct))
+            .cartProducts(cartProducts)
             .build();
     }
 }
