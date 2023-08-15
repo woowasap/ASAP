@@ -19,7 +19,7 @@ public class Cart {
     }
 
     public void addProduct(final CartProduct cartProduct) {
-        if (hasCartProduct(cartProduct)) {
+        if (cartProducts.contains(cartProduct)) {
             updateCartProductInCartProducts(cartProduct);
             return;
         }
@@ -30,9 +30,5 @@ public class Cart {
         final CartProduct updatedCartProduct = cartProduct.addQuantity(cartProduct.getQuantity());
         cartProducts.remove(cartProduct);
         cartProducts.add(updatedCartProduct);
-    }
-
-    private boolean hasCartProduct(final CartProduct cartProduct) {
-        return cartProducts.stream().anyMatch(cp -> cp == cartProduct);
     }
 }
