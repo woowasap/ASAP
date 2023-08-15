@@ -105,9 +105,9 @@ class OrderAcceptanceTest extends AcceptanceTest {
         final long orderId = ordersResponse.orders().get(0).orderId();
 
         final DetailOrderProductResponse expectedDetailOrderProductResponse =
-            new DetailOrderProductResponse(product.productId(), product.name());
+            new DetailOrderProductResponse(product.productId(), product.name(), product.price(), quantity);
         final DetailOrderResponse expectedDetailOrderResponse = new DetailOrderResponse(orderId, List.of(expectedDetailOrderProductResponse),
-            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(), 1, LocalDateTime.now());
+            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(), LocalDateTime.now());
 
         // when
         final ExtractableResponse<Response> result = OrderApiSupporter.getOrderByOrderId(orderId, token);
