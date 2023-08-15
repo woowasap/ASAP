@@ -23,7 +23,7 @@ public class MockCartRepository implements CartRepository {
     public static final long ORDER_QUANTITY = 10L;
 
     public static final long MOCK_CART_ID = 1L;
-    public static final long MOCK_PRODUCT_ID = 1L;
+    public static final long MOCK_PRODUCT_ID = 33L;
 
     private static final String OFFSET_ID = "+09:00";
 

@@ -93,16 +93,8 @@ class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartProducts() {
         // given
         final String accessToken = "Token";
-        final long quantity = 10L;
 
-        final RegisterProductRequest registerProductRequest = registerProductRequest();
-        final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
-            registerProductRequest);
-        final long productId = Long.parseLong(registerResponse.header("Location").split("/")[4]);
-
-        final AddCartProductRequest addCartProductRequest = new AddCartProductRequest(productId,
-            quantity);
-        CartApiSupporter.addCartProduct(accessToken, addCartProductRequest);
+        final long productId = 33L;
 
         // when
         final ExtractableResponse<Response> response = CartApiSupporter.deleteCartProduct(
@@ -118,10 +110,6 @@ class CartAcceptanceTest extends AcceptanceTest {
         // given
         final String accessToken = "Token";
         final long notExitProductId = 517;
-
-        final RegisterProductRequest registerProductRequest = registerProductRequest();
-        final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
-            registerProductRequest);
 
         // when
         final ExtractableResponse<Response> response = CartApiSupporter.deleteCartProduct(
