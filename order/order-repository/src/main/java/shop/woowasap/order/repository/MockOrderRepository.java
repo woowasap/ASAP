@@ -3,6 +3,7 @@ package shop.woowasap.order.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.out.OrderRepository;
@@ -24,5 +25,10 @@ public class MockOrderRepository implements OrderRepository {
 
         return new OrdersPaginationResponse(List.of(userIdPerOrderRepository.get(userId)), page,
             size);
+    }
+
+    @Override
+    public Optional<Order> findOrderByOrderIdAndUserId(final long orderId, final long userId) {
+        return Optional.empty();
     }
 }

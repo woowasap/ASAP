@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import shop.woowasap.order.domain.Order;
+import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
+import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
@@ -14,7 +16,7 @@ public final class OrderDtoFixture {
         throw new UnsupportedOperationException("Cannot invoke constructor \"OrderDtoFixture()\"");
     }
 
-    public static OrdersResponse from(final List<Order> orders, final String locale, final int page,
+    public static OrdersResponse ordersResponse(final List<Order> orders, final String locale, final int page,
         final int totalPage, final String fixedName) {
 
         final List<OrderResponse> orderResponses = getOrderResponse(orders, locale, fixedName);
@@ -40,5 +42,18 @@ public final class OrderDtoFixture {
             .stream()
             .map(orderProduct -> new OrderProductResponse(orderProduct.getProductId(), fixedName))
             .toList();
+    }
+
+    public static DetailOrderResponse detailOrderResponse(final Order order, final String defaultProductName,
+        final String defaultProductPrice, final String locale) {
+
+        final List<DetailOrderProductResponse> detailOrderProductResponses = order.getOrderProducts()
+            .stream()
+            .map(orderProduct -> new DetailOrderProductResponse(orderProduct.getProductId(), defaultProductName,
+                defaultProductPrice, orderProduct.getQuantity()))
+            .toList();
+
+        return new DetailOrderResponse(order.getId(), detailOrderProductResponses, order.getTotalPrice().toString(),
+            LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
     }
 }

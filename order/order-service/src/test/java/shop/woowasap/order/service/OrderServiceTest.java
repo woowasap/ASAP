@@ -18,10 +18,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.OrderProduct;
+import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.exception.DoesNotFindProductException;
 import shop.woowasap.order.domain.exception.DoesNotOrderedException;
 import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
+import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.Payment;
@@ -149,7 +151,7 @@ class OrderServiceTest {
             when(productConnector.findByProductId(product.getId())).thenReturn(
                 Optional.of(product));
 
-            final OrdersResponse expected = OrderDtoFixture.from(List.of(defaultOrder), "Asia/Seoul",
+            final OrdersResponse expected = OrderDtoFixture.ordersResponse(List.of(defaultOrder), "Asia/Seoul",
                 page, size, product.getName().getValue());
 
             // when
@@ -200,6 +202,75 @@ class OrderServiceTest {
 
             // then
             assertThat(result.orders()).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("getOrderByOrderIdAndUserId 메소드는")
+    class getOrderByOrderIdAndUserIdMethod {
+
+        @Test
+        @DisplayName("orderId와 userId를 받아, DetailOrderResponse 를 반환한다.")
+        void returnDetailOrderResponseWhenReceiveOrderIdAndUserId() {
+            // given
+            final long orderId = 1L;
+            final long userId = 1L;
+
+            final Product product = ProductFixture.getDefaultBuilder().build();
+            final OrderProduct orderProduct = OrderProductFixture.from(product);
+            final Order order = OrderFixture.getDefault(List.of(orderProduct));
+
+            when(orderRepository.findOrderByOrderIdAndUserId(orderId, userId)).thenReturn(Optional.of(order));
+
+            when(productConnector.findByProductId(product.getId())).thenReturn(Optional.of(product));
+
+            final DetailOrderResponse expected = OrderDtoFixture.detailOrderResponse(order,
+                product.getName().getValue(),
+                product.getPrice().getValue().toString(), "Asia/Seoul");
+
+            // when
+            final DetailOrderResponse result = orderUseCase.getOrderByOrderIdAndUserId(orderId, userId);
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("orderId와 userId에 해당하는 Order를 찾을 수 없을경우, DoesNotFindOrderException을 던진다.")
+        void throwDoesNotFindOrderExceptionWhenCannotFindMatchedOrder() {
+            // given
+            final long orderId = 1L;
+            final long userId = 1L;
+
+            when(orderRepository.findOrderByOrderIdAndUserId(orderId, userId)).thenReturn(Optional.empty());
+
+            // when
+            final Exception result = catchException(() -> orderUseCase.getOrderByOrderIdAndUserId(orderId, userId));
+
+            // then
+            assertThat(result).isInstanceOf(DoesNotFindOrderException.class);
+        }
+
+        @Test
+        @DisplayName("productId에 해당하는 product를 찾을 수 없을경우, DoesNotFindProductException을 던진다.")
+        void throwDoesNotFindProductExceptionWhenCannotFindMatchedProduct() {
+            // given
+            final long orderId = 1L;
+            final long userId = 1L;
+
+            final Product product = ProductFixture.getDefaultBuilder().build();
+            final OrderProduct orderProduct = OrderProductFixture.from(product);
+            final Order order = OrderFixture.getDefault(List.of(orderProduct));
+
+            when(orderRepository.findOrderByOrderIdAndUserId(orderId, userId)).thenReturn(Optional.of(order));
+
+            when(productConnector.findByProductId(product.getId())).thenReturn(Optional.empty());
+
+            // when
+            final Exception result = catchException(() -> orderUseCase.getOrderByOrderIdAndUserId(orderId, userId));
+
+            // then
+            assertThat(result).isInstanceOf(DoesNotFindProductException.class);
         }
     }
 }
