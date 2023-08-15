@@ -1,6 +1,7 @@
 package shop.woowasap.shop.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -13,6 +14,7 @@ import static shop.woowasap.shop.service.support.fixture.CartFixture.cartProduct
 import static shop.woowasap.shop.service.support.fixture.CartFixture.cartResponse;
 import static shop.woowasap.shop.service.support.fixture.CartFixture.emptyCart;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +29,8 @@ import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.domain.api.cart.response.CartResponse;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
+import shop.woowasap.shop.domain.exception.CannotFindProductException;
+import shop.woowasap.shop.domain.exception.CannotFindProductInCartException;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.spi.CartRepository;
 import shop.woowasap.shop.domain.spi.ProductRepository;
@@ -147,4 +151,81 @@ class CartServiceTest {
         }
     }
 
+    @Nested
+    @DisplayName("deleteCartProduct 메서드는")
+    class DeleteCartProduct_Method {
+
+        @Test
+        @DisplayName("cart 에서 product 를 제거한다.")
+        void deleteProductInCart() {
+            // given
+            final long cartId = 1L;
+            final long userId = 1L;
+            final long deleteProductId = 1L;
+
+            final Product deleteProduct = ProductFixture.productBuilder(deleteProductId).build();
+            final CartProduct deleteCartProduct = CartFixture.getCartProductBuilder(deleteProduct)
+                .build();
+            final Cart cart = Cart(userId, new ArrayList<>(List.of(deleteCartProduct)));
+
+            when(cartRepository.existCartByUserId(userId)).thenReturn(true);
+            when(idGenerator.generate()).thenReturn(cartId);
+            when(cartRepository.getByUserId(userId)).thenReturn(cart);
+            when(productRepository.findById(deleteProductId)).thenReturn(
+                Optional.of(deleteProduct));
+
+            // when
+            cartService.deleteCartProduct(userId, deleteProductId);
+
+            // then
+            assertThat(cart.getCartProducts()).noneMatch(
+                cartProduct -> cartProduct.isSameProduct(deleteProduct));
+            verify(cartRepository).persist(cart);
+        }
+
+        @Test
+        @DisplayName("productId 에 해당하는 product 가 존재하지 않을 경우 CannotFindProductException 를 던진다.")
+        void throwCannotFindProductExceptionWhenNotExitProduct() {
+            // given
+            final long userId = 1L;
+            final long notExistProductId = 1L;
+
+            final Cart cart = Cart(userId, new ArrayList<>());
+
+            when(cartRepository.existCartByUserId(userId)).thenReturn(true);
+            when(cartRepository.getByUserId(userId)).thenReturn(cart);
+            when(productRepository.findById(notExistProductId)).thenReturn(
+                Optional.empty());
+
+            // when
+            final Exception exception = catchException(
+                () -> cartService.deleteCartProduct(userId, notExistProductId));
+
+            // then
+            assertThat(exception).isInstanceOf(CannotFindProductException.class);
+        }
+
+        @Test
+        @DisplayName("Cart 가 존재하지 않는 경우 빈 Cart 를 생성하고 CannotFindProductInCartException 를 던진다.")
+        void createEmptyCartAndThrowCannotFindProductInCartExceptionWhenNotExistCart() {
+            // given
+            final long userId = 1L;
+            final long productId = 1L;
+
+            final Product product = ProductFixture.productBuilder(productId).build();
+            final Cart emptyCart = emptyCart(userId);
+
+            when(cartRepository.existCartByUserId(userId)).thenReturn(false);
+            when(productRepository.findById(productId)).thenReturn(
+                Optional.of(product));
+            when(cartRepository.createEmptyCart(eq(userId), anyLong())).thenReturn(emptyCart);
+            when(cartRepository.getByUserId(userId)).thenReturn(emptyCart);
+            // when
+            final Exception exception = catchException(
+                () -> cartService.deleteCartProduct(userId, productId));
+
+            // then
+            assertThat(exception).isInstanceOf(CannotFindProductInCartException.class);
+        }
+    }
 }

@@ -30,11 +30,6 @@ public class MockCartRepository implements CartRepository {
     public static final LocalDateTime END_TIME = LocalDateTime.of(2023, 8, 5, 14, 30);
 
     @Override
-    public Cart createEmptyCart(final Cart cart) {
-        return null;
-    }
-
-    @Override
     public Cart createEmptyCart(final long userId, final long cartId) {
         return new Cart(MOCK_CART_ID, userId, new ArrayList<>());
     }
