@@ -24,7 +24,7 @@ public final class OrderValidator {
 
         OrdersResponse ordersResult = result.as(OrdersResponse.class);
 
-        assertThat(ordersResult).usingRecursiveAssertion()
+        assertThat(ordersResult).usingRecursiveComparison()
             .ignoringFields("orders.createdAt", "orders.orderId")
             .isEqualTo(expected);
     }

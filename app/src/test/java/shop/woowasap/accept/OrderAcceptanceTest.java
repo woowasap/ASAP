@@ -2,6 +2,7 @@ package shop.woowasap.accept;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -10,11 +11,11 @@ import shop.woowasap.accept.support.api.OrderApiSupporter;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.OrderValidator;
+import shop.woowasap.mock.dto.ProductsResponse;
+import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
-import shop.woowasap.mock.dto.ProductsResponse;
-import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 
 @DisplayName("Order 인수테스트")
 class OrderAcceptanceTest extends AcceptanceTest {
@@ -65,7 +66,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
         // given
         final String token = "TOKEN";
         final ProductsResponse.Product product = getRandomProduct();
-        final long quantity = 1;
+        final long quantity = 10;
         final OrderProductQuantityRequest orderProductQuantityRequest = new OrderProductQuantityRequest(
             quantity);
 
@@ -74,8 +75,10 @@ class OrderAcceptanceTest extends AcceptanceTest {
         final OrderProductResponse expectedOrderProductResponse = new OrderProductResponse(
             product.productId(), product.name());
         final OrderResponse expectedOrderResponse = new OrderResponse(1L,
-            List.of(expectedOrderProductResponse), product.price(), quantity, LocalDateTime.now());
-        final OrdersResponse expected = new OrdersResponse(List.of(expectedOrderResponse), 1, 1);
+            List.of(expectedOrderProductResponse),
+            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(),
+            1, LocalDateTime.now());
+        final OrdersResponse expected = new OrdersResponse(List.of(expectedOrderResponse), 1, 20);
 
         // when
         final ExtractableResponse<Response> result = OrderApiSupporter.getAllProducts(token);
