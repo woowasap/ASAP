@@ -14,6 +14,7 @@ import shop.woowasap.shop.domain.api.cart.response.CartResponse;
 public class CartController {
 
     private final static long MOCK_USER_ID = 1L;
+
     private final CartUseCase cartUseCase;
 
     @GetMapping
