@@ -66,7 +66,15 @@ public class CartService implements CartUseCase {
 
     @Override
     public void deleteCartProduct(final long userId, final long productId) {
-        throw new UnsupportedOperationException();
+        if (!cartRepository.existCartByUserId(userId)) {
+            cartRepository.createEmptyCart(userId, idGenerator.generate());
+        }
+
+        final Cart cart = cartRepository.getByUserId(userId);
+        final Product product = getByProductId(productId);
+
+        cart.deleteProduct(product);
+        cartRepository.persist(cart);
     }
 
     @Override

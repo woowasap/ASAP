@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
+import shop.woowasap.order.domain.exception.DoesNotFindCartException;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.exception.DoesNotFindProductException;
 import shop.woowasap.order.domain.exception.DoesNotOrderedException;
@@ -46,6 +47,14 @@ public class OrderController {
             .build();
     }
 
+    @PostMapping("/carts/{cart-id}")
+    public ResponseEntity<Void> orderCart(@PathVariable("cart-id") final long cartId) {
+        final long orderId = orderUseCase.orderCartByCartIdAndUserId(cartId, MOCK_USER_ID);
+
+        return ResponseEntity.created(URI.create("/v1/orders/" + orderId))
+            .build();
+    }
+
     @GetMapping
     public ResponseEntity<OrdersResponse> getOrdersByUserId(
         @RequestParam(defaultValue = "1") final int page,
@@ -67,7 +76,8 @@ public class OrderController {
         InvalidPriceException.class,
         InvalidProductSaleTimeException.class,
         InvalidQuantityException.class,
-        DoesNotFindOrderException.class})
+        DoesNotFindOrderException.class,
+        DoesNotFindCartException.class})
     private ResponseEntity<Void> handleBadRequest(final RuntimeException runtimeException) {
         return ResponseEntity.badRequest().build();
     }

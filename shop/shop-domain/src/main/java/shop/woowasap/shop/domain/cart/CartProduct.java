@@ -28,6 +28,10 @@ public class CartProduct {
             .build();
     }
 
+    public boolean isSameProduct(final Product product) {
+        return this.product.equals(product);
+    }
+
     public CartProduct updateQuantity(final CartProductQuantity quantity) {
         return CartProduct.builder()
             .product(this.product)

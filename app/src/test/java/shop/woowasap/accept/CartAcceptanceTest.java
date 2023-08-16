@@ -6,6 +6,7 @@ import static shop.woowasap.accept.support.fixture.CartFixture.cartResponse;
 import static shop.woowasap.accept.support.fixture.ProductFixture.registerProductRequest;
 import static shop.woowasap.accept.support.valid.CartValidator.assertCartProductsFound;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertBadRequest;
+import static shop.woowasap.accept.support.valid.HttpValidator.assertOk;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.CartApiSupporter;
 import shop.woowasap.accept.support.fixture.CartFixture;
 import shop.woowasap.accept.support.fixture.ProductFixture;
-import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.api.cart.request.UpdateCartProductRequest;
 import shop.woowasap.shop.domain.api.cart.response.CartResponse;
@@ -38,7 +38,7 @@ class CartAcceptanceTest extends AcceptanceTest {
             .addCartProduct(accessToken, CartFixture.addCartProductRequest(productId, quantity));
 
         // then
-        HttpValidator.assertOk(response);
+        assertOk(response);
     }
 
     @Test
@@ -60,7 +60,7 @@ class CartAcceptanceTest extends AcceptanceTest {
             .addCartProduct(accessToken, CartFixture.addCartProductRequest(productId, addQuantity));
 
         // then
-        HttpValidator.assertOk(response);
+        assertOk(response);
     }
 
     @Test
@@ -128,6 +128,37 @@ class CartAcceptanceTest extends AcceptanceTest {
         // when
         final ExtractableResponse<Response> response = CartApiSupporter.updateCartProduct(
             accessToken, updateCartProductRequest);
+
+        // then
+        assertBadRequest(response);
+    }
+
+    @Test
+    @DisplayName("장바구니에 있는 상품을 제거한다.")
+    void deleteCartProducts() {
+        // given
+        final String accessToken = "Token";
+
+        final long productId = 33L;
+
+        // when
+        final ExtractableResponse<Response> response = CartApiSupporter.deleteCartProduct(
+            accessToken, productId);
+
+        // then
+        assertOk(response);
+    }
+
+    @Test
+    @DisplayName("ProductId에 해당하는 상품이 장바구니에 존재하지 않는다면, 400 BadRequest 를 응답한다.")
+    void returnBadRequestWhenCannotFoundProductInCart() {
+        // given
+        final String accessToken = "Token";
+        final long notExitProductId = 517;
+
+        // when
+        final ExtractableResponse<Response> response = CartApiSupporter.deleteCartProduct(
+            accessToken, notExitProductId);
 
         // then
         assertBadRequest(response);

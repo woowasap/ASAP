@@ -59,7 +59,7 @@ public final class CartApiSupporter {
         return given().log().all()
             .accept(JSON)
             .header(HttpHeaders.AUTHORIZATION, token)
-            .queryParam("productId", productId)
+            .queryParam("product-id", productId)
             .when().log().all()
             .delete(API_VERSION + "/carts")
             .then().log().all()
