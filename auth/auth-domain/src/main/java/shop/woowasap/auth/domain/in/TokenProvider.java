@@ -1,12 +1,15 @@
 package shop.woowasap.auth.domain.in;
 
-import shop.woowasap.auth.domain.UserType;
+import java.util.List;
 import shop.woowasap.auth.domain.in.response.UserResponse;
 
 public interface TokenProvider {
 
-    String createToken(UserResponse userResponse);
+    String generateToken(UserResponse userResponse);
 
-    UserType parseToken(String accessToken);
+    boolean validateToken(String accessToken);
 
+    List<String> getAuthorities(String accessToken);
+
+    String getUserId(String accessToken);
 }

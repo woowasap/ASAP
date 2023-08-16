@@ -48,7 +48,7 @@ public class AuthService implements UserUseCase {
     public LoginResponse login(final UserLoginRequest userLoginRequest) {
         final User user = validateUsernameAndPassword(userLoginRequest);
 
-        final String accessToken = tokenProvider.createToken(new UserResponse(user.getId(),
+        final String accessToken = tokenProvider.generateToken(new UserResponse(user.getId(),
             user.getUsername(), user.getUserType().getValue()));
         return new LoginResponse(accessToken);
     }

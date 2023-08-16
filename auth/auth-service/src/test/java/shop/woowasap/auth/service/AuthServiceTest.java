@@ -104,7 +104,7 @@ class AuthServiceTest {
             final UserLoginRequest userLoginRequest = new UserLoginRequest(username, password);
             when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
             when(passwordEncoder.matches(password, hashedPassword)).thenReturn(true);
-            when(tokenProvider.createToken(any())).thenReturn(accessToken);
+            when(tokenProvider.generateToken(any())).thenReturn(accessToken);
 
             // when
             final LoginResponse result = authService.login(userLoginRequest);
