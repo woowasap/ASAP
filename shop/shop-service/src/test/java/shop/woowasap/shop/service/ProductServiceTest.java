@@ -25,7 +25,7 @@ import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
-import shop.woowasap.shop.domain.exception.CannotFindProductException;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.spi.ProductRepository;
 import shop.woowasap.shop.domain.spi.response.ProductsPaginationResponse;
@@ -91,7 +91,7 @@ class ProductServiceTest {
         }
 
         @Test
-        @DisplayName("ProductId 에 해당하는 Product 가 존재하지 않을 경우 CannotFindProductException 을 던진다")
+        @DisplayName("ProductId 에 해당하는 Product 가 존재하지 않을 경우 NotExistsProductException 을 던진다")
         void throwUpdateProductExceptionWhenNoProductExist() {
             // given
             final long noExistProductId = 1L;
@@ -104,7 +104,7 @@ class ProductServiceTest {
                 () -> productService.update(noExistProductId, updateProductRequest));
 
             // then
-            assertThat(exception).isInstanceOf(CannotFindProductException.class);
+            assertThat(exception).isInstanceOf(NotExistsProductException.class);
             assertThat(exception.getMessage()).contains("productId 에 해당하는 Product 가 존재하지 않습니다.");
         }
     }
@@ -114,8 +114,8 @@ class ProductServiceTest {
     class GetById_Method {
 
         @Test
-        @DisplayName("id에 해당하는 Product 를 찾을 수 없을경우, CannotFindProductException 을 던진다.")
-        void throwCannotFindProductExceptionWhenCannotFindIdMatchedProduct() {
+        @DisplayName("id에 해당하는 Product 를 찾을 수 없을경우, NotExistsProductException 을 던진다.")
+        void throwNotExistsProductExceptionWhenCannotFindIdMatchedProduct() {
             // given
             final long productId = 1L;
 
@@ -125,7 +125,7 @@ class ProductServiceTest {
             Exception exception = catchException(() -> productService.getByProductId(productId));
 
             // then
-            assertThat(exception).isInstanceOf(CannotFindProductException.class);
+            assertThat(exception).isInstanceOf(NotExistsProductException.class);
         }
 
         @Test
@@ -209,8 +209,8 @@ class ProductServiceTest {
     class GetByIdWithAdmin_Method {
 
         @Test
-        @DisplayName("productId에 해당하는 Product 를 찾을 수 없을 경우, CannotFindProductException 을 던진다.")
-        void throwCannotFindProductExceptionWhenCannotFindIdMatchedProduct() {
+        @DisplayName("productId에 해당하는 Product 를 찾을 수 없을 경우, NotExistsProductException 을 던진다.")
+        void throwNotExistsProductExceptionWhenCannotFindIdMatchedProduct() {
             // given
             final long productId = 1L;
 
@@ -221,7 +221,7 @@ class ProductServiceTest {
                 () -> productService.getByProductIdWithAdmin(productId));
 
             // then
-            assertThat(exception).isInstanceOf(CannotFindProductException.class);
+            assertThat(exception).isInstanceOf(NotExistsProductException.class);
         }
 
         @Test

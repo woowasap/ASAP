@@ -14,7 +14,7 @@ import shop.woowasap.shop.domain.api.cart.response.CartResponse;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
 import shop.woowasap.shop.domain.cart.CartProductQuantity;
-import shop.woowasap.shop.domain.exception.CannotFindProductException;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.spi.CartRepository;
 import shop.woowasap.shop.domain.spi.ProductRepository;
@@ -89,7 +89,7 @@ public class CartService implements CartUseCase {
 
     private Product getByProductId(final Long productId) {
         return productRepository.findById(productId)
-            .orElseThrow(() -> new CannotFindProductException(
+            .orElseThrow(() -> new NotExistsProductException(
                 MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
                     productId)
             ));

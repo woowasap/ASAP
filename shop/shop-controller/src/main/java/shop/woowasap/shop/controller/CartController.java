@@ -15,8 +15,7 @@ import shop.woowasap.shop.domain.api.cart.CartUseCase;
 import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.api.cart.request.UpdateCartProductRequest;
 import shop.woowasap.shop.domain.api.cart.response.CartResponse;
-import shop.woowasap.shop.domain.exception.CannotFindProductException;
-import shop.woowasap.shop.domain.exception.CannotFindProductInCartException;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 
 @RestController
@@ -57,8 +56,7 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    @ExceptionHandler({NotExistsCartProductException.class, CannotFindProductInCartException.class,
-        CannotFindProductException.class})
+    @ExceptionHandler({NotExistsCartProductException.class, NotExistsProductException.class})
     public ResponseEntity<Void> handleException() {
         return ResponseEntity.badRequest().build();
     }

@@ -30,8 +30,7 @@ import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.domain.api.cart.response.CartResponse;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
-import shop.woowasap.shop.domain.exception.CannotFindProductException;
-import shop.woowasap.shop.domain.exception.CannotFindProductInCartException;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.spi.CartRepository;
@@ -241,8 +240,8 @@ class CartServiceTest {
         }
 
         @Test
-        @DisplayName("productId 에 해당하는 product 가 존재하지 않을 경우 CannotFindProductException 를 던진다.")
-        void throwCannotFindProductExceptionWhenNotExitProduct() {
+        @DisplayName("productId 에 해당하는 product 가 존재하지 않을 경우 NotExistsProductException 를 던진다.")
+        void throwNotExistsProductExceptionWhenNotExitProduct() {
             // given
             final long userId = 1L;
             final long notExistProductId = 1L;
@@ -259,12 +258,12 @@ class CartServiceTest {
                 () -> cartService.deleteCartProduct(userId, notExistProductId));
 
             // then
-            assertThat(exception).isInstanceOf(CannotFindProductException.class);
+            assertThat(exception).isInstanceOf(NotExistsProductException.class);
         }
 
         @Test
-        @DisplayName("Cart 가 존재하지 않는 경우 빈 Cart 를 생성하고 CannotFindProductInCartException 를 던진다.")
-        void createEmptyCartAndThrowCannotFindProductInCartExceptionWhenNotExistCart() {
+        @DisplayName("Cart 가 존재하지 않는 경우 빈 Cart 를 생성하고 NotExistsCartProductException 를 던진다.")
+        void createEmptyCartAndThrowNotExistsCartProductExceptionWhenNotExistCart() {
             // given
             final long userId = 1L;
             final long productId = 1L;
@@ -283,7 +282,7 @@ class CartServiceTest {
                 () -> cartService.deleteCartProduct(userId, productId));
 
             // then
-            assertThat(exception).isInstanceOf(CannotFindProductInCartException.class);
+            assertThat(exception).isInstanceOf(NotExistsCartProductException.class);
         }
     }
 }

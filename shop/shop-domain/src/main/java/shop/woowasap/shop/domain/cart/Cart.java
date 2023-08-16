@@ -4,7 +4,6 @@ import java.text.MessageFormat;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-import shop.woowasap.shop.domain.exception.CannotFindProductInCartException;
 import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 import shop.woowasap.shop.domain.product.Product;
 
@@ -51,7 +50,7 @@ public final class Cart {
 
     private void validateProduct(final Product product) {
         if (cartProducts.stream().noneMatch(cartProduct -> cartProduct.isSameProduct(product))) {
-            throw new CannotFindProductInCartException(
+            throw new NotExistsCartProductException(
                 MessageFormat.format(
                     "product 가 장바구니에 존재하지 않습니다. productId : \"{0}\"",
                     product.getId())

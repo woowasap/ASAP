@@ -12,7 +12,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import shop.woowasap.shop.domain.exception.CannotFindProductInCartException;
 import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 import shop.woowasap.shop.domain.product.Product;
 
