@@ -12,8 +12,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import shop.woowasap.auth.controller.request.LoginRequest;
 import shop.woowasap.auth.controller.request.SignUpRequest;
-import shop.woowasap.mock.dto.LoginRequest;
 
 class AuthAcceptanceTest extends AcceptanceTest {
 
