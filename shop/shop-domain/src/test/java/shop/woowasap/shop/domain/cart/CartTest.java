@@ -92,8 +92,8 @@ class CartTest {
         }
 
         @Test
-        @DisplayName("product 가 Cart 에 존재하지 않으면 CannotFindProductInCartException 을 던진다.")
-        void throwCannotFindProductInCartExceptionWithNotExistInCart() {
+        @DisplayName("product 가 Cart 에 존재하지 않으면 NotExistsCartProductException 을 던진다.")
+        void throwNotExistsCartProductExceptionWithNotExistInCart() {
             // given
             final Product product = getDefaultBuilder().build();
             final Cart cart = getEmptyCartBuilder().build();
@@ -102,7 +102,7 @@ class CartTest {
             final Exception exception = catchException(() -> cart.deleteProduct(product));
 
             // then
-            assertThat(exception).isInstanceOf(CannotFindProductInCartException.class);
+            assertThat(exception).isInstanceOf(NotExistsCartProductException.class);
         }
     }
 
