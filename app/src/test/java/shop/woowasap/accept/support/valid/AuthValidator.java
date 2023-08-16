@@ -14,7 +14,7 @@ public final class AuthValidator {
     public static void assertLoginSuccess(ExtractableResponse<Response> result) {
         HttpValidator.assertOk(result);
 
-        String token = result.jsonPath().getString("token");
+        String token = result.jsonPath().getString("accessToken");
         assertThat(token).isNotBlank();
     }
 
