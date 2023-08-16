@@ -15,7 +15,7 @@ import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
-import shop.woowasap.shop.domain.exception.CannotFindProductException;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.spi.ProductRepository;
 import shop.woowasap.shop.domain.spi.response.ProductsPaginationResponse;
@@ -78,7 +78,7 @@ public class ProductService implements ProductUseCase {
     @Override
     public ProductDetailsResponse getByProductId(final long productId) {
         final Product persistProduct = productRepository.findByIdAndValidSaleTime(productId)
-            .orElseThrow(() -> new CannotFindProductException(
+            .orElseThrow(() -> new NotExistsProductException(
                 MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
                     productId)));
 
@@ -94,7 +94,7 @@ public class ProductService implements ProductUseCase {
 
     private Product getProduct(final long productId) {
         return productRepository.findById(productId)
-            .orElseThrow(() -> new CannotFindProductException(
+            .orElseThrow(() -> new NotExistsProductException(
                 MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
                     productId)
             ));

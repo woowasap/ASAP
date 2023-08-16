@@ -6,7 +6,7 @@ import shop.woowasap.shop.domain.api.cart.response.CartResponse;
 
 public interface CartUseCase {
 
-    void updateCartProduct(final long userId, final UpdateCartProductRequest updateProductRequest);
+    void updateCartProduct(final long userId, final UpdateCartProductRequest updateCartProductRequest);
 
     void addCartProduct(final long userId, final AddCartProductRequest addCartProductRequest);
 

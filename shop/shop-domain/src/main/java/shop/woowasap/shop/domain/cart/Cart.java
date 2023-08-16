@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-import shop.woowasap.shop.domain.exception.CannotFindProductInCartException;
+import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 import shop.woowasap.shop.domain.product.Product;
 
 @Getter
@@ -29,6 +29,14 @@ public final class Cart {
         cartProducts.add(cartProduct);
     }
 
+    public void updateCartProduct(final CartProduct cartProduct) {
+        if (!cartProducts.contains(cartProduct)) {
+            throw new NotExistsCartProductException("해당 상품이 장바구니에 존재하지 않습니다.");
+        }
+        cartProducts.remove(cartProduct);
+        cartProducts.add(cartProduct);
+    }
+
     private void updateCartProductInCartProducts(final CartProduct cartProduct) {
         final CartProduct updatedCartProduct = cartProduct.addQuantity(cartProduct.getQuantity());
         cartProducts.remove(cartProduct);
@@ -42,7 +50,7 @@ public final class Cart {
 
     private void validateProduct(final Product product) {
         if (cartProducts.stream().noneMatch(cartProduct -> cartProduct.isSameProduct(product))) {
-            throw new CannotFindProductInCartException(
+            throw new NotExistsCartProductException(
                 MessageFormat.format(
                     "product 가 장바구니에 존재하지 않습니다. productId : \"{0}\"",
                     product.getId())
@@ -50,4 +58,3 @@ public final class Cart {
         }
     }
 }
-

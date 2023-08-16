@@ -12,9 +12,8 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import shop.woowasap.shop.domain.exception.CannotFindProductInCartException;
+import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.domain.support.CartFixture;
 
 @DisplayName("Cart 테스트")
 class CartTest {
@@ -27,7 +26,7 @@ class CartTest {
         @DisplayName("정상적인 입력인 경우 장바구니를 생성한다.")
         void createCart() {
             // when & then
-            assertThatCode(() -> CartFixture.getEmptyCartBuilder().build())
+            assertThatCode(() -> getEmptyCartBuilder().build())
                 .doesNotThrowAnyException();
         }
     }
@@ -40,11 +39,8 @@ class CartTest {
         @DisplayName("해당 상품이 없는 경우 장바구니에 추가된다.")
         void addCartProductWithNotExists() {
             // given
-            final CartProduct cartProduct = CartProduct.builder()
-                .product(getDefaultBuilder().build())
-                .quantity(new CartProductQuantity(10L))
-                .build();
-            final Cart cart = CartFixture.getEmptyCartBuilder().build();
+            final CartProduct cartProduct = getCartProductBuilder().build();
+            final Cart cart = getEmptyCartBuilder().build();
 
             // when
             cart.addProduct(cartProduct);
@@ -61,7 +57,7 @@ class CartTest {
             final CartProduct cartProduct = getCartProductBuilder().build();
             final List<CartProduct> cartProducts = new ArrayList<>();
             cartProducts.add(cartProduct);
-            final Cart cart = CartFixture.getEmptyCartBuilder()
+            final Cart cart = getEmptyCartBuilder()
                 .cartProducts(cartProducts).build();
 
             // when
@@ -96,8 +92,8 @@ class CartTest {
         }
 
         @Test
-        @DisplayName("product 가 Cart 에 존재하지 않으면 CannotFindProductInCartException 을 던진다.")
-        void throwCannotFindProductInCartExceptionWithNotExistInCart() {
+        @DisplayName("product 가 Cart 에 존재하지 않으면 NotExistsCartProductException 을 던진다.")
+        void throwNotExistsCartProductExceptionWithNotExistInCart() {
             // given
             final Product product = getDefaultBuilder().build();
             final Cart cart = getEmptyCartBuilder().build();
@@ -106,7 +102,49 @@ class CartTest {
             final Exception exception = catchException(() -> cart.deleteProduct(product));
 
             // then
-            assertThat(exception).isInstanceOf(CannotFindProductInCartException.class);
+            assertThat(exception).isInstanceOf(NotExistsCartProductException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("장바구니에 상품의 수량을 수정하는 경우")
+    class updateCartProductQuantity {
+
+        @Test
+        @DisplayName("해당 상품이 없으면, 예외를 던진다.")
+        void updateCartProductQuantityWithNotExistsCartProductThrowException() {
+            // given
+            final CartProductQuantity updateCartProductQuantity = new CartProductQuantity(20L);
+            final CartProduct cartProduct = getCartProductBuilder()
+                .quantity(updateCartProductQuantity).build();
+            final Cart cart = getEmptyCartBuilder().build();
+
+            // when
+            final Exception exception = catchException(
+                () -> cart.updateCartProduct(cartProduct));
+
+            // then
+            assertThat(exception).isInstanceOf(NotExistsCartProductException.class);
+        }
+
+        @Test
+        @DisplayName("정상적으로 개수가 변경된다.")
+        void updateCartProductQuantityWithExists() {
+            // given
+            final List<CartProduct> cartProducts = new ArrayList<>();
+            cartProducts.add(getCartProductBuilder().build());
+            final CartProductQuantity updateCartProductQuantity = new CartProductQuantity(20L);
+            final CartProduct updateCartProduct = getCartProductBuilder()
+                .quantity(updateCartProductQuantity).build();
+            final Cart cart = getEmptyCartBuilder().cartProducts(cartProducts).build();
+
+            // when
+            cart.updateCartProduct(updateCartProduct);
+
+            // then
+            assertThat(cart.getCartProducts()).hasSize(1);
+            assertThat(cart.getCartProducts().get(0).getQuantity()).isEqualTo(
+                updateCartProductQuantity);
         }
     }
 }

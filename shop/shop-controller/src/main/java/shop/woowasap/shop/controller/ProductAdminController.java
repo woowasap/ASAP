@@ -17,7 +17,7 @@ import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
-import shop.woowasap.shop.domain.exception.CannotFindProductException;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
 
 @RestController
 @RequiredArgsConstructor
@@ -60,7 +60,7 @@ public class ProductAdminController {
         return ResponseEntity.ok(productResponse);
     }
 
-    @ExceptionHandler(CannotFindProductException.class)
+    @ExceptionHandler(NotExistsProductException.class)
     public ResponseEntity<Void> handleException() {
         return ResponseEntity.badRequest().build();
     }

@@ -5,10 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchException;
 import static shop.woowasap.shop.domain.support.CartFixture.getCartProductBuilder;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.shop.domain.exception.InvalidCartProductQuantityException;
+import shop.woowasap.shop.domain.support.CartFixture;
 
 @DisplayName("CartProduct 테스트")
 class CartProductTest {
@@ -52,6 +54,25 @@ class CartProductTest {
 
             // then
             assertThat(exception).isInstanceOf(InvalidCartProductQuantityException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("장바구니 상품의 수량을 수정 시")
+    class updateCartProductQuantity {
+
+        @Test
+        @DisplayName("상품의 수량이 변경된 상품이 생성된다.")
+        void update() {
+            // given
+            final CartProductQuantity updateProductQuantity = new CartProductQuantity(20L);
+            final CartProduct cartProduct = getCartProductBuilder().build();
+
+            // when
+            final CartProduct updateCartProduct = cartProduct.updateQuantity(updateProductQuantity);
+
+            // then
+            assertThat(updateCartProduct.getQuantity()).isEqualTo(updateProductQuantity);
         }
     }
 }

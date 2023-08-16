@@ -13,6 +13,7 @@ import static shop.woowasap.shop.service.support.fixture.CartFixture.addCartProd
 import static shop.woowasap.shop.service.support.fixture.CartFixture.cartProduct;
 import static shop.woowasap.shop.service.support.fixture.CartFixture.cartResponse;
 import static shop.woowasap.shop.service.support.fixture.CartFixture.emptyCart;
+import static shop.woowasap.shop.service.support.fixture.CartFixture.updateCartProductRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,8 @@ import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.domain.api.cart.response.CartResponse;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
-import shop.woowasap.shop.domain.exception.CannotFindProductException;
-import shop.woowasap.shop.domain.exception.CannotFindProductInCartException;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
+import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.spi.CartRepository;
 import shop.woowasap.shop.domain.spi.ProductRepository;
@@ -152,6 +153,61 @@ class CartServiceTest {
     }
 
     @Nested
+    @DisplayName("Cart Product 를 수정하는 메서드는")
+    class UpdateCartProduct {
+
+        @Test
+        @DisplayName("장바구니에 해당 상품이 있다면 개수를 정상적으로 변경한다.")
+        void update() {
+            // given
+            final long cartId = 1L;
+            final long userId = 1L;
+            final long productId = 1L;
+            final long updateQuantity = 20L;
+            final Product product = ProductFixture.validProduct(productId);
+            final List<CartProduct> cartProducts = new ArrayList<>();
+            cartProducts.add(CartFixture.getCartProductBuilder(product).build());
+            final Cart cart = CartFixture.getEmptyCartBuilder().cartProducts(cartProducts)
+                .build();
+
+            when(cartRepository.existCartByUserId(userId)).thenReturn(true);
+            when(idGenerator.generate()).thenReturn(cartId);
+            when(cartRepository.getByUserId(userId)).thenReturn(cart);
+            when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+            // when
+            cartService.updateCartProduct(userId, updateCartProductRequest(productId, updateQuantity));
+
+            // then
+            verify(cartRepository, times(1)).persist(cart);
+        }
+
+        @Test
+        @DisplayName("장바구니에 해당 상품이 없다면 예외를 던진다.")
+        void updateNotExistsCartProductThrowException() {
+            // given
+            final long cartId = 1L;
+            final long userId = 1L;
+            final long productId = 1L;
+            final long updateQuantity = 20L;
+            final Cart cart = CartFixture.cart(cartId);
+            final Product product = ProductFixture.validProduct(productId);
+
+            when(cartRepository.existCartByUserId(userId)).thenReturn(false);
+            when(idGenerator.generate()).thenReturn(cartId);
+            when(cartRepository.getByUserId(userId)).thenReturn(cart);
+            when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+            // when
+            Exception exception = catchException(() -> cartService.updateCartProduct(userId,
+                updateCartProductRequest(productId, updateQuantity)));
+
+            // then
+            assertThat(exception).isInstanceOf(NotExistsCartProductException.class);
+        }
+    }
+
+    @Nested
     @DisplayName("deleteCartProduct 메서드는")
     class DeleteCartProduct_Method {
 
@@ -184,8 +240,8 @@ class CartServiceTest {
         }
 
         @Test
-        @DisplayName("productId 에 해당하는 product 가 존재하지 않을 경우 CannotFindProductException 를 던진다.")
-        void throwCannotFindProductExceptionWhenNotExitProduct() {
+        @DisplayName("productId 에 해당하는 product 가 존재하지 않을 경우 NotExistsProductException 를 던진다.")
+        void throwNotExistsProductExceptionWhenNotExitProduct() {
             // given
             final long userId = 1L;
             final long notExistProductId = 1L;
@@ -202,12 +258,12 @@ class CartServiceTest {
                 () -> cartService.deleteCartProduct(userId, notExistProductId));
 
             // then
-            assertThat(exception).isInstanceOf(CannotFindProductException.class);
+            assertThat(exception).isInstanceOf(NotExistsProductException.class);
         }
 
         @Test
-        @DisplayName("Cart 가 존재하지 않는 경우 빈 Cart 를 생성하고 CannotFindProductInCartException 를 던진다.")
-        void createEmptyCartAndThrowCannotFindProductInCartExceptionWhenNotExistCart() {
+        @DisplayName("Cart 가 존재하지 않는 경우 빈 Cart 를 생성하고 NotExistsCartProductException 를 던진다.")
+        void createEmptyCartAndThrowNotExistsCartProductExceptionWhenNotExistCart() {
             // given
             final long userId = 1L;
             final long productId = 1L;
@@ -226,7 +282,7 @@ class CartServiceTest {
                 () -> cartService.deleteCartProduct(userId, productId));
 
             // then
-            assertThat(exception).isInstanceOf(CannotFindProductInCartException.class);
+            assertThat(exception).isInstanceOf(NotExistsCartProductException.class);
         }
     }
 }

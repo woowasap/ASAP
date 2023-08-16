@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shop.woowasap.shop.domain.api.product.ProductUseCase;
 import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
-import shop.woowasap.shop.domain.exception.CannotFindProductException;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +33,7 @@ public class ProductController {
         return ResponseEntity.ok(productUseCase.getValidProducts(page, size));
     }
 
-    @ExceptionHandler(CannotFindProductException.class)
+    @ExceptionHandler(NotExistsProductException.class)
     public ResponseEntity<Void> handleException() {
         return ResponseEntity.badRequest().build();
     }

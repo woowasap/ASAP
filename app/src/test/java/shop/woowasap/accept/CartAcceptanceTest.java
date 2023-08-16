@@ -16,6 +16,7 @@ import shop.woowasap.accept.support.api.CartApiSupporter;
 import shop.woowasap.accept.support.fixture.CartFixture;
 import shop.woowasap.accept.support.fixture.ProductFixture;
 import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.api.cart.request.UpdateCartProductRequest;
 import shop.woowasap.shop.domain.api.cart.response.CartResponse;
 import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
 
@@ -87,6 +88,50 @@ class CartAcceptanceTest extends AcceptanceTest {
         assertCartProductsFound(response, expected);
     }
 
+    @Test
+    @DisplayName("장바구니에 있는 상품의 수량을 수정한다.")
+    void updateCartProduct() {
+        // given
+        final String accessToken = "Token";
+        final long updatedQuantity = 10L;
+        final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
+            registerProductRequest());
+
+        final long productId = Long.parseLong(registerResponse.header("Location").split("/")[4]);
+        final UpdateCartProductRequest updateCartProductRequest = new UpdateCartProductRequest(
+            productId, updatedQuantity);
+
+        final AddCartProductRequest addCartProductRequest = new AddCartProductRequest(productId,
+            5L);
+        CartApiSupporter.addCartProduct(accessToken, addCartProductRequest);
+
+        final CartResponse expected = cartResponse(productId, updatedQuantity);
+
+        // when
+        CartApiSupporter.updateCartProduct(accessToken, updateCartProductRequest);
+
+        // then
+        final ExtractableResponse<Response> cartProducts = getCartProducts(accessToken);
+        assertCartProductsFound(cartProducts, expected);
+    }
+
+    @Test
+    @DisplayName("해당 장바구니에 담겨져 있지 않은 상품의 수량을 수정하는 경우 400 BadRequest를 반환한다.")
+    void updateNotExistsCartProduct() {
+        // given
+        final String accessToken = "Token";
+        final long invalidProductId = 999L;
+        final long quantity = 10L;
+        final UpdateCartProductRequest updateCartProductRequest = new UpdateCartProductRequest(
+            invalidProductId, quantity);
+
+        // when
+        final ExtractableResponse<Response> response = CartApiSupporter.updateCartProduct(
+            accessToken, updateCartProductRequest);
+
+        // then
+        assertBadRequest(response);
+    }
 
     @Test
     @DisplayName("장바구니에 있는 상품을 제거한다.")
@@ -118,4 +163,5 @@ class CartAcceptanceTest extends AcceptanceTest {
         // then
         assertBadRequest(response);
     }
+
 }
