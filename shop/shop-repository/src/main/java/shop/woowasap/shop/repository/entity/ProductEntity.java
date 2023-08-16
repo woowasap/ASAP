@@ -8,7 +8,6 @@ import jakarta.persistence.Table;
 import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import shop.woowasap.shop.repository.entity.BaseEntity;
 
 @Entity
 @Getter

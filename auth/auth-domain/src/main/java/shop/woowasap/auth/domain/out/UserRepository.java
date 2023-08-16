@@ -7,5 +7,5 @@ public interface UserRepository {
 
     User insertUser(final User user);
 
-    Optional<User> findByUserId(final String userId);
+    Optional<User> findByUsername(final String username);
 }
