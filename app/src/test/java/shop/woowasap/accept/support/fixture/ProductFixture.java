@@ -4,10 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import shop.woowasap.auth.controller.request.LoginRequest;
-import shop.woowasap.shop.app.api.request.RegisterProductRequest;
-import shop.woowasap.shop.app.api.request.UpdateProductRequest;
-import shop.woowasap.shop.app.api.response.ProductResponse;
-import shop.woowasap.shop.app.api.response.ProductsResponse;
+import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
+import shop.woowasap.shop.domain.api.product.response.ProductResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
 
 public class ProductFixture {
 
@@ -45,8 +46,7 @@ public class ProductFixture {
 
     public static ProductsResponse productsResponse(final Long productId) {
         return new ProductsResponse(
-            List.of(
-                new ProductsResponse.ProductResponse(productId, NAME, PRICE, START_TIME, END_TIME)),
+            List.of(new ProductResponse(productId, NAME, PRICE, START_TIME, END_TIME)),
             1,
             1
         );
@@ -62,22 +62,20 @@ public class ProductFixture {
             LocalDateTime.now().minusHours(3), LocalDateTime.now().minusHours(2));
     }
 
-    public static ProductsResponse productsResponse(
-        final List<RegisterProductRequest> registerProductRequests) {
-        final List<ProductsResponse.ProductResponse> products = registerProductRequests.stream()
-            .map(product -> new ProductsResponse.ProductResponse(
-                UNKNOWN_ID,
-                product.name(),
-                product.price(),
-                product.startTime(),
-                product.endTime()
-            )).collect(Collectors.toList());
+    public static ProductsResponse productsResponse(final List<RegisterProductRequest> registerProductRequests) {
+        final List<ProductResponse> products = registerProductRequests.stream().map(product -> new ProductResponse(
+            UNKNOWN_ID,
+            product.name(),
+            product.price(),
+            product.startTime(),
+            product.endTime()
+        )).collect(Collectors.toList());
 
         return new ProductsResponse(products, PAGE, TOTAL_PAGE);
     }
 
-    public static ProductResponse productResponse(RegisterProductRequest registerProductRequest) {
-        return new ProductResponse(UNKNOWN_ID, registerProductRequest.name(),
+    public static ProductDetailsResponse productResponse(RegisterProductRequest registerProductRequest) {
+        return new ProductDetailsResponse(UNKNOWN_ID, registerProductRequest.name(),
             registerProductRequest.description(), registerProductRequest.price(),
             registerProductRequest.quantity(), registerProductRequest.startTime(),
             registerProductRequest.endTime());

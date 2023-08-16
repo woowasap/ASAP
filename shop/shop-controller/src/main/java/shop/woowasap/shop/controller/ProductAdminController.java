@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import shop.woowasap.shop.app.api.ProductUseCase;
-import shop.woowasap.shop.app.api.request.RegisterProductRequest;
-import shop.woowasap.shop.app.api.request.UpdateProductRequest;
-import shop.woowasap.shop.app.api.response.ProductResponse;
-import shop.woowasap.shop.app.api.response.ProductsResponse;
-import shop.woowasap.shop.app.exception.CannotFindProductException;
+import shop.woowasap.shop.domain.api.product.ProductUseCase;
+import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
+import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,14 +53,14 @@ public class ProductAdminController {
     }
 
     @GetMapping("/{product-id}")
-    public ResponseEntity<ProductResponse> readProduct(
+    public ResponseEntity<ProductDetailsResponse> readProduct(
         @PathVariable("product-id") final Long productId) {
-        final ProductResponse productResponse = productUseCase.getByIdWithAdmin(productId);
+        final ProductDetailsResponse productResponse = productUseCase.getByProductIdWithAdmin(productId);
 
         return ResponseEntity.ok(productResponse);
     }
 
-    @ExceptionHandler(CannotFindProductException.class)
+    @ExceptionHandler(NotExistsProductException.class)
     public ResponseEntity<Void> handleException() {
         return ResponseEntity.badRequest().build();
     }

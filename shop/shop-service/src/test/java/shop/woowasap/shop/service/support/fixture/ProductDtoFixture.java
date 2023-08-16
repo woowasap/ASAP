@@ -2,8 +2,8 @@ package shop.woowasap.shop.service.support.fixture;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import shop.woowasap.shop.app.api.response.ProductResponse;
-import shop.woowasap.shop.app.product.Product;
+import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.product.Product;
 
 public final class ProductDtoFixture {
 
@@ -12,8 +12,8 @@ public final class ProductDtoFixture {
             "Cannot invoke constructor \"ProductDtoFixture()\"");
     }
 
-    public static ProductResponse fromProduct(Product product) {
-        return new ProductResponse(product.getId(), product.getName().getValue(),
+    public static ProductDetailsResponse fromProduct(Product product) {
+        return new ProductDetailsResponse(product.getId(), product.getName().getValue(),
             product.getDescription().getValue(), product.getPrice().getValue().toString(),
             product.getQuantity().getValue(),
             LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),

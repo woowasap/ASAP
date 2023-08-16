@@ -5,11 +5,12 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.app.api.response.ProductResponse;
-import shop.woowasap.shop.app.api.response.ProductsResponse;
-import shop.woowasap.shop.app.product.Product;
-import shop.woowasap.shop.app.api.request.RegisterProductRequest;
-import shop.woowasap.shop.app.spi.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.spi.response.ProductsPaginationResponse;
 
 public final class ProductMapper {
 
@@ -29,8 +30,8 @@ public final class ProductMapper {
             .build();
     }
 
-    public static ProductResponse toProductResponse(final Product product, final ZoneId zoneId) {
-        return new ProductResponse(product.getId(), product.getName().getValue(),
+    public static ProductDetailsResponse toProductResponse(final Product product, final ZoneId zoneId) {
+        return new ProductDetailsResponse(product.getId(), product.getName().getValue(),
             product.getDescription().getValue(), product.getPrice().getValue().toString(),
             product.getQuantity().getValue(),
             LocalDateTime.ofInstant(product.getStartTime(), zoneId),
@@ -41,8 +42,8 @@ public final class ProductMapper {
         final ProductsPaginationResponse paginationResponse,
         final ZoneId zoneId
     ) {
-        final List<ProductsResponse.ProductResponse> products = paginationResponse.products().stream()
-            .map(product -> new ProductsResponse.ProductResponse(
+        final List<ProductResponse> products = paginationResponse.products().stream()
+            .map(product -> new ProductResponse(
                 product.getId(),
                 product.getName().getValue(),
                 product.getPrice().getValue().toString(),

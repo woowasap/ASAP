@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
-import shop.woowasap.shop.app.api.response.ProductResponse;
-import shop.woowasap.shop.app.api.response.ProductsResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
 
 public final class ShopValidator {
 
     private static final RecursiveComparisonConfiguration IGNORE_ID_COMPARISON = RecursiveComparisonConfiguration.builder()
-        .withIgnoredFields("id")
+        .withIgnoredFields("id", "startTime", "endTime")
         .build();
 
     private ShopValidator() {
@@ -40,15 +40,15 @@ public final class ShopValidator {
         assertThat(result.totalPage()).isEqualTo(expected.totalPage());
 
         assertThat(result).usingRecursiveComparison(RecursiveComparisonConfiguration.builder()
-            .withIgnoredFields("products.productId")
+            .withIgnoredFields("products.productId", "products.startTime", "products.endTime")
             .build()).isEqualTo(expected);
     }
 
     public static void assertProduct(ExtractableResponse<Response> result,
-        ProductResponse expected) {
+        ProductDetailsResponse expected) {
         HttpValidator.assertOk(result);
 
-        ProductResponse productResponse = result.as(ProductResponse.class);
+        ProductDetailsResponse productResponse = result.as(ProductDetailsResponse.class);
 
         assertThat(productResponse).usingRecursiveComparison(IGNORE_ID_COMPARISON)
             .isEqualTo(expected);
