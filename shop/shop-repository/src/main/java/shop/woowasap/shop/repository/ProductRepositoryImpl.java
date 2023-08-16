@@ -52,7 +52,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public ProductsPaginationResponse findAllWithPagination(final int page, final int size) {
-        final PageRequest pageRequest = PageRequest.of(page, size);
+        final PageRequest pageRequest = PageRequest.of(page - 1, size);
         final Page<ProductEntity> pagination = productJpaRepository.findAll(pageRequest);
 
         final List<Product> products = pagination.get()
