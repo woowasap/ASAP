@@ -1,8 +1,7 @@
-package shop.woowasap.shop.repository.entity.cart;
+package shop.woowasap.shop.repository.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
-import shop.woowasap.shop.repository.entity.product.ProductEntity;
 
 public class CartProductId implements Serializable {
 

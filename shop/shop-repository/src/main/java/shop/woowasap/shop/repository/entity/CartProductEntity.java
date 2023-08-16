@@ -1,4 +1,4 @@
-package shop.woowasap.shop.repository.entity.cart;
+package shop.woowasap.shop.repository.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +10,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import shop.woowasap.shop.repository.entity.product.ProductEntity;
 
 @Entity
 @Getter

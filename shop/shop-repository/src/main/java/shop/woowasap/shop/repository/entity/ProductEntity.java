@@ -1,4 +1,4 @@
-package shop.woowasap.shop.repository.entity.product;
+package shop.woowasap.shop.repository.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

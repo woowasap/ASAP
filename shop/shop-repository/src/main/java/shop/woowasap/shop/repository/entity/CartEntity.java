@@ -1,4 +1,4 @@
-package shop.woowasap.shop.repository.entity.cart;
+package shop.woowasap.shop.repository.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import shop.woowasap.shop.repository.entity.BaseEntity;
 
 @Entity
 @Getter
