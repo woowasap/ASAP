@@ -138,8 +138,10 @@ class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartProducts() {
         // given
         final String accessToken = "Token";
-
-        final long productId = 33L;
+        final RegisterProductRequest registerProductRequest = registerProductRequest();
+        final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
+            registerProductRequest);
+        final long productId = Long.parseLong(registerResponse.header("Location").split("/")[4]);
 
         // when
         final ExtractableResponse<Response> response = CartApiSupporter.deleteCartProduct(
