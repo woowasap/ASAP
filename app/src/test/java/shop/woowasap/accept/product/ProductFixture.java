@@ -1,7 +1,7 @@
 package shop.woowasap.accept.product;
 
 import java.time.LocalDateTime;
-import shop.woowasap.mock.dto.LoginRequest;
+import shop.woowasap.auth.controller.request.LoginRequest;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 

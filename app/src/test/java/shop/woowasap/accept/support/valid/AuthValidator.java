@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import shop.woowasap.mock.dto.SignUpResponse;
 
 public final class AuthValidator {
 
@@ -14,18 +13,11 @@ public final class AuthValidator {
     public static void assertLoginSuccess(ExtractableResponse<Response> result) {
         HttpValidator.assertOk(result);
 
-        String token = result.jsonPath().getString("token");
+        String token = result.jsonPath().getString("accessToken");
         assertThat(token).isNotBlank();
     }
 
     public static void assertLoginFail(ExtractableResponse<Response> result) {
         HttpValidator.assertBadRequest(result);
-    }
-
-    public static void assertSigned(ExtractableResponse<Response> result, SignUpResponse expected) {
-        HttpValidator.assertCreated(result);
-
-        SignUpResponse resultResponse = result.as(SignUpResponse.class);
-        assertThat(resultResponse).isEqualTo(expected);
     }
 }

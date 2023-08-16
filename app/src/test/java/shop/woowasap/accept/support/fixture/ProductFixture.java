@@ -3,7 +3,7 @@ package shop.woowasap.accept.support.fixture;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import shop.woowasap.mock.dto.LoginRequest;
+import shop.woowasap.auth.controller.request.LoginRequest;
 import shop.woowasap.shop.app.api.request.RegisterProductRequest;
 import shop.woowasap.shop.app.api.request.UpdateProductRequest;
 import shop.woowasap.shop.app.api.response.ProductResponse;

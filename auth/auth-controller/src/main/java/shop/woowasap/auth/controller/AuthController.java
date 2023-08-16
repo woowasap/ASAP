@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import shop.woowasap.auth.controller.request.LoginRequest;
 import shop.woowasap.auth.controller.request.SignUpRequest;
 import shop.woowasap.auth.domain.exception.AuthDomainBaseException;
 import shop.woowasap.auth.domain.exception.DuplicatedUsernameException;
 import shop.woowasap.auth.domain.in.UserUseCase;
 import shop.woowasap.auth.domain.in.request.UserCreateRequest;
+import shop.woowasap.auth.domain.in.response.LoginResponse;
 
 @Slf4j
 @RestController
@@ -31,6 +33,14 @@ public class AuthController {
         userUseCase.createUser(
             new UserCreateRequest(signUpRequest.username(), signUpRequest.password()));
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(
+        @RequestBody @Valid final LoginRequest loginRequest) {
+
+        LoginResponse loginResponse = userUseCase.login(loginRequest.toUserLoginRequest());
+        return ResponseEntity.ok().body(loginResponse);
     }
 
     @ExceptionHandler(DuplicatedUsernameException.class)
