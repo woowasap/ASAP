@@ -39,7 +39,7 @@ public class CartController {
 
     @PatchMapping
     public ResponseEntity<Void> updateCartProduct(
-        @RequestBody UpdateCartProductRequest updateCartProductRequest) {
+        @RequestBody final UpdateCartProductRequest updateCartProductRequest) {
         cartUseCase.updateCartProduct(MOCK_USER_ID, updateCartProductRequest);
 
         return ResponseEntity.ok().build();
