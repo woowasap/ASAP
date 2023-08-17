@@ -85,7 +85,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
             List.of(expectedOrderProductResponse),
             new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(),
             LocalDateTime.now());
-        final OrdersResponse expected = new OrdersResponse(List.of(expectedOrderResponse), 1, 20);
+        final OrdersResponse expected = new OrdersResponse(List.of(expectedOrderResponse), 1, 1);
 
         // when
         final ExtractableResponse<Response> result = OrderApiSupporter.getAllProducts(token);

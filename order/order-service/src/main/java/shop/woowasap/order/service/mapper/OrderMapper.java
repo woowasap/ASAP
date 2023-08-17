@@ -49,7 +49,7 @@ public final class OrderMapper {
     private static OrderProduct toOrderProduct(final Product product, final long quantity) {
         return OrderProduct.builder()
             .productId(product.getId())
-            .price(product.getPrice().getValue().toString())
+            .price(product.getPrice().getValue().multiply(BigInteger.valueOf(quantity)).toString())
             .name(product.getName().getValue())
             .quantity(quantity)
             .startTime(product.getStartTime())
@@ -59,7 +59,8 @@ public final class OrderMapper {
 
     public static OrderProductResponse toOrderProductResponse(final OrderProduct orderProduct) {
         return new OrderProductResponse(orderProduct.getProductId(), orderProduct.getName(),
-            orderProduct.getPrice().divide(BigInteger.valueOf(orderProduct.getQuantity())).toString()
+            orderProduct.getPrice().divide(BigInteger.valueOf(orderProduct.getQuantity()))
+                .toString()
             , orderProduct.getQuantity());
     }
 
@@ -89,7 +90,8 @@ public final class OrderMapper {
         final OrderProduct orderProduct) {
         return new DetailOrderProductResponse(orderProduct.getProductId(),
             orderProduct.getName(),
-            orderProduct.getPrice().divide(BigInteger.valueOf(orderProduct.getQuantity())).toString(),
+            orderProduct.getPrice().divide(BigInteger.valueOf(orderProduct.getQuantity()))
+                .toString(),
             orderProduct.getQuantity());
     }
 }

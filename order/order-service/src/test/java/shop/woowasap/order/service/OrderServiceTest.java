@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.Mockito.when;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -177,7 +178,8 @@ class OrderServiceTest {
             when(cartConnector.findByCartIdAndUserId(cartId, userId)).thenReturn(Optional.empty());
 
             // when
-            final Exception result = catchException(() -> orderUseCase.orderCartByCartIdAndUserId(cartId, userId));
+            final Exception result = catchException(
+                () -> orderUseCase.orderCartByCartIdAndUserId(cartId, userId));
 
             // then
             assertThat(result).isInstanceOf(DoesNotFindCartException.class);
@@ -203,7 +205,8 @@ class OrderServiceTest {
             when(payment.pay(userId)).thenReturn(false);
 
             // when
-            final Exception result = catchException(() -> orderUseCase.orderCartByCartIdAndUserId(cartId, userId));
+            final Exception result = catchException(
+                () -> orderUseCase.orderCartByCartIdAndUserId(cartId, userId));
 
             // then
             assertThat(result).isInstanceOf(DoesNotOrderedException.class);
@@ -232,8 +235,9 @@ class OrderServiceTest {
             when(productConnector.findByProductId(product.getId())).thenReturn(
                 Optional.of(product));
 
-            final OrdersResponse expected = OrderDtoFixture.ordersResponse(List.of(defaultOrder), "Asia/Seoul",
-                page, size, product.getName().getValue(), product.getPrice().getValue().toString());
+            final OrdersResponse expected = OrderDtoFixture.ordersResponse(List.of(defaultOrder),
+                "Asia/Seoul", page, size, product.getName().getValue(),
+                product.getPrice().getValue().toString());
 
             // when
             final OrdersResponse result = orderUseCase.getOrderByUserId(userId, page, size);
@@ -276,16 +280,19 @@ class OrderServiceTest {
             final OrderProduct orderProduct = OrderProductFixture.from(product);
             final Order order = OrderFixture.getDefault(List.of(orderProduct));
 
-            when(orderRepository.findOrderByOrderIdAndUserId(orderId, userId)).thenReturn(Optional.of(order));
+            when(orderRepository.findOrderByOrderIdAndUserId(orderId, userId)).thenReturn(
+                Optional.of(order));
 
-            when(productConnector.findByProductId(product.getId())).thenReturn(Optional.of(product));
+            when(productConnector.findByProductId(product.getId())).thenReturn(
+                Optional.of(product));
 
             final DetailOrderResponse expected = OrderDtoFixture.detailOrderResponse(order,
                 product.getName().getValue(),
                 product.getPrice().getValue().toString(), "Asia/Seoul");
 
             // when
-            final DetailOrderResponse result = orderUseCase.getOrderByOrderIdAndUserId(orderId, userId);
+            final DetailOrderResponse result = orderUseCase.getOrderByOrderIdAndUserId(orderId,
+                userId);
 
             // then
             assertThat(result).isEqualTo(expected);
@@ -298,10 +305,12 @@ class OrderServiceTest {
             final long orderId = 1L;
             final long userId = 1L;
 
-            when(orderRepository.findOrderByOrderIdAndUserId(orderId, userId)).thenReturn(Optional.empty());
+            when(orderRepository.findOrderByOrderIdAndUserId(orderId, userId)).thenReturn(
+                Optional.empty());
 
             // when
-            final Exception result = catchException(() -> orderUseCase.getOrderByOrderIdAndUserId(orderId, userId));
+            final Exception result = catchException(
+                () -> orderUseCase.getOrderByOrderIdAndUserId(orderId, userId));
 
             // then
             assertThat(result).isInstanceOf(DoesNotFindOrderException.class);

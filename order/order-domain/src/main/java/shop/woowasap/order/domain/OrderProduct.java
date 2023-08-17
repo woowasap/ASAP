@@ -28,7 +28,7 @@ public class OrderProduct {
         this.productId = productId;
         this.name = name;
         this.quantity = quantity;
-        this.price = new BigInteger(price).multiply(BigInteger.valueOf(quantity));
+        this.price = new BigInteger(price);
     }
 
     private void validPrice(final String price) {

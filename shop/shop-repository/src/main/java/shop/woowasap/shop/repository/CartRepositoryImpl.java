@@ -1,5 +1,6 @@
 package shop.woowasap.shop.repository;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.woowasap.shop.domain.cart.Cart;

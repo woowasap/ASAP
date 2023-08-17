@@ -30,7 +30,7 @@ import shop.woowasap.order.domain.in.response.OrdersResponse;
 @RequestMapping("/v1/orders")
 public class OrderController {
 
-    private static final long MOCK_USER_ID = 1L;
+    private static final long MOCK_USER_ID = 33L;
 
     private final OrderUseCase orderUseCase;
 
