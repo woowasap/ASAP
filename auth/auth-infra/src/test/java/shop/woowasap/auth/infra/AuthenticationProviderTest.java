@@ -40,12 +40,14 @@ class AuthenticationProviderTest {
             // given
             final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVHlwZSI6IlJPTEVfVVNFUiIsInVzZXJJZCI6MSwiaWF0IjoxNjkyMDU3NjAxLCJleHAiOjE2OTIyNzM2MDF9.bVVPMLAxm2Vc6zy697wvJBSkYWPkAzEDP_LQ6ZJj9K8";
             final String bearerToken = "Bearer " + accessToken;
+            when(jwtTokenProvider.extractAccessToken(bearerToken)).thenReturn(
+                Optional.of(accessToken));
             when(jwtTokenProvider.validateToken(accessToken)).thenReturn(true);
             when(jwtTokenProvider.getUserId(accessToken)).thenReturn("1");
             when(jwtTokenProvider.getAuthorities(accessToken)).thenReturn(List.of("ROLE_USER"));
 
             // when
-            Optional<Authentication> authentication = authenticationProvider
+            final Optional<Authentication> authentication = authenticationProvider
                 .findAuthentication(bearerToken);
 
             // then
@@ -57,8 +59,11 @@ class AuthenticationProviderTest {
         @ValueSource(strings = {"hello.world"})
         @DisplayName("잘못된 토큰 입력시 인증 반환")
         void findAuthenticationWrongToken(String bearerToken) {
+            // given
+            when(jwtTokenProvider.extractAccessToken(bearerToken)).thenReturn(Optional.empty());
+
             // when
-            Optional<Authentication> authentication = authenticationProvider
+            final Optional<Authentication> authentication = authenticationProvider
                 .findAuthentication(bearerToken);
 
             // then
@@ -71,10 +76,12 @@ class AuthenticationProviderTest {
             // given
             final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVHlwZSI6IlJPTEVfVVNFUiIsInVzZXJJZCI6MSwiaWF0IjoxNjkyMDU3NjAxLCJleHAiOjE2OTIyNzM2MDF9.bVVPMLAxm2Vc6zy697wvJBSkYWPkAzEDP_LQ6ZJj9K8";
             final String bearerToken = "Bearer " + accessToken;
+            when(jwtTokenProvider.extractAccessToken(bearerToken)).thenReturn(
+                Optional.of(accessToken));
             when(jwtTokenProvider.validateToken(accessToken)).thenReturn(false);
 
             // when
-            Optional<Authentication> authentication = authenticationProvider
+            final Optional<Authentication> authentication = authenticationProvider
                 .findAuthentication(bearerToken);
 
             // then
