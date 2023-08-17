@@ -8,8 +8,10 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.woowasap.order.domain.OrderProduct;
 
 @Entity
 @Getter
@@ -36,4 +38,22 @@ public class OrderProductEntity extends BaseEntity {
     @Column(name = "quantity", nullable = false)
     private Long quantity;
 
+    protected OrderProductEntity(final OrderEntity orderEntity, final OrderProduct orderProduct) {
+        this.orderEntity = orderEntity;
+        this.productId = orderProduct.getProductId();
+        this.name = orderProduct.getName();
+        this.price = orderProduct.getPrice().toString();
+        this.quantity = orderProduct.getQuantity();
+    }
+
+    protected OrderProduct toDomain() {
+        return OrderProduct.builder()
+            .productId(this.productId)
+            .name(this.name)
+            .price(this.price)
+            .quantity(this.quantity)
+            .startTime(Instant.MIN)
+            .endTime(Instant.MAX)
+            .build();
+    }
 }

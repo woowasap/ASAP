@@ -1,5 +1,6 @@
 package shop.woowasap.order.service.mapper;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -21,8 +22,8 @@ public final class OrderMapper {
         throw new UnsupportedOperationException("Cannot invoke constructor \"OrderMapper()\"");
     }
 
-    public static Order toDomain(final IdGenerator idGenerator, final OrderProductRequest orderProductRequest,
-        final Product product) {
+    public static Order toDomain(final IdGenerator idGenerator,
+        final OrderProductRequest orderProductRequest, final Product product) {
         return Order.builder()
             .id(idGenerator.generate())
             .userId(orderProductRequest.userId())
@@ -30,10 +31,12 @@ public final class OrderMapper {
             .build();
     }
 
-    public static Order toDomain(final IdGenerator idGenerator, final long userId, final Cart cart) {
+    public static Order toDomain(final IdGenerator idGenerator, final long userId,
+        final Cart cart) {
         final List<OrderProduct> orderProducts = cart.getCartProducts()
             .stream()
-            .map(cartProduct -> toOrderProduct(cartProduct.getProduct(), cartProduct.getQuantity().getValue()))
+            .map(cartProduct -> toOrderProduct(cartProduct.getProduct(),
+                cartProduct.getQuantity().getValue()))
             .toList();
 
         return Order.builder()
@@ -46,23 +49,27 @@ public final class OrderMapper {
     private static OrderProduct toOrderProduct(final Product product, final long quantity) {
         return OrderProduct.builder()
             .productId(product.getId())
-            .price(product.getPrice().getValue().toString())
+            .price(product.getPrice().getValue().multiply(BigInteger.valueOf(quantity)).toString())
+            .name(product.getName().getValue())
             .quantity(quantity)
             .startTime(product.getStartTime())
             .endTime(product.getEndTime())
             .build();
     }
 
-    public static OrderProductResponse toOrderProductResponse(final Product product, final long quantity) {
-        return new OrderProductResponse(product.getId(), product.getName().getValue(),
-            product.getPrice().getValue().toString(), quantity);
+    public static OrderProductResponse toOrderProductResponse(final OrderProduct orderProduct) {
+        return new OrderProductResponse(orderProduct.getProductId(), orderProduct.getName(),
+            orderProduct.getPrice().divide(BigInteger.valueOf(orderProduct.getQuantity()))
+                .toString()
+            , orderProduct.getQuantity());
     }
 
     public static OrderResponse toOrderResponse(final Order order,
         final List<OrderProductResponse> orderProductResponses, final String locale) {
 
         return new OrderResponse(order.getId(), orderProductResponses,
-            order.getTotalPrice().toString(), LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
+            order.getTotalPrice().toString(),
+            LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
     }
 
     public static OrdersResponse toOrdersResponse(final List<OrderResponse> orderResponses,
@@ -74,13 +81,17 @@ public final class OrderMapper {
     public static DetailOrderResponse toDetailOrderResponse(final Order order,
         final List<DetailOrderProductResponse> detailOrderProductResponses, final String locale) {
 
-        return new DetailOrderResponse(order.getId(), detailOrderProductResponses, order.getTotalPrice().toString(),
+        return new DetailOrderResponse(order.getId(), detailOrderProductResponses,
+            order.getTotalPrice().toString(),
             LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
     }
 
-    public static DetailOrderProductResponse toDetailOrderProductResponse(final OrderProduct orderProduct,
-        final Product product) {
-        return new DetailOrderProductResponse(orderProduct.getProductId(), product.getName().getValue(),
-            product.getPrice().getValue().toString(), orderProduct.getQuantity());
+    public static DetailOrderProductResponse toDetailOrderProductResponse(
+        final OrderProduct orderProduct) {
+        return new DetailOrderProductResponse(orderProduct.getProductId(),
+            orderProduct.getName(),
+            orderProduct.getPrice().divide(BigInteger.valueOf(orderProduct.getQuantity()))
+                .toString(),
+            orderProduct.getQuantity());
     }
 }

@@ -2,6 +2,7 @@ package shop.woowasap.shop.service;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.shop.domain.api.cart.CartConnector;
@@ -23,7 +24,7 @@ public class CartConnectorService implements CartConnector {
                 return Optional.empty();
             }
             return Optional.of(cart);
-        } catch (IllegalStateException illegalStateException) {
+        } catch (InvalidDataAccessApiUsageException invalidDataAccessApiUsageException) {
             return Optional.empty();
         }
     }

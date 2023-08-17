@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
+import shop.woowasap.order.domain.exception.BlankProductNameException;
 import shop.woowasap.order.domain.exception.InvalidPriceException;
 import shop.woowasap.order.domain.exception.InvalidProductSaleTimeException;
 import shop.woowasap.order.domain.exception.InvalidQuantityException;
@@ -13,18 +14,21 @@ import shop.woowasap.order.domain.exception.InvalidQuantityException;
 public class OrderProduct {
 
     private final long productId;
+    private final String name;
     private final long quantity;
     private final BigInteger price;
 
     @Builder
-    private OrderProduct(final long productId, final long quantity, final String price,
-        final Instant startTime, final Instant endTime) {
+    private OrderProduct(final long productId, final String name, final long quantity, final String price,
+            final Instant startTime, final Instant endTime) {
         validPrice(price);
         validQuantity(quantity);
-        validateProductSaleTime(startTime, endTime);
+        validProductSaleTime(startTime, endTime);
+        validName(name);
         this.productId = productId;
+        this.name = name;
         this.quantity = quantity;
-        this.price = new BigInteger(price).multiply(BigInteger.valueOf(quantity));
+        this.price = new BigInteger(price);
     }
 
     private void validPrice(final String price) {
@@ -52,10 +56,16 @@ public class OrderProduct {
         }
     }
 
-    private void validateProductSaleTime(final Instant startTime, final Instant endTime) {
+    private void validProductSaleTime(final Instant startTime, final Instant endTime) {
         final Instant currentTime = Instant.now();
         if (currentTime.isBefore(startTime) || currentTime.isAfter(endTime)) {
             throw new InvalidProductSaleTimeException(startTime, currentTime, endTime);
+        }
+    }
+
+    private void validName(final String name) {
+        if (name == null || name.isBlank()) {
+            throw new BlankProductNameException();
         }
     }
 }

@@ -83,8 +83,9 @@ class OrderAcceptanceTest extends AcceptanceTest {
             product.productId(), product.name(), product.price(), quantity);
         final OrderResponse expectedOrderResponse = new OrderResponse(1L,
             List.of(expectedOrderProductResponse),
-            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(), LocalDateTime.now());
-        final OrdersResponse expected = new OrdersResponse(List.of(expectedOrderResponse), 1, 20);
+            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(),
+            LocalDateTime.now());
+        final OrdersResponse expected = new OrdersResponse(List.of(expectedOrderResponse), 1, 1);
 
         // when
         final ExtractableResponse<Response> result = OrderApiSupporter.getAllProducts(token);
@@ -109,13 +110,16 @@ class OrderAcceptanceTest extends AcceptanceTest {
         final long orderId = ordersResponse.orders().get(0).orderId();
 
         final DetailOrderProductResponse expectedDetailOrderProductResponse =
-            new DetailOrderProductResponse(product.productId(), product.name(), product.price(), quantity);
+            new DetailOrderProductResponse(product.productId(), product.name(), product.price(),
+                quantity);
         final DetailOrderResponse expectedDetailOrderResponse = new DetailOrderResponse(orderId,
             List.of(expectedDetailOrderProductResponse),
-            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(), LocalDateTime.now());
+            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(),
+            LocalDateTime.now());
 
         // when
-        final ExtractableResponse<Response> result = OrderApiSupporter.getOrderByOrderId(orderId, token);
+        final ExtractableResponse<Response> result = OrderApiSupporter.getOrderByOrderId(orderId,
+            token);
 
         // then
         OrderValidator.assertOrder(result, expectedDetailOrderResponse);
@@ -129,7 +133,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
         final long invalidOrderId = 999L;
 
         // when
-        final ExtractableResponse<Response> result = OrderApiSupporter.getOrderByOrderId(invalidOrderId, token);
+        final ExtractableResponse<Response> result = OrderApiSupporter.getOrderByOrderId(
+            invalidOrderId, token);
 
         // then
         HttpValidator.assertBadRequest(result);
@@ -143,7 +148,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         final ProductResponse product = getRandomProduct(token);
         final int quantity = 2;
-        final AddCartProductRequest addCartProductRequest = new AddCartProductRequest(product.productId(), quantity);
+        final AddCartProductRequest addCartProductRequest = new AddCartProductRequest(
+            product.productId(), quantity);
 
         CartApiSupporter.addCartProduct(token, addCartProductRequest);
 
@@ -165,14 +171,15 @@ class OrderAcceptanceTest extends AcceptanceTest {
         final long invalidCartId = 999L;
 
         // when
-        final ExtractableResponse<Response> result = OrderApiSupporter.orderCart(invalidCartId, token);
+        final ExtractableResponse<Response> result = OrderApiSupporter.orderCart(invalidCartId,
+            token);
 
         // then
         HttpValidator.assertBadRequest(result);
     }
 
     private ProductResponse getRandomProduct(final String token) {
-        ShopApiSupporter.registerProduct(token, ProductFixture.registerProductRequest());
+        ShopApiSupporter.registerProduct(token, ProductFixture.registerValidProductRequest());
 
         return ShopApiSupporter.getAllProducts().as(ProductsResponse.class)
             .products().get(0);

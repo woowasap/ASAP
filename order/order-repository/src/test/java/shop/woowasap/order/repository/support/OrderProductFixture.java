@@ -1,4 +1,4 @@
-package shop.woowasap.order.domain.support.fixture;
+package shop.woowasap.order.repository.support;
 
 import java.time.Instant;
 import shop.woowasap.order.domain.OrderProduct;
@@ -11,7 +11,8 @@ public final class OrderProductFixture {
     private static final String DEFAULT_PRICE = "1";
 
     private OrderProductFixture() {
-        throw new UnsupportedOperationException("Cannot invoke constructor \"OrderProductFixture()\"");
+        throw new UnsupportedOperationException(
+            "Cannot invoke constructor \"OrderProductFixture()\"");
     }
 
     public static OrderProduct defaultProduct() {
@@ -22,12 +23,12 @@ public final class OrderProductFixture {
         Instant startTime = Instant.now().minusSeconds(100);
         Instant endTime = Instant.now().plusSeconds(100);
         return OrderProduct.builder()
-                .productId(DEFAULT_PRODUCT_ID)
-                .name(DEFAULT_NAME)
-                .quantity(DEFAULT_QUANTITY)
-                .price(DEFAULT_PRICE)
-                .startTime(startTime)
-                .endTime(endTime);
+            .productId(DEFAULT_PRODUCT_ID)
+            .name(DEFAULT_NAME)
+            .quantity(DEFAULT_QUANTITY)
+            .price(DEFAULT_PRICE)
+            .startTime(startTime)
+            .endTime(endTime);
     }
 
 }
