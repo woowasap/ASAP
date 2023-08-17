@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -120,6 +121,37 @@ class JwtTokenProviderTest {
             assertThat(result).isFalse();
         }
     }
+
+    @Nested
+    @DisplayName("JwtTokenProvider.extractAccessToken 메소드")
+    class JwtTokenProviderExtractAccessTokenMethod {
+
+        @Test
+        @DisplayName("정상 입력 시 액세스 토큰에 클레임 정상 생성")
+        void extractAccessTokenThenReturnAccessToken() {
+            // given
+            final String bearerToken = "Bearer e.a.e";
+
+            // when
+            final Optional<String> accessToken = tokenProvider.extractAccessToken(bearerToken);
+
+            // then
+            assertThat(accessToken).isNotEmpty();
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @ValueSource(strings = "asdasdasdasd")
+        @DisplayName("정상 입력 시 액세스 토큰에 클레임 정상 생성")
+        void extractAccessTokenWrongTokenThenReturnEmpty(final String bearerToken) {
+            // when
+            final Optional<String> accessToken = tokenProvider.extractAccessToken(bearerToken);
+
+            // then
+            assertThat(accessToken).isEmpty();
+        }
+    }
+
 
     @Nested
     @DisplayName("JwtTokenProvider.getAuthorities 메소드")
