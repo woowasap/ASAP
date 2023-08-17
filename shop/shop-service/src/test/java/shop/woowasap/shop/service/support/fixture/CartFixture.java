@@ -3,11 +3,11 @@ package shop.woowasap.shop.service.support.fixture;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.productBuilder;
 
 import java.util.List;
-import shop.woowasap.shop.domain.api.cart.request.UpdateCartProductRequest;
-import shop.woowasap.shop.domain.api.cart.response.CartProductResponse;
-import shop.woowasap.shop.domain.api.cart.response.CartResponse;
+import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.response.CartProductResponse;
+import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import java.util.ArrayList;
-import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
 import shop.woowasap.shop.domain.cart.CartProductQuantity;

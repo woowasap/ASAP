@@ -6,8 +6,8 @@ import static io.restassured.http.ContentType.JSON;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
-import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
-import shop.woowasap.shop.domain.api.cart.request.UpdateCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
 
 public final class CartApiSupporter {
 

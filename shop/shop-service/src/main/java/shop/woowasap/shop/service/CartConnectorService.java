@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.woowasap.shop.domain.api.cart.CartConnector;
+import shop.woowasap.shop.domain.in.cart.CartConnector;
 import shop.woowasap.shop.domain.cart.Cart;
-import shop.woowasap.shop.domain.spi.CartRepository;
+import shop.woowasap.shop.domain.out.CartRepository;
 
 @Service
 @RequiredArgsConstructor

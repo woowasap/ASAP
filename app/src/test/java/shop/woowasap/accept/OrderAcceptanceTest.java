@@ -19,10 +19,10 @@ import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
-import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
-import shop.woowasap.shop.domain.api.cart.response.CartResponse;
-import shop.woowasap.shop.domain.api.product.response.ProductResponse;
-import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.response.CartResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
 @DisplayName("Order 인수테스트")
 class OrderAcceptanceTest extends AcceptanceTest {

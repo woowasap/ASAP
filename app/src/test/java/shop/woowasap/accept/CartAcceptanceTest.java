@@ -15,10 +15,10 @@ import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.CartApiSupporter;
 import shop.woowasap.accept.support.fixture.CartFixture;
 import shop.woowasap.accept.support.fixture.ProductFixture;
-import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
-import shop.woowasap.shop.domain.api.cart.request.UpdateCartProductRequest;
-import shop.woowasap.shop.domain.api.cart.response.CartResponse;
-import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.response.CartResponse;
+import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 
 class CartAcceptanceTest extends AcceptanceTest {
 

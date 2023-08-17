@@ -1,4 +1,4 @@
-package shop.woowasap.shop.domain.api.cart;
+package shop.woowasap.shop.domain.in.cart;
 
 import java.util.Optional;
 import shop.woowasap.shop.domain.cart.Cart;

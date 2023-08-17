@@ -27,14 +27,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.domain.api.cart.response.CartResponse;
+import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
 import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.domain.spi.CartRepository;
-import shop.woowasap.shop.domain.spi.ProductRepository;
+import shop.woowasap.shop.domain.out.CartRepository;
+import shop.woowasap.shop.domain.out.ProductRepository;
 import shop.woowasap.shop.service.support.fixture.CartFixture;
 import shop.woowasap.shop.service.support.fixture.ProductFixture;
 

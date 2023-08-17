@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import shop.woowasap.shop.domain.api.cart.CartUseCase;
-import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
-import shop.woowasap.shop.domain.api.cart.request.UpdateCartProductRequest;
-import shop.woowasap.shop.domain.api.cart.response.CartResponse;
+import shop.woowasap.shop.domain.in.cart.CartUseCase;
+import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 

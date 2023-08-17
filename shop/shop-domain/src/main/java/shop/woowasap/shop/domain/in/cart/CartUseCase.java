@@ -1,8 +1,8 @@
-package shop.woowasap.shop.domain.api.cart;
+package shop.woowasap.shop.domain.in.cart;
 
-import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
-import shop.woowasap.shop.domain.api.cart.request.UpdateCartProductRequest;
-import shop.woowasap.shop.domain.api.cart.response.CartResponse;
+import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 
 public interface CartUseCase {
 

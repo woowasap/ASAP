@@ -13,9 +13,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import shop.woowasap.shop.domain.api.cart.CartConnector;
+import shop.woowasap.shop.domain.in.cart.CartConnector;
 import shop.woowasap.shop.domain.cart.Cart;
-import shop.woowasap.shop.domain.spi.CartRepository;
+import shop.woowasap.shop.domain.out.CartRepository;
 import shop.woowasap.shop.service.support.fixture.CartFixture;
 
 @ExtendWith(SpringExtension.class)

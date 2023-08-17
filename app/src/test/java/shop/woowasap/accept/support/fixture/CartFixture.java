@@ -1,10 +1,10 @@
 package shop.woowasap.accept.support.fixture;
 
 import java.util.List;
-import shop.woowasap.shop.domain.api.cart.request.AddCartProductRequest;
-import shop.woowasap.shop.domain.api.cart.request.UpdateCartProductRequest;
-import shop.woowasap.shop.domain.api.cart.response.CartProductResponse;
-import shop.woowasap.shop.domain.api.cart.response.CartResponse;
+import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.response.CartProductResponse;
+import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 
 public final class CartFixture {
 

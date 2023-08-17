@@ -15,7 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import shop.woowasap.BeanScanBaseLocation;
 import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.domain.spi.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
 import shop.woowasap.shop.repository.support.ProductFixture;
 
 @DataJpaTest

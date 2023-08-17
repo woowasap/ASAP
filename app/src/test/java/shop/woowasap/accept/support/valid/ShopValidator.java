@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
-import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
-import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
 public final class ShopValidator {
 

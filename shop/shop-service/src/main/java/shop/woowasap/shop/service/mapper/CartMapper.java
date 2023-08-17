@@ -1,8 +1,8 @@
 package shop.woowasap.shop.service.mapper;
 
 import java.util.List;
-import shop.woowasap.shop.domain.api.cart.response.CartProductResponse;
-import shop.woowasap.shop.domain.api.cart.response.CartResponse;
+import shop.woowasap.shop.domain.in.cart.response.CartProductResponse;
+import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.cart.Cart;
 
 

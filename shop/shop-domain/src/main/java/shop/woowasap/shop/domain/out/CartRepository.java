@@ -1,4 +1,4 @@
-package shop.woowasap.shop.domain.spi;
+package shop.woowasap.shop.domain.out;
 
 import shop.woowasap.shop.domain.cart.Cart;
 

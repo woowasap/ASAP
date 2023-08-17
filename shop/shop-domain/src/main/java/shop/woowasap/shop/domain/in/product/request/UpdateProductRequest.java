@@ -1,4 +1,4 @@
-package shop.woowasap.shop.domain.api.product.request;
+package shop.woowasap.shop.domain.in.product.request;
 
 import java.time.LocalDateTime;
 
