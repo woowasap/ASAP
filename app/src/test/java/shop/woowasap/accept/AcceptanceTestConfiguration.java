@@ -22,10 +22,10 @@ public class AcceptanceTestConfiguration {
     }
 
     @Bean
-    public ApplicationRunner dataInitializer(UserRepository userRepository,
-        PasswordEncoder passwordEncoder) {
+    public ApplicationRunner dataInitializer(final UserRepository userRepository,
+        final PasswordEncoder passwordEncoder) {
         return args -> {
-            User admin = User.builder()
+            final User admin = User.builder()
                 .id(12345L)
                 .username("admin")
                 .password(passwordEncoder.encode("1234567890"))
