@@ -18,13 +18,13 @@ public class Order {
     private final Instant createdAt;
 
     @Builder
-    private Order(final long id, final long userId, final List<OrderProduct> orderProducts) {
+    private Order(final long id, final long userId, final List<OrderProduct> orderProducts, final Instant createdAt) {
         validOrderProducts(orderProducts);
         this.id = id;
         this.userId = userId;
         this.orderProducts = orderProducts;
         this.totalPrice = calculatePrice();
-        this.createdAt = Instant.now();
+        this.createdAt = createdAt == null ? Instant.now() : createdAt;
     }
 
     private void validOrderProducts(final List<OrderProduct> orderProducts) {
