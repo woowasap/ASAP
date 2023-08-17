@@ -12,11 +12,13 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import shop.woowasap.auth.domain.UserType;
 import shop.woowasap.auth.domain.in.TokenProvider;
 import shop.woowasap.auth.domain.in.response.UserResponse;
@@ -28,6 +30,8 @@ public class JwtTokenProvider implements TokenProvider {
 
     private static final String USER_ID = "userId";
     private static final String USER_TYPE = "userType";
+    private static final String BEARER_PREFIX = "Bearer ";
+    private static final int BEARER_PREFIX_LENGTH = 7;
 
     private final Clock clock;
 
@@ -85,6 +89,14 @@ public class JwtTokenProvider implements TokenProvider {
             log.info("IllegalArgumentException: JWT 토큰이 잘못되었습니다.");
         }
         return false;
+    }
+
+    @Override
+    public Optional<String> extractAccessToken(String bearerToken) {
+        if (!StringUtils.hasText(bearerToken) || !bearerToken.startsWith(BEARER_PREFIX)) {
+            return Optional.empty();
+        }
+        return Optional.of(bearerToken.substring(BEARER_PREFIX_LENGTH));
     }
 
     @Override
