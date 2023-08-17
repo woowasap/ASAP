@@ -5,6 +5,7 @@ import io.restassured.response.Response;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.CartApiSupporter;

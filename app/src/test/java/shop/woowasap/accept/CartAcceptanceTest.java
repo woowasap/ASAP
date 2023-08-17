@@ -142,6 +142,8 @@ class CartAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
             registerProductRequest);
         final long productId = Long.parseLong(registerResponse.header("Location").split("/")[4]);
+        CartApiSupporter
+            .addCartProduct(accessToken, CartFixture.addCartProductRequest(productId, 10L));
 
         // when
         final ExtractableResponse<Response> response = CartApiSupporter.deleteCartProduct(

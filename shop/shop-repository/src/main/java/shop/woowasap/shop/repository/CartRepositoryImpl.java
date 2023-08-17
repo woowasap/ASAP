@@ -15,10 +15,9 @@ public class CartRepositoryImpl implements CartRepository {
 
     @Override
     public Cart createEmptyCart(final long userId, final long cartId) {
-        final CartEntity cartEntity = new CartEntity(cartId, userId);
-        cartJpaRepository.save(cartEntity);
+        final CartEntity persist = cartJpaRepository.saveAndFlush(new CartEntity(cartId, userId));
 
-        return cartEntity.toDomain();
+        return persist.toDomain();
     }
 
     @Override
