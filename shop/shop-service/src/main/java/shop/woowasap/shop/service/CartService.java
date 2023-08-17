@@ -65,6 +65,7 @@ public class CartService implements CartUseCase {
     }
 
     @Override
+    @Transactional
     public void deleteCartProduct(final long userId, final long productId) {
         if (!cartRepository.existCartByUserId(userId)) {
             cartRepository.createEmptyCart(userId, idGenerator.generate());

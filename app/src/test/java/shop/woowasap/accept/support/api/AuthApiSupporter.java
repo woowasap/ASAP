@@ -7,6 +7,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import shop.woowasap.auth.controller.request.LoginRequest;
 import shop.woowasap.auth.controller.request.SignUpRequest;
+import shop.woowasap.auth.domain.in.response.LoginResponse;
 
 public final class AuthApiSupporter {
 
@@ -37,4 +38,16 @@ public final class AuthApiSupporter {
             .extract();
     }
 
+    public static String adminAccessToken() {
+        return given()
+            .contentType(JSON)
+            .accept(JSON)
+            .body(new LoginRequest("admin", "1234567890"))
+            .when()
+            .post(API_VERSION + "/login")
+            .then()
+            .extract()
+            .as(LoginResponse.class)
+            .accessToken();
+    }
 }
