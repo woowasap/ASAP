@@ -11,3 +11,4 @@ exclude shop/woowasap/auth/infra/*/*
 exclude shop/woowasap/order/payment/random/RandomOrderPayment
 exclude shop/woowasap/*/repository/entity/*
 exclude shop/woowasap/payment/domain/*
+exclude shop/woowasap/core/util/time/*

@@ -28,6 +28,7 @@ include 'auth:auth-repository'
 include 'auth:auth-infra'
 
 include 'core'
+include 'core:util'
 include 'core:id-gen'
 
 include 'order'
@@ -39,9 +40,5 @@ include 'order:order-repository'
 
 include 'payment'
 include 'payment:payment-domain'
-findProject(':payment:payment-domain')?.name = 'payment-domain'
 include 'payment:payment-service'
-findProject(':payment:payment-service')?.name = 'payment-service'
 include 'payment:payment-repository'
-findProject(':payment:payment-repository')?.name = 'payment-repository'
-
