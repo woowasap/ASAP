@@ -23,5 +23,4 @@ exclude shop/woowasap/*/domain/*/request/*
 exclude shop/woowasap/*/domain/*/response/*
 exclude shop/woowasap/auth/service/configuration/*
 exclude shop/woowasap/auth/infra/*/*
-exclude shop/woowasap/accept/CartAcceptance
 exclude shop/woowasap/*/controller/request/*
