@@ -16,7 +16,7 @@ public abstract class BaseEntity {
 
     @PrePersist
     void prePersist() {
-        Instant now = Instant.now();
+        final Instant now = Instant.now();
 
         createdAt = createdAt != null ? createdAt : now;
         updatedAt = updatedAt != null ? updatedAt : now;
