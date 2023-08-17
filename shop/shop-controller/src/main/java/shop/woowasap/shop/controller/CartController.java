@@ -17,41 +17,42 @@ import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
 import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
+import shop.woowasap.auth.domain.in.LoginUser;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/carts")
 public class CartController {
 
-    private static final long MOCK_USER_ID = 33L;
-
     private final CartUseCase cartUseCase;
 
     @GetMapping
-    public ResponseEntity<CartResponse> getCart() {
-        return ResponseEntity.ok(cartUseCase.getCartByUserId(MOCK_USER_ID));
+    public ResponseEntity<CartResponse> getCart(@LoginUser final Long userId) {
+        return ResponseEntity.ok(cartUseCase.getCartByUserId(userId));
     }
 
     @PostMapping
     public ResponseEntity<Void> createCartProduct(
-        @RequestBody AddCartProductRequest addCartProductRequest) {
-        cartUseCase.addCartProduct(MOCK_USER_ID, addCartProductRequest);
+        @RequestBody final AddCartProductRequest addCartProductRequest,
+        @LoginUser final Long userId) {
+        cartUseCase.addCartProduct(userId, addCartProductRequest);
 
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping
     public ResponseEntity<Void> updateCartProduct(
-        @RequestBody final UpdateCartProductRequest updateCartProductRequest) {
-        cartUseCase.updateCartProduct(MOCK_USER_ID, updateCartProductRequest);
+        @RequestBody final UpdateCartProductRequest updateCartProductRequest,
+        @LoginUser final Long userId) {
+        cartUseCase.updateCartProduct(userId, updateCartProductRequest);
 
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCartProduct(
-        @RequestParam("product-id") final long productId) {
-        cartUseCase.deleteCartProduct(MOCK_USER_ID, productId);
+    public ResponseEntity<Void> deleteCartProduct(@RequestParam("product-id") final long productId,
+        @LoginUser final Long userId) {
+        cartUseCase.deleteCartProduct(userId, productId);
 
         return ResponseEntity.ok().build();
     }
