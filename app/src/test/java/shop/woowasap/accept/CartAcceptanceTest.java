@@ -10,8 +10,10 @@ import static shop.woowasap.accept.support.valid.HttpValidator.assertOk;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import shop.woowasap.accept.support.api.AuthApiSupporter;
 import shop.woowasap.accept.support.api.CartApiSupporter;
 import shop.woowasap.accept.support.fixture.CartFixture;
 import shop.woowasap.accept.support.fixture.ProductFixture;
@@ -22,11 +24,17 @@ import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 
 class CartAcceptanceTest extends AcceptanceTest {
 
+    private String accessToken;
+
+    @BeforeEach
+    void setAccessToken() {
+        accessToken = AuthApiSupporter.adminAccessToken();
+    }
+
     @Test
     @DisplayName("POST /v1/carts 요청을 통해서 해당 상품을 장바구니에 추가한다.")
     void addCartProduct() {
         // given
-        final String accessToken = "Token";
         final long quantity = 10L;
         final long productId = Long.parseLong(registerProduct(accessToken,
             ProductFixture.registerProductRequest())
@@ -45,7 +53,6 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("POST /v1/carts 요청을 통해서 이미 담겨져 있는 상품을 추가로 상품을 장바구니에 추가하는 경우 개수가 증가한다.")
     void addCartProductAlreadyInCart() {
         // given
-        final String accessToken = "Token";
         final long quantity = 10L;
         final long addQuantity = 5L;
         final long productId = Long.parseLong(registerProduct(accessToken,
@@ -67,7 +74,6 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니에 있는 상품을 조회한다.")
     void findCartProducts() {
         // given
-        final String accessToken = "Token";
         final long quantity = 10L;
 
         final RegisterProductRequest registerProductRequest = registerProductRequest();
@@ -92,7 +98,6 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니에 있는 상품의 수량을 수정한다.")
     void updateCartProduct() {
         // given
-        final String accessToken = "Token";
         final long updatedQuantity = 10L;
         final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
             registerProductRequest());
@@ -119,7 +124,6 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("해당 장바구니에 담겨져 있지 않은 상품의 수량을 수정하는 경우 400 BadRequest를 반환한다.")
     void updateNotExistsCartProduct() {
         // given
-        final String accessToken = "Token";
         final long invalidProductId = 999L;
         final long quantity = 10L;
         final UpdateCartProductRequest updateCartProductRequest = new UpdateCartProductRequest(
@@ -137,7 +141,6 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니에 있는 상품을 제거한다.")
     void deleteCartProducts() {
         // given
-        final String accessToken = "Token";
         final RegisterProductRequest registerProductRequest = registerProductRequest();
         final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
             registerProductRequest);
@@ -157,7 +160,6 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("ProductId에 해당하는 상품이 장바구니에 존재하지 않는다면, 400 BadRequest 를 응답한다.")
     void returnBadRequestWhenCannotFoundProductInCart() {
         // given
-        final String accessToken = "Token";
         final long notExitProductId = 517;
 
         // when

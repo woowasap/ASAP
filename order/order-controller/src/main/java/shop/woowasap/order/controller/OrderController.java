@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import shop.woowasap.auth.domain.in.LoginUser;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 import shop.woowasap.order.domain.exception.DoesNotFindCartException;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
@@ -30,15 +31,14 @@ import shop.woowasap.order.domain.in.response.OrdersResponse;
 @RequestMapping("/v1/orders")
 public class OrderController {
 
-    private static final long MOCK_USER_ID = 33L;
-
     private final OrderUseCase orderUseCase;
 
     @PostMapping("/products/{product-id}")
     public ResponseEntity<Void> orderProduct(@PathVariable("product-id") final long productId,
-        @RequestBody final OrderProductQuantityRequest orderProductQuantityRequest) {
+        @RequestBody final OrderProductQuantityRequest orderProductQuantityRequest,
+        @LoginUser final Long userId) {
 
-        final OrderProductRequest orderProductRequest = new OrderProductRequest(MOCK_USER_ID,
+        final OrderProductRequest orderProductRequest = new OrderProductRequest(userId,
             productId,
             orderProductQuantityRequest.quantity());
         final long orderId = orderUseCase.orderProduct(orderProductRequest);
@@ -48,8 +48,9 @@ public class OrderController {
     }
 
     @PostMapping("/carts/{cart-id}")
-    public ResponseEntity<Void> orderCart(@PathVariable("cart-id") final long cartId) {
-        final long orderId = orderUseCase.orderCartByCartIdAndUserId(cartId, MOCK_USER_ID);
+    public ResponseEntity<Void> orderCart(@PathVariable("cart-id") final long cartId,
+        @LoginUser final Long userId) {
+        final long orderId = orderUseCase.orderCartByCartIdAndUserId(cartId, userId);
 
         return ResponseEntity.created(URI.create("/v1/orders/" + orderId))
             .build();
@@ -58,16 +59,17 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<OrdersResponse> getOrdersByUserId(
         @RequestParam(defaultValue = "1") final int page,
-        @RequestParam(defaultValue = "20") final int size) {
+        @RequestParam(defaultValue = "20") final int size,
+        @LoginUser final Long userId) {
 
-        return ResponseEntity.ok(orderUseCase.getOrderByUserId(MOCK_USER_ID, page, size));
+        return ResponseEntity.ok(orderUseCase.getOrderByUserId(userId, page, size));
     }
 
     @GetMapping("/{order-id}")
     public ResponseEntity<DetailOrderResponse> getOrderByOrderIdAndUserID(
-        @PathVariable("order-id") final long orderId) {
+        @PathVariable("order-id") final long orderId, @LoginUser final Long userId) {
 
-        return ResponseEntity.ok(orderUseCase.getOrderByOrderIdAndUserId(orderId, MOCK_USER_ID));
+        return ResponseEntity.ok(orderUseCase.getOrderByOrderIdAndUserId(orderId, userId));
     }
 
     @ExceptionHandler({DoesNotFindProductException.class,
@@ -78,7 +80,7 @@ public class OrderController {
         InvalidQuantityException.class,
         DoesNotFindOrderException.class,
         DoesNotFindCartException.class})
-    private ResponseEntity<Void> handleBadRequest(final RuntimeException runtimeException) {
+    private ResponseEntity<Void> handleBadRequest() {
         return ResponseEntity.badRequest().build();
     }
 }

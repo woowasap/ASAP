@@ -12,8 +12,10 @@ import static shop.woowasap.accept.support.valid.ShopValidator.assertProductsFou
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import shop.woowasap.accept.support.api.AuthApiSupporter;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.fixture.ProductFixture;
 import shop.woowasap.accept.support.valid.HttpValidator;
@@ -26,12 +28,17 @@ import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 @DisplayName("Product 인수테스트")
 class ProductAcceptanceTest extends AcceptanceTest {
 
+    private String accessToken;
+
+    @BeforeEach
+    void setAccessToken() {
+        accessToken = AuthApiSupporter.adminAccessToken();
+    }
+
     @Test
     @DisplayName("상품 내용을 수정한다.")
     void updateProduct() {
         // given
-        final String accessToken = "Token";
-
         final RegisterProductRequest registerProductRequest = registerProductRequest();
         final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
             registerProductRequest);
@@ -55,8 +62,6 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("존재하지 않는 상품을 수정하려고 하는경우 BAD REQUEST 응답을 받는다.")
     void updateProductWithNotFound() {
         // given
-        final String accessToken = "Token";
-
         final long invalidProductId = 123;
 
         final UpdateProductRequest updateProductRequest = updateProductRequest();
@@ -73,9 +78,6 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("POST /products 요청을 통해서 상품을 생성한다.")
     void createProduct() {
-        // given
-        final String accessToken = "Token";
-
         // when
         final ExtractableResponse<Response> response = ShopApiSupporter
             .registerProduct(accessToken, ProductFixture.registerProductRequest());
@@ -88,8 +90,6 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("기한이 유효한 상품의 목록을 조회한다.")
     void findValidProducts() {
         // given
-        final String accessToken = "Token";
-
         final RegisterProductRequest invalidRegisterProductRequest = ProductFixture.registerInvalidProductRequest();
         final RegisterProductRequest validRegisterProductRequest = ProductFixture.registerValidProductRequest();
 
@@ -112,7 +112,6 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("GET /v1/admin/products 요청을 통해서 등록 되어 있는 전체 상품을 조회할 수 있다.")
     void getAdminProducts() {
         // given
-        final String accessToken = "Token";
         final RegisterProductRequest registerProductRequest = registerProductRequest();
         final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
             registerProductRequest);
