@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,7 +51,8 @@ public class CartEntity extends BaseEntity {
         return Cart.builder()
             .id(this.id)
             .userId(this.userId)
-            .cartProducts(this.cartProducts.stream().map(CartProductEntity::toDomain).toList())
+            .cartProducts(this.cartProducts.stream().map(CartProductEntity::toDomain)
+                .collect(Collectors.toList()))
             .build();
     }
 }
