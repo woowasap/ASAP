@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(':order:order-domain')
+    implementation project(':payment:payment-domain')
+}

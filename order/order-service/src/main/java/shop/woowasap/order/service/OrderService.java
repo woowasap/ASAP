@@ -47,7 +47,7 @@ public class OrderService implements OrderUseCase {
         final Product product = getProductByProductId(orderProductRequest.productId());
         final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product);
 
-        if (!payment.pay(orderProductRequest.userId())) {
+        if (!payment.pay(orderProductRequest.userId(), order.getId(), order.getTotalPrice().toString())) {
             throw new DoesNotOrderedException();
         }
 
@@ -68,7 +68,7 @@ public class OrderService implements OrderUseCase {
 
         final Order order = OrderMapper.toDomain(idGenerator, userId, cart);
 
-        if (!payment.pay(userId)) {
+        if (!payment.pay(userId, order.getId(), order.getTotalPrice().toString())) {
             throw new DoesNotOrderedException();
         }
 

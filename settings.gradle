@@ -28,6 +28,7 @@ include 'auth:auth-repository'
 include 'auth:auth-infra'
 
 include 'core'
+include 'core:util'
 include 'core:id-gen'
 
 include 'order'
@@ -37,3 +38,7 @@ include 'order:order-service'
 include 'order:order-controller'
 include 'order:order-repository'
 
+include 'payment'
+include 'payment:payment-domain'
+include 'payment:payment-service'
+include 'payment:payment-repository'

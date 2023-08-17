@@ -18,7 +18,7 @@ public class AcceptanceTestConfiguration {
     @Bean
     @Primary
     public Clock fixedClock() {
-        return Clock.fixed(Instant.parse("2023-08-15T00:00:02.00Z"), ZoneId.of("Asia/Seoul"));
+        return Clock.fixed(Instant.parse("2023-08-15T00:00:02.00Z"), ZoneId.of("UTC"));
     }
 
     @Bean

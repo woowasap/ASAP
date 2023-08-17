@@ -2,6 +2,10 @@ package shop.woowasap.order.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -10,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
@@ -81,7 +86,7 @@ class OrderServiceTest {
             when(productConnector.findByProductId(productId)).thenReturn(
                 Optional.of(ProductFixture.getDefaultBuilder()
                     .build()));
-            when(payment.pay(userId)).thenReturn(true);
+            when(payment.pay(eq(userId), anyLong(), anyString())).thenReturn(true);
 
             // when
             final long result = orderUseCase.orderProduct(orderProductRequest);
@@ -105,7 +110,7 @@ class OrderServiceTest {
             when(productConnector.findByProductId(productId)).thenReturn(
                 Optional.of(ProductFixture.getDefaultBuilder()
                     .build()));
-            when(payment.pay(userId)).thenReturn(false);
+            when(payment.pay(eq(userId), anyLong(), anyString())).thenReturn(false);
 
             // when
             final Exception exception = catchException(
@@ -157,7 +162,7 @@ class OrderServiceTest {
 
             when(cartConnector.findByCartIdAndUserId(cartId, userId)).thenReturn(Optional.of(cart));
             when(idGenerator.generate()).thenReturn(orderId);
-            when(payment.pay(userId)).thenReturn(true);
+            when(payment.pay(eq(userId), anyLong(), anyString())).thenReturn(true);
 
             // when
             final long result = orderUseCase.orderCartByCartIdAndUserId(cartId, userId);
@@ -200,7 +205,7 @@ class OrderServiceTest {
 
             when(cartConnector.findByCartIdAndUserId(cartId, userId)).thenReturn(Optional.of(cart));
             when(idGenerator.generate()).thenReturn(orderId);
-            when(payment.pay(userId)).thenReturn(false);
+            when(payment.pay(eq(userId), anyLong(), anyString())).thenReturn(false);
 
             // when
             final Exception result = catchException(
