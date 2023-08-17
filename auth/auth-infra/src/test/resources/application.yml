@@ -1,0 +1,4 @@
+jwt:
+  secret:
+    key: thisissecretkeyforissuejwtfortemporary
+    expiration: 216000000

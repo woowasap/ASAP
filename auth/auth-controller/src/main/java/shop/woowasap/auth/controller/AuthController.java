@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import shop.woowasap.auth.controller.request.LoginRequest;
 import shop.woowasap.auth.controller.request.SignUpRequest;
 import shop.woowasap.auth.domain.exception.AuthDomainBaseException;
-import shop.woowasap.auth.domain.exception.DuplicatedUserIdException;
+import shop.woowasap.auth.domain.exception.DuplicatedUsernameException;
 import shop.woowasap.auth.domain.in.UserUseCase;
 import shop.woowasap.auth.domain.in.request.UserCreateRequest;
+import shop.woowasap.auth.domain.in.response.LoginResponse;
 
 @Slf4j
 @RestController
@@ -29,17 +31,25 @@ public class AuthController {
     public ResponseEntity<Void> signUp(@RequestBody @Valid final SignUpRequest signUpRequest) {
 
         userUseCase.createUser(
-            new UserCreateRequest(signUpRequest.userId(), signUpRequest.password()));
+            new UserCreateRequest(signUpRequest.username(), signUpRequest.password()));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @ExceptionHandler(DuplicatedUserIdException.class)
-    public ResponseEntity<String> handleAuthExceptions(
-        final DuplicatedUserIdException duplicatedUserIdException) {
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(
+        @RequestBody @Valid final LoginRequest loginRequest) {
 
-        log.info(duplicatedUserIdException.getMessage());
+        LoginResponse loginResponse = userUseCase.login(loginRequest.toUserLoginRequest());
+        return ResponseEntity.ok().body(loginResponse);
+    }
+
+    @ExceptionHandler(DuplicatedUsernameException.class)
+    public ResponseEntity<String> handleAuthExceptions(
+        final DuplicatedUsernameException duplicatedUsernameException) {
+
+        log.info(duplicatedUsernameException.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
-            .body(duplicatedUserIdException.getMessage());
+            .body(duplicatedUsernameException.getMessage());
     }
 
     @ExceptionHandler(AuthDomainBaseException.class)

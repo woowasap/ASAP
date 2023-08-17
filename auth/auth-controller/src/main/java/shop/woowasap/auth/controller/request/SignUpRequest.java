@@ -7,7 +7,7 @@ public record SignUpRequest(
 
     @NotNull(message = "유저 아이디는 비어있을 수 없습니다.")
     @NotBlank(message = "유저 아이디는 비어있을 수 없습니다.")
-    String userId,
+    String username,
 
     @NotNull(message = "유저 비밀번호는 비어있을 수 없습니다.")
     @NotBlank(message = "유저 비밀번호는 비어있을 수 없습니다.")
