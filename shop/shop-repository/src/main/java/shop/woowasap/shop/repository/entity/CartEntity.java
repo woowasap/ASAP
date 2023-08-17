@@ -32,6 +32,11 @@ public class CartEntity extends BaseEntity {
     @OneToMany(mappedBy = "cartEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartProductEntity> cartProducts = new ArrayList<>();
 
+    public CartEntity(final Long cartId, final Long userId) {
+        this.id = cartId;
+        this.userId = userId;
+    }
+
     public static CartEntity from(final Cart cart) {
         final List<CartProductEntity> cartProductEntities = cart.getCartProducts().stream()
             .map(CartProductEntity::from).toList();
