@@ -7,6 +7,7 @@ import java.time.Instant;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import shop.woowasap.order.domain.exception.BlankProductNameException;
 import shop.woowasap.order.domain.exception.InvalidPriceException;
 import shop.woowasap.order.domain.exception.InvalidProductSaleTimeException;
 import shop.woowasap.order.domain.exception.InvalidQuantityException;
@@ -25,6 +26,7 @@ class OrderProductTest {
             // given
             final long productId = 1L;
             final long quantity = 2L;
+            final String name = "name";
             final String price = "10000";
             final Instant startTime = Instant.now().minusSeconds(100);
             final Instant endTime = Instant.now().plusSeconds(100);
@@ -34,6 +36,7 @@ class OrderProductTest {
                     .productId(productId)
                     .quantity(quantity)
                     .price(price)
+                    .name(name)
                     .startTime(startTime)
                     .endTime(endTime)
                     .build());
@@ -118,6 +121,36 @@ class OrderProductTest {
 
             // then
             assertThat(exception).isInstanceOf(InvalidProductSaleTimeException.class);
+        }
+
+        @Test
+        @DisplayName("orderProduct 이름이 blank라면, BlankProductNameException을 던진다.")
+        void throwBlankProductNameExceptionWhenOrderProductWasBlank() {
+            // given
+            final String blankName = " ";
+
+            // when
+            final Exception exception = catchException(() -> OrderProductFixture.defaultBuilder()
+                    .name(blankName)
+                    .build());
+
+            // then
+            assertThat(exception).isInstanceOf(BlankProductNameException.class);
+        }
+
+        @Test
+        @DisplayName("orderProduct 이름이 null 이라면, BlankProductNameException을 던진다.")
+        void throwBlankProductNameExceptionWhenOrderProductWasNull() {
+            // given
+            final String nullName = null;
+
+            // when
+            final Exception exception = catchException(() -> OrderProductFixture.defaultBuilder()
+                    .name(nullName)
+                    .build());
+
+            // then
+            assertThat(exception).isInstanceOf(BlankProductNameException.class);
         }
     }
 }

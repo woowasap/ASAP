@@ -55,6 +55,11 @@ public class OrderService implements OrderUseCase {
         return order.getId();
     }
 
+    private Product getProductByProductId(final long productId) {
+        return productConnector.findByProductId(productId)
+            .orElseThrow(() -> new DoesNotFindProductException(productId));
+    }
+
     @Override
     @Transactional
     public long orderCartByCartIdAndUserId(final long cartId, final long userId) {
@@ -88,8 +93,7 @@ public class OrderService implements OrderUseCase {
     private List<OrderProductResponse> getOrderProductResponse(final Order order) {
         return order.getOrderProducts()
             .stream()
-            .map(orderProduct -> OrderMapper.toOrderProductResponse(getProductByProductId(orderProduct.getProductId()),
-                orderProduct.getQuantity()))
+            .map(OrderMapper::toOrderProductResponse)
             .toList();
     }
 
@@ -100,17 +104,9 @@ public class OrderService implements OrderUseCase {
 
         final List<DetailOrderProductResponse> detailOrderProductResponses = order.getOrderProducts()
             .stream()
-            .map(orderProduct -> {
-                Product product = getProductByProductId(orderProduct.getProductId());
-                return OrderMapper.toDetailOrderProductResponse(orderProduct, product);
-            })
+            .map(OrderMapper::toDetailOrderProductResponse)
             .toList();
 
         return OrderMapper.toDetailOrderResponse(order, detailOrderProductResponses, locale);
-    }
-
-    private Product getProductByProductId(final long productId) {
-        return productConnector.findByProductId(productId)
-            .orElseThrow(() -> new DoesNotFindProductException(productId));
     }
 }
