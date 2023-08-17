@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.shop.domain.api.cart.CartConnector;
@@ -60,7 +61,8 @@ class CartConnectorServiceTest {
             final long cartId = 1L;
             final long userId = 2L;
 
-            when(cartRepository.getByUserId(userId)).thenThrow(new IllegalStateException());
+            when(cartRepository.getByUserId(userId)).thenThrow(
+                new InvalidDataAccessApiUsageException("test"));
 
             // when
             final Optional<Cart> result = cartConnector.findByCartIdAndUserId(cartId, userId);
@@ -85,7 +87,8 @@ class CartConnectorServiceTest {
             final long invalidCartId = 999L;
 
             // when
-            final Optional<Cart> result = cartConnector.findByCartIdAndUserId(invalidCartId, userId);
+            final Optional<Cart> result = cartConnector.findByCartIdAndUserId(invalidCartId,
+                userId);
 
             // then
             assertThat(result).isEmpty();
