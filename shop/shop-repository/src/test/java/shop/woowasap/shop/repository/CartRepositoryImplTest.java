@@ -170,10 +170,14 @@ class CartRepositoryImplTest {
             // given
             final long userId = 1L;
             final long cartId = 1L;
-            cartRepository.persist(new Cart(cartId, userId, new ArrayList<>()));
+            final Cart expected = new Cart(cartId, userId, new ArrayList<>());
+            cartRepository.persist(expected);
 
-            // when & then
-            assertThat(cartRepository.getByUserId(userId).getId()).isEqualTo(cartId);
+            // when
+            final Cart persist = cartRepository.getByUserId(userId);
+
+            // then
+            assertThat(persist).usingRecursiveComparison().isEqualTo(expected);
         }
 
         @Test
