@@ -13,7 +13,7 @@ import shop.woowasap.auth.domain.in.TokenProvider;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationProvider {
-    
+
     private final TokenProvider tokenProvider;
 
     public Optional<Authentication> findAuthentication(final String bearerToken) {
@@ -36,12 +36,12 @@ public class AuthenticationProvider {
         return Optional.of(authentication);
     }
 
-    private Principal getPrincipal(String accessToken) {
+    private Principal getPrincipal(final String accessToken) {
         final String userId = tokenProvider.getUserId(accessToken);
         return () -> userId;
     }
 
-    private List<SimpleGrantedAuthority> getGrantedAuthorities(String accessToken) {
+    private List<SimpleGrantedAuthority> getGrantedAuthorities(final String accessToken) {
         final List<String> authorities = tokenProvider.getAuthorities(accessToken);
         return authorities.stream()
             .map(SimpleGrantedAuthority::new)
