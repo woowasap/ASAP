@@ -39,7 +39,7 @@ public final class AuthApiSupporter {
     }
 
     public static String adminAccessToken() {
-        return given()
+        return "Bearer " + given()
             .contentType(JSON)
             .accept(JSON)
             .body(new LoginRequest("admin", "1234567890"))

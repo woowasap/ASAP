@@ -33,6 +33,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         log.info("bearerToken : " + bearerToken);
         final String accessToken = tokenProvider.extractAccessToken(bearerToken)
             .orElseThrow(LoginException::new);
-        return tokenProvider.getUserId(accessToken);
+        return Long.parseLong(tokenProvider.getUserId(accessToken));
     }
 }
