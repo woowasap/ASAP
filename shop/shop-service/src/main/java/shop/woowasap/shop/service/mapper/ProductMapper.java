@@ -5,12 +5,12 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
-import shop.woowasap.shop.domain.api.product.response.ProductResponse;
-import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
-import shop.woowasap.shop.domain.spi.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
 
 public final class ProductMapper {
 

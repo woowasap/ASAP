@@ -1,4 +1,4 @@
-package shop.woowasap.shop.domain.api.cart.request;
+package shop.woowasap.shop.domain.in.cart.request;
 
 public record AddCartProductRequest(long productId, long quantity) {
 }

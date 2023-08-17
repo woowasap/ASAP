@@ -1,10 +1,9 @@
 package shop.woowasap.shop.repository;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.woowasap.shop.domain.cart.Cart;
-import shop.woowasap.shop.domain.spi.CartRepository;
+import shop.woowasap.shop.domain.out.CartRepository;
 import shop.woowasap.shop.repository.entity.CartEntity;
 import shop.woowasap.shop.repository.jpa.CartJpaRepository;
 

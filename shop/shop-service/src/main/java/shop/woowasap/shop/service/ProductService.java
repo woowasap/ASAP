@@ -10,15 +10,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.domain.api.product.ProductUseCase;
-import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
-import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
-import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
-import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.in.product.ProductUseCase;
+import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
+import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.domain.spi.ProductRepository;
-import shop.woowasap.shop.domain.spi.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.out.ProductRepository;
+import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
 import shop.woowasap.shop.service.mapper.ProductMapper;
 
 @Service

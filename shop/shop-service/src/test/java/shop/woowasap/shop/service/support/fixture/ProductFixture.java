@@ -5,10 +5,10 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
-import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
-import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
-import shop.woowasap.shop.domain.api.product.response.ProductResponse;
-import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
+import shop.woowasap.shop.domain.in.product.response.ProductResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 import shop.woowasap.shop.domain.product.Product;
 
 public class ProductFixture {

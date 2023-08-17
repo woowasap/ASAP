@@ -1,5 +1,6 @@
 package shop.woowasap.auth.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -44,6 +45,42 @@ class UserTest {
 
             // when
             assertDoesNotThrow(() -> user1.assertNotDuplicatedUsername(user2));
+        }
+    }
+
+    @Nested
+    @DisplayName("User.new 생성자")
+    class newConstructor {
+
+        @Test
+        @DisplayName("id, username, password, type을 받아서, 생성할 수 있다.")
+        void createSuccess() {
+            // given
+            final long id = 1L;
+            final String username = "helloworld";
+            final String password = "helloworld123";
+            final UserType userType = UserType.ROLE_USER;
+
+            // when
+            final User user = User.builder()
+                .id(id)
+                .username(username)
+                .password(password)
+                .userType(userType)
+                .build();
+
+            // then
+            assertThat(user).extracting(
+                User::getId,
+                User::getUsername,
+                User::getPassword,
+                User::getUserType
+            ).containsExactly(
+                id,
+                username,
+                password,
+                userType
+            );
         }
     }
 }

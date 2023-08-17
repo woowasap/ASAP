@@ -6,8 +6,8 @@ import static io.restassured.http.ContentType.JSON;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
-import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
-import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
+import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 
 public final class ShopApiSupporter {
 

@@ -1,4 +1,4 @@
-package shop.woowasap.shop.domain.api.cart.response;
+package shop.woowasap.shop.domain.in.cart.response;
 
 import java.util.List;
 

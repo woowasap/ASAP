@@ -22,8 +22,8 @@ import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.Payment;
 import shop.woowasap.order.domain.out.response.OrdersPaginationResponse;
 import shop.woowasap.order.service.mapper.OrderMapper;
-import shop.woowasap.shop.domain.api.cart.CartConnector;
-import shop.woowasap.shop.domain.api.product.ProductConnector;
+import shop.woowasap.shop.domain.in.cart.CartConnector;
+import shop.woowasap.shop.domain.in.product.ProductConnector;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.product.Product;
 

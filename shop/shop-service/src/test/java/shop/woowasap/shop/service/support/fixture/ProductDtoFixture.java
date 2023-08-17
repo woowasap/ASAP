@@ -2,7 +2,7 @@ package shop.woowasap.shop.service.support.fixture;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.product.Product;
 
 public final class ProductDtoFixture {

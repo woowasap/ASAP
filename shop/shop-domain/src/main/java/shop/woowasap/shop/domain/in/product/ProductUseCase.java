@@ -1,9 +1,9 @@
-package shop.woowasap.shop.domain.api.product;
+package shop.woowasap.shop.domain.in.product;
 
-import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
-import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
-import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
-import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
+import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
 public interface ProductUseCase {
 

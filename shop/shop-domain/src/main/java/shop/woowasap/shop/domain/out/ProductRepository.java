@@ -1,8 +1,8 @@
-package shop.woowasap.shop.domain.spi;
+package shop.woowasap.shop.domain.out;
 
 import java.util.Optional;
 import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.domain.spi.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
 
 public interface ProductRepository {
 

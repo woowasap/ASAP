@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.domain.spi.ProductRepository;
-import shop.woowasap.shop.domain.spi.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.out.ProductRepository;
+import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
 import shop.woowasap.shop.repository.entity.ProductEntity;
 import shop.woowasap.shop.repository.jpa.ProductJpaRepository;
 

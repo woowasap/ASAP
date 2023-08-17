@@ -18,10 +18,10 @@ import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.fixture.ProductFixture;
 import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.ShopValidator;
-import shop.woowasap.shop.domain.api.product.request.RegisterProductRequest;
-import shop.woowasap.shop.domain.api.product.request.UpdateProductRequest;
-import shop.woowasap.shop.domain.api.product.response.ProductDetailsResponse;
-import shop.woowasap.shop.domain.api.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
+import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
 @DisplayName("Product 인수테스트")
 class ProductAcceptanceTest extends AcceptanceTest {
