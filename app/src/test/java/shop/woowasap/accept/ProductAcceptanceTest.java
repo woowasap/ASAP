@@ -129,10 +129,9 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("저장되어있는 특정 상품을 조회할경우, 상품의 정보가 응답된다.")
     void findSpecificProduct() {
         // given
-        final String token = "MOCK TOKEN";
         final RegisterProductRequest registerProductRequest = ProductFixture.registerValidProductRequest();
 
-        ShopApiSupporter.registerProduct(token, registerProductRequest);
+        ShopApiSupporter.registerProduct(accessToken, registerProductRequest);
 
         final ProductsResponse productsResponse = ShopApiSupporter.getAllProducts()
             .as(ProductsResponse.class);
@@ -166,12 +165,12 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("Admin 유저가 저장되어있는 특정 상품을 조회할경우, 상품의 정보가 응답된다.")
     void findSpecificProductWithAdmin() {
         // given
-        final String token = "MOCK TOKEN";
+
         final RegisterProductRequest registerProductRequest = ProductFixture.registerProductRequest();
 
-        ShopApiSupporter.registerProduct(token, registerProductRequest);
+        ShopApiSupporter.registerProduct(accessToken, registerProductRequest);
 
-        final ProductsResponse productsResponse = ShopApiSupporter.getRegisteredProducts(token)
+        final ProductsResponse productsResponse = ShopApiSupporter.getRegisteredProducts(accessToken)
             .as(ProductsResponse.class);
 
         final long anyProductId = productsResponse.products().get(0).productId();
@@ -180,7 +179,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
             registerProductRequest);
 
         // when
-        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(token,
+        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(accessToken,
             anyProductId);
 
         // then
@@ -191,11 +190,10 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("Admin 유저가 productId에 해당하는 상품을 찾을 수 없다면, 400 BadRequest가 응답된다.")
     void returnBadRequestWhenCannotFoundProductWithAdmin() {
         // given
-        final String token = "MOCK TOKEN";
         final long notFoundProductId = 123L;
 
         // when
-        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(token,
+        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(accessToken,
             notFoundProductId);
 
         // then

@@ -17,23 +17,16 @@ public class AuthenticationProvider {
     private final TokenProvider tokenProvider;
 
     public Optional<Authentication> findAuthentication(final String bearerToken) {
-        final Optional<String> token = tokenProvider.extractAccessToken(bearerToken);
-        if (token.isEmpty()) {
-            return Optional.empty();
-        }
-        final String accessToken = token.get();
-        if (!tokenProvider.validateToken(accessToken)) {
-            return Optional.empty();
-        }
+        return tokenProvider.extractAccessToken(bearerToken)
+            .filter(tokenProvider::validateToken)
+            .map(this::createAuthentication);
+    }
 
+    private Authentication createAuthentication(final String accessToken) {
         final Principal principal = getPrincipal(accessToken);
         final List<SimpleGrantedAuthority> grantedAuthorities = getGrantedAuthorities(accessToken);
 
-        final Authentication authentication = new UsernamePasswordAuthenticationToken(
-            principal,
-            accessToken,
-            grantedAuthorities);
-        return Optional.of(authentication);
+        return new UsernamePasswordAuthenticationToken(principal, accessToken, grantedAuthorities);
     }
 
     private Principal getPrincipal(final String accessToken) {
