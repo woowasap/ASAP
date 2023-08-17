@@ -31,7 +31,8 @@ public class UserEntity extends BaseEntity {
     private UserEntityType userType;
 
     @Builder
-    public UserEntity(Long id, String username, String password, UserEntityType userType) {
+    public UserEntity(final Long id, final String username, final String password,
+        final UserEntityType userType) {
         this.id = id;
         this.username = username;
         this.password = password;

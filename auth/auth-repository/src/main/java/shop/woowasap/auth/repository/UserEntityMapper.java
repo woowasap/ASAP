@@ -10,7 +10,7 @@ public class UserEntityMapper {
     private UserEntityMapper() {
     }
 
-    public static User toDomain(UserEntity userEntity) {
+    public static User toDomain(final UserEntity userEntity) {
         return User.builder()
             .id(userEntity.getId())
             .username(userEntity.getUsername())
@@ -19,7 +19,7 @@ public class UserEntityMapper {
             .build();
     }
 
-    public static UserEntity toEntity(User user) {
+    public static UserEntity toEntity(final User user) {
         return UserEntity.builder()
             .id(user.getId())
             .username(user.getUsername())

@@ -35,7 +35,7 @@ class UserRepositoryImplTest {
         @DisplayName("정상 입력 시 유저 생성 성공")
         void insertUserSuccessThenReturnUser() {
             // given
-            User user = User.builder()
+            final User user = User.builder()
                 .id(123L)
                 .username("username")
                 .password("hashedPassword")
@@ -43,20 +43,10 @@ class UserRepositoryImplTest {
                 .build();
 
             // when
-            User result = userRepository.insertUser(user);
+            final User result = userRepository.insertUser(user);
 
             // then
-            assertThat(result).extracting(
-                User::getId,
-                User::getUsername,
-                User::getPassword,
-                User::getUserType
-            ).containsExactly(
-                123L,
-                "username",
-                "hashedPassword",
-                UserType.ROLE_USER
-            );
+            assertThat(result).usingRecursiveComparison().isEqualTo(user);
         }
     }
 
@@ -68,7 +58,7 @@ class UserRepositoryImplTest {
         @DisplayName("정상 입력 시 유저 반환 성공")
         void findByUsernameSuccessThenReturnOptionalUser() {
             // given
-            User user = User.builder()
+            final User user = User.builder()
                 .id(123L)
                 .username("username")
                 .password("hashedPassword")
@@ -77,28 +67,18 @@ class UserRepositoryImplTest {
             userRepository.insertUser(user);
 
             // when
-            Optional<User> result = userRepository.findByUsername("username");
+            final Optional<User> result = userRepository.findByUsername("username");
 
             // then
             assertThat(result).isNotEmpty();
-            assertThat(result.get()).extracting(
-                User::getId,
-                User::getUsername,
-                User::getPassword,
-                User::getUserType
-            ).containsExactly(
-                123L,
-                "username",
-                "hashedPassword",
-                UserType.ROLE_USER
-            );
+            assertThat(result.get()).usingRecursiveComparison().isEqualTo(user);
         }
 
         @Test
         @DisplayName("없는 유저 입력 시 빈 옵셔널 반환")
         void findByUsernameFailThenReturnOptionalEmpty() {
             // when
-            Optional<User> result = userRepository.findByUsername("username");
+            final Optional<User> result = userRepository.findByUsername("username");
 
             // then
             assertThat(result).isEmpty();

@@ -15,14 +15,14 @@ public class UserRepositoryImpl implements UserRepository {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public User insertUser(User user) {
-        UserEntity userEntity = userJpaRepository.save(UserEntityMapper.toEntity(user));
+    public User insertUser(final User user) {
+        final UserEntity userEntity = userJpaRepository.save(UserEntityMapper.toEntity(user));
         return UserEntityMapper.toDomain(userEntity);
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
-        Optional<UserEntity> userEntity = userJpaRepository.findByUsername(username);
+    public Optional<User> findByUsername(final String username) {
+        final Optional<UserEntity> userEntity = userJpaRepository.findByUsername(username);
         return userEntity.map(UserEntityMapper::toDomain);
     }
 }
