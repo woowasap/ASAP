@@ -52,7 +52,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 상품을 수정하려고 하는경우 BADREQUEST 응답을 받는다.")
+    @DisplayName("존재하지 않는 상품을 수정하려고 하는경우 BAD REQUEST 응답을 받는다.")
     void updateProductWithNotFound() {
         // given
         final String accessToken = "Token";
@@ -131,7 +131,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
     void findSpecificProduct() {
         // given
         final String token = "MOCK TOKEN";
-        final RegisterProductRequest registerProductRequest = ProductFixture.registerProductRequest();
+        final RegisterProductRequest registerProductRequest = ProductFixture.registerValidProductRequest();
 
         ShopApiSupporter.registerProduct(token, registerProductRequest);
 
@@ -140,7 +140,8 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         final long anyProductId = productsResponse.products().get(0).productId();
 
-        final ProductDetailsResponse expected = ProductFixture.productResponse(registerProductRequest);
+        final ProductDetailsResponse expected = ProductFixture.productResponse(anyProductId,
+            registerProductRequest);
 
         // when
         final ExtractableResponse<Response> result = ShopApiSupporter.getProduct(anyProductId);
@@ -176,7 +177,8 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         final long anyProductId = productsResponse.products().get(0).productId();
 
-        final ProductDetailsResponse expected = ProductFixture.productResponse(registerProductRequest);
+        final ProductDetailsResponse expected = ProductFixture.productResponse(anyProductId,
+            registerProductRequest);
 
         // when
         final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(token,
@@ -194,7 +196,8 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final long notFoundProductId = 123L;
 
         // when
-        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(token, notFoundProductId);
+        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(token,
+            notFoundProductId);
 
         // then
         HttpValidator.assertBadRequest(result);

@@ -6,12 +6,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.woowasap.shop.domain.product.Product;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "product")
 public class ProductEntity extends BaseEntity {
 
@@ -34,7 +38,31 @@ public class ProductEntity extends BaseEntity {
 
     @Column(name = "start_time", columnDefinition = "TIMESTAMP(6)", nullable = false)
     private Instant startTime;
+
     @Column(name = "end_time", columnDefinition = "TIMESTAMP(6)", nullable = false)
     private Instant endTime;
 
+    public static ProductEntity from(final Product product) {
+        return new ProductEntity(
+            product.getId(),
+            product.getName().getValue(),
+            product.getDescription().getValue(),
+            product.getPrice().getValue().toString(),
+            product.getQuantity().getValue(),
+            product.getStartTime(),
+            product.getEndTime()
+        );
+    }
+
+    public Product toDomain() {
+        return Product.builder()
+            .id(this.id)
+            .name(this.name)
+            .description(this.description)
+            .price(this.price)
+            .quantity(this.quantity)
+            .startTime(this.startTime)
+            .endTime(this.endTime)
+            .build();
+    }
 }
