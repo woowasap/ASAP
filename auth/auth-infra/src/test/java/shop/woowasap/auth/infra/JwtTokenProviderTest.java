@@ -130,10 +130,10 @@ class JwtTokenProviderTest {
         @DisplayName("정상 입력 시 액세스 토큰에 클레임 정상 생성")
         void extractAccessTokenThenReturnAccessToken() {
             // given
-            String bearerToken = "Bearer e.a.e";
+            final String bearerToken = "Bearer e.a.e";
 
             // when
-            Optional<String> accessToken = tokenProvider.extractAccessToken(bearerToken);
+            final Optional<String> accessToken = tokenProvider.extractAccessToken(bearerToken);
 
             // then
             assertThat(accessToken).isNotEmpty();
@@ -143,9 +143,9 @@ class JwtTokenProviderTest {
         @NullAndEmptySource
         @ValueSource(strings = "asdasdasdasd")
         @DisplayName("정상 입력 시 액세스 토큰에 클레임 정상 생성")
-        void extractAccessTokenWrongTokenThenReturnEmpty(String bearerToken) {
+        void extractAccessTokenWrongTokenThenReturnEmpty(final String bearerToken) {
             // when
-            Optional<String> accessToken = tokenProvider.extractAccessToken(bearerToken);
+            final Optional<String> accessToken = tokenProvider.extractAccessToken(bearerToken);
 
             // then
             assertThat(accessToken).isEmpty();

@@ -92,7 +92,7 @@ public class JwtTokenProvider implements TokenProvider {
     }
 
     @Override
-    public Optional<String> extractAccessToken(String bearerToken) {
+    public Optional<String> extractAccessToken(final String bearerToken) {
         if (!StringUtils.hasText(bearerToken) || !bearerToken.startsWith(BEARER_PREFIX)) {
             return Optional.empty();
         }

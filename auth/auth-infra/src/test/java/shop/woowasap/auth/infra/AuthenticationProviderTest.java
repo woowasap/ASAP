@@ -47,7 +47,7 @@ class AuthenticationProviderTest {
             when(jwtTokenProvider.getAuthorities(accessToken)).thenReturn(List.of("ROLE_USER"));
 
             // when
-            Optional<Authentication> authentication = authenticationProvider
+            final Optional<Authentication> authentication = authenticationProvider
                 .findAuthentication(bearerToken);
 
             // then
@@ -63,7 +63,7 @@ class AuthenticationProviderTest {
             when(jwtTokenProvider.extractAccessToken(bearerToken)).thenReturn(Optional.empty());
 
             // when
-            Optional<Authentication> authentication = authenticationProvider
+            final Optional<Authentication> authentication = authenticationProvider
                 .findAuthentication(bearerToken);
 
             // then
@@ -81,7 +81,7 @@ class AuthenticationProviderTest {
             when(jwtTokenProvider.validateToken(accessToken)).thenReturn(false);
 
             // when
-            Optional<Authentication> authentication = authenticationProvider
+            final Optional<Authentication> authentication = authenticationProvider
                 .findAuthentication(bearerToken);
 
             // then
