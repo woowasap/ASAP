@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.woowasap.order.domain.Order;
 
 @Entity
 @Getter
@@ -31,4 +32,25 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "total_price", nullable = false)
     private String totalPrice;
 
+    public OrderEntity(final Order order) {
+        this.id = order.getId();
+        this.userId = order.getUserId();
+        this.orderProducts = order.getOrderProducts()
+            .stream()
+            .map(orderProduct -> new OrderProductEntity(this, orderProduct))
+            .toList();
+        this.totalPrice = order.getTotalPrice().toString();
+        this.createdAt = order.getCreatedAt();
+    }
+
+    public Order toDomain() {
+        return Order.builder()
+            .id(this.id)
+            .userId(this.userId)
+            .orderProducts(orderProducts.stream()
+                .map(OrderProductEntity::toDomain)
+                .toList())
+            .createdAt(this.createdAt)
+            .build();
+    }
 }
