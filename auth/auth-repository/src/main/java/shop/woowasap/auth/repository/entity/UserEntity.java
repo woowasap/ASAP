@@ -27,7 +27,7 @@ public class UserEntity extends BaseEntity {
     private String password;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "user_type", nullable = false)
+    @Column(name = "user_type", length = 16, nullable = false)
     private UserEntityType userType;
 
     @Builder
