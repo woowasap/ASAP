@@ -12,6 +12,7 @@ public final class OrderProductFixture {
     public static OrderProduct from(final Product product) {
         return OrderProduct.builder()
             .productId(product.getId())
+            .name(product.getName().getValue().toString())
             .startTime(product.getStartTime())
             .endTime(product.getEndTime())
             .price(String.valueOf(product.getPrice().getValue()))

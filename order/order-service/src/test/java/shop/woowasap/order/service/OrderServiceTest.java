@@ -243,31 +243,6 @@ class OrderServiceTest {
         }
 
         @Test
-        @DisplayName("productId에 해당하는 product를 찾을 수 없으면 DoesNotFindProductException를 던진다.")
-        void throwDoesNotFindProductExceptionWhenCannotFindMatchedProduct() {
-            // given
-            final long userId = 1L;
-            final int page = 1;
-            final int size = 1;
-
-            final Product product = ProductFixture.getDefaultBuilder().build();
-            final OrderProduct orderProduct = OrderProductFixture.from(product);
-            final Order defaultOrder = OrderFixture.getDefault(List.of(orderProduct));
-
-            when(orderRepository.findAllOrderByUserId(userId, page, size)).thenReturn(
-                new OrdersPaginationResponse(List.of(defaultOrder), page, size));
-
-            when(productConnector.findByProductId(Mockito.anyLong())).thenReturn(Optional.empty());
-
-            // when
-            final Exception result = catchException(
-                () -> orderUseCase.getOrderByUserId(userId, page, size));
-
-            // then
-            assertThat(result).isInstanceOf(DoesNotFindProductException.class);
-        }
-
-        @Test
         @DisplayName("userId에 해당하는 user가 주문한 상품이 없다면 빈 Order가 반환된다.")
         void returnEmptyOrdersWhenNoExistOrderHistory() {
             // given
@@ -330,28 +305,6 @@ class OrderServiceTest {
 
             // then
             assertThat(result).isInstanceOf(DoesNotFindOrderException.class);
-        }
-
-        @Test
-        @DisplayName("productId에 해당하는 product를 찾을 수 없을경우, DoesNotFindProductException을 던진다.")
-        void throwDoesNotFindProductExceptionWhenCannotFindMatchedProduct() {
-            // given
-            final long orderId = 1L;
-            final long userId = 1L;
-
-            final Product product = ProductFixture.getDefaultBuilder().build();
-            final OrderProduct orderProduct = OrderProductFixture.from(product);
-            final Order order = OrderFixture.getDefault(List.of(orderProduct));
-
-            when(orderRepository.findOrderByOrderIdAndUserId(orderId, userId)).thenReturn(Optional.of(order));
-
-            when(productConnector.findByProductId(product.getId())).thenReturn(Optional.empty());
-
-            // when
-            final Exception result = catchException(() -> orderUseCase.getOrderByOrderIdAndUserId(orderId, userId));
-
-            // then
-            assertThat(result).isInstanceOf(DoesNotFindProductException.class);
         }
     }
 }
