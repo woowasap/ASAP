@@ -7,4 +7,5 @@ public interface ProductConnector {
 
     Optional<Product> findByProductId(final long productId);
 
+    void consumeProductByProductId(final long productId, final long quantity);
 }
