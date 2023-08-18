@@ -168,4 +168,46 @@ class ProductTest {
             assertThat(update).usingRecursiveAssertion().isEqualTo(expected);
         }
     }
+
+    @Nested
+    @DisplayName("isEndTimeBefore 메서드는")
+    class IsEndTimeBefore_Method {
+
+        @Test
+        @DisplayName("EndTime 이 time 이전이라면 true 를 반환한다.")
+        void returnTrueWhenEndTimeIsBeforeTime() {
+            // given
+            final Product product = getDefaultBuilder()
+                .startTime(Instant.now().minusSeconds(1_000))
+                .endTime(Instant.now().plusSeconds(1_000))
+                .build();
+
+            final Instant time = Instant.now().plusSeconds(10_000);
+
+            // when
+            final boolean result = product.isEndTimeBefore(time);
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("EndTime 이 time 이후라면 false 를 반환한다.")
+        void returnFalseWhenEndTimeIsAfterTime() {
+            // given
+            final Product product = getDefaultBuilder()
+                .startTime(Instant.now().minusSeconds(1_000))
+                .endTime(Instant.now().plusSeconds(1_000))
+                .build();
+
+            final Instant time = Instant.now();
+
+            // when
+            final boolean result = product.isEndTimeBefore(time);
+
+            // then
+            assertThat(result).isFalse();
+        }
+    }
+
 }

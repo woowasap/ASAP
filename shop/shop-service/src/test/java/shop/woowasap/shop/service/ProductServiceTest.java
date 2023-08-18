@@ -10,6 +10,7 @@ import static shop.woowasap.shop.service.support.fixture.ProductFixture.products
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.registerProductRequest;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.updateProductRequest;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -21,14 +22,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
+import shop.woowasap.shop.domain.exception.SaleEndedProductException;
 import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
-import shop.woowasap.shop.domain.exception.NotExistsProductException;
-import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.out.ProductRepository;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.service.support.fixture.ProductDtoFixture;
 import shop.woowasap.shop.service.support.fixture.ProductFixture;
 
@@ -110,8 +112,8 @@ class ProductServiceTest {
     }
 
     @Nested
-    @DisplayName("getById 메소드는")
-    class GetById_Method {
+    @DisplayName("getByProductId 메소드는")
+    class GetByProductId_Method {
 
         @Test
         @DisplayName("id에 해당하는 Product 를 찾을 수 없을경우, NotExistsProductException 을 던진다.")
@@ -119,7 +121,8 @@ class ProductServiceTest {
             // given
             final long productId = 1L;
 
-            when(productRepository.findByIdAndValidSaleTime(productId)).thenReturn(Optional.empty());
+            when(productRepository.findById(productId)).thenReturn(
+                Optional.empty());
 
             // when
             Exception exception = catchException(() -> productService.getByProductId(productId));
@@ -129,14 +132,35 @@ class ProductServiceTest {
         }
 
         @Test
-        @DisplayName("id에 해당하는 Product 가 존재한다면, ProductResponse를 반환한다.")
+        @DisplayName("id에 해당하는 Product 가 판매가 끝났을 경우, SaleEndedProductException 을 던진다.")
+        void throwSaleEndedProductExceptionWhenCannotFindIdMatchedProduct() {
+            // given
+            final long productId = 1L;
+            final Product saleEndedproduct = productBuilder(productId)
+                .startTime(Instant.now().minusSeconds(10_000))
+                .endTime(Instant.now().minusSeconds(1_000))
+                .build();
+
+            when(productRepository.findById(productId)).thenReturn(Optional.of(saleEndedproduct));
+
+            // when
+            Exception exception = catchException(() -> productService.getByProductId(productId));
+
+            // then
+            assertThat(exception).isInstanceOf(SaleEndedProductException.class);
+        }
+
+        @Test
+        @DisplayName("id에 해당하는 Product 가 존재한다면, ProductResponse 를 반환한다.")
         void ReturnProductResponseWhenExistsIdMatchedProduct() {
             // given
             final long productId = 1L;
-            final Product product = productBuilder(productId).build();
+            final Product product = ProductFixture.validProduct(productId);
+            
             final ProductDetailsResponse expected = ProductDtoFixture.fromProduct(product);
 
-            when(productRepository.findByIdAndValidSaleTime(productId)).thenReturn(Optional.of(product));
+            when(productRepository.findById(productId)).thenReturn(
+                Optional.of(product));
 
             // when
             ProductDetailsResponse result = productService.getByProductId(productId);

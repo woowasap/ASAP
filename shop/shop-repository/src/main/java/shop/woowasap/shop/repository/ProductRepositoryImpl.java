@@ -33,12 +33,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Optional<Product> findByIdAndValidSaleTime(final long productId) {
-        return productJpaRepository.findByIdAndEndTimeAfter(productId, Instant.now())
-            .map(ProductEntity::toDomain);
-    }
-
-    @Override
     public ProductsPaginationResponse findAllValidWithPagination(final int page, final int size) {
         final PageRequest pageRequest = PageRequest.of(page - 1, size,
             Sort.by("startTime").ascending());

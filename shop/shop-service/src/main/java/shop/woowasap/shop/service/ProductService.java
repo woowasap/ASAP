@@ -4,21 +4,23 @@ import static shop.woowasap.shop.service.mapper.ProductMapper.toDomain;
 import static shop.woowasap.shop.service.mapper.ProductMapper.toProductsResponse;
 
 import java.text.MessageFormat;
+import java.time.Instant;
 import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
+import shop.woowasap.shop.domain.exception.SaleEndedProductException;
 import shop.woowasap.shop.domain.in.product.ProductUseCase;
 import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
-import shop.woowasap.shop.domain.exception.NotExistsProductException;
-import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.out.ProductRepository;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.service.mapper.ProductMapper;
 
 @Service
@@ -61,7 +63,8 @@ public class ProductService implements ProductUseCase {
 
     @Override
     public ProductsResponse getValidProducts(final int page, final int size) {
-        final ProductsPaginationResponse pagination = productRepository.findAllValidWithPagination(page,
+        final ProductsPaginationResponse pagination = productRepository.findAllValidWithPagination(
+            page,
             size);
 
         return ProductMapper.toProductsResponse(pagination, ZoneId.of(locale));
@@ -77,12 +80,20 @@ public class ProductService implements ProductUseCase {
 
     @Override
     public ProductDetailsResponse getByProductId(final long productId) {
-        final Product persistProduct = productRepository.findByIdAndValidSaleTime(productId)
+        final Product product = productRepository.findById(productId)
             .orElseThrow(() -> new NotExistsProductException(
                 MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
                     productId)));
 
-        return ProductMapper.toProductResponse(persistProduct, ZoneId.of(locale));
+        if (product.isEndTimeBefore(Instant.now())) {
+            throw new SaleEndedProductException(
+                MessageFormat.format(
+                    "판매가 종료된 product 입니다. productId : \"{0}\"",
+                    productId)
+            );
+        }
+
+        return ProductMapper.toProductResponse(product, ZoneId.of(locale));
     }
 
     @Override
