@@ -2,7 +2,6 @@ package shop.woowasap.shop.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -14,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import shop.woowasap.BeanScanBaseLocation;
-import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.repository.support.ProductFixture;
 
 @DataJpaTest
@@ -158,7 +157,7 @@ class ProductRepositoryImplTest {
     class findAllValidWithPaginationMethod {
 
         @Test
-        @DisplayName("판매 예정이거나 판매 중인 Product 들을 반환한다.")
+        @DisplayName("판매 예정이거나 판매 중인 Product 들을 startTime 기준 오름차순으로 반환한다.")
         void returnAllValidProducts() {
             // given
             final int page = 1;
@@ -166,12 +165,12 @@ class ProductRepositoryImplTest {
             final int totalPage = 1;
 
             final Product salePastProduct = ProductFixture.salePastProduct(1L);
-            final Product onSaleProduct = ProductFixture.onSaleProduct(2L);
-            final Product salePriorProduct = ProductFixture.salePriorProduct(3L);
+            final Product salePriorProduct = ProductFixture.salePriorProduct(2L);
+            final Product onSaleProduct = ProductFixture.onSaleProduct(3L);
 
             productRepository.persist(salePastProduct);
-            productRepository.persist(onSaleProduct);
             productRepository.persist(salePriorProduct);
+            productRepository.persist(onSaleProduct);
 
             ProductsPaginationResponse expected = new ProductsPaginationResponse(
                 List.of(onSaleProduct, salePriorProduct),
@@ -194,7 +193,7 @@ class ProductRepositoryImplTest {
     class findAllWithPaginationMethod {
 
         @Test
-        @DisplayName("모든 Product 들을 반환한다.")
+        @DisplayName("모든 Product 들을 startTime 기준 오름차순으로 반환한다.")
         void returnAllProducts() {
             // given
             final int page = 1;
@@ -202,15 +201,15 @@ class ProductRepositoryImplTest {
             final int totalPage = 1;
 
             final Product salePastProduct = ProductFixture.salePastProduct(1L);
-            final Product onSaleProduct = ProductFixture.onSaleProduct(2L);
-            final Product salePriorProduct = ProductFixture.salePriorProduct(3L);
+            final Product salePriorProduct = ProductFixture.salePriorProduct(2L);
+            final Product onSaleProduct = ProductFixture.onSaleProduct(3L);
 
             productRepository.persist(salePastProduct);
-            productRepository.persist(onSaleProduct);
             productRepository.persist(salePriorProduct);
+            productRepository.persist(onSaleProduct);
 
             ProductsPaginationResponse expected = new ProductsPaginationResponse(
-                List.of(salePastProduct, onSaleProduct, salePriorProduct),
+                List.of(onSaleProduct, salePastProduct, salePriorProduct),
                 page,
                 totalPage
             );
