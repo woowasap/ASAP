@@ -10,7 +10,6 @@ import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.exception.DoesNotFindCartException;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.exception.DoesNotFindProductException;
-import shop.woowasap.order.domain.exception.DoesNotOrderedException;
 import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
 import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
@@ -19,7 +18,6 @@ import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.order.domain.out.OrderRepository;
-import shop.woowasap.order.domain.out.Payment;
 import shop.woowasap.order.domain.out.response.OrdersPaginationResponse;
 import shop.woowasap.order.service.mapper.OrderMapper;
 import shop.woowasap.shop.domain.in.cart.CartConnector;
@@ -32,7 +30,6 @@ import shop.woowasap.shop.domain.product.Product;
 @Transactional(readOnly = true)
 public class OrderService implements OrderUseCase {
 
-    private final Payment payment;
     private final IdGenerator idGenerator;
     private final ProductConnector productConnector;
     private final CartConnector cartConnector;
@@ -46,11 +43,6 @@ public class OrderService implements OrderUseCase {
     public long orderProduct(final OrderProductRequest orderProductRequest) {
         final Product product = getProductByProductId(orderProductRequest.productId());
         final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product);
-
-        if (!payment.pay(orderProductRequest.userId(), order.getId(),
-            order.getTotalPrice().toString())) {
-            throw new DoesNotOrderedException();
-        }
 
         orderRepository.persist(order);
         productConnector.consumeProductByProductId(product.getId(), orderProductRequest.quantity());
@@ -69,10 +61,6 @@ public class OrderService implements OrderUseCase {
             .orElseThrow(() -> new DoesNotFindCartException(cartId, userId));
 
         final Order order = OrderMapper.toDomain(idGenerator, userId, cart);
-
-        if (!payment.pay(userId, order.getId(), order.getTotalPrice().toString())) {
-            throw new DoesNotOrderedException();
-        }
 
         orderRepository.persist(order);
         cart.getCartProducts()

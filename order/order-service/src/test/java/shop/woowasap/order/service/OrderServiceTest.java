@@ -2,10 +2,6 @@ package shop.woowasap.order.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -14,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,13 +20,11 @@ import shop.woowasap.order.domain.OrderProduct;
 import shop.woowasap.order.domain.exception.DoesNotFindCartException;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.exception.DoesNotFindProductException;
-import shop.woowasap.order.domain.exception.DoesNotOrderedException;
 import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
 import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.order.domain.out.OrderRepository;
-import shop.woowasap.order.domain.out.Payment;
 import shop.woowasap.order.domain.out.response.OrdersPaginationResponse;
 import shop.woowasap.order.service.support.fixture.CartFixture;
 import shop.woowasap.order.service.support.fixture.OrderDtoFixture;
@@ -64,9 +57,6 @@ class OrderServiceTest {
     @MockBean
     private OrderRepository orderRepository;
 
-    @MockBean
-    private Payment payment;
-
     @Nested
     @DisplayName("orderProduct 메소드는")
     class orderProductMethod {
@@ -86,38 +76,12 @@ class OrderServiceTest {
             when(productConnector.findByProductId(productId)).thenReturn(
                 Optional.of(ProductFixture.getDefaultBuilder()
                     .build()));
-            when(payment.pay(eq(userId), anyLong(), anyString())).thenReturn(true);
 
             // when
             final long result = orderUseCase.orderProduct(orderProductRequest);
 
             // then
             assertThat(result).isEqualTo(orderId);
-        }
-
-        @Test
-        @DisplayName("주문을 실패하면, DoesNotOrderedException을 던진다.")
-        void throwDoesNotOrderedExceptionWhenFailToOrder() {
-            // given
-            final long userId = 1L;
-            final long productId = 2L;
-            final int quantity = 3;
-            final OrderProductRequest orderProductRequest = new OrderProductRequest(userId,
-                productId, quantity);
-
-            final long orderId = 1L;
-            when(idGenerator.generate()).thenReturn(orderId);
-            when(productConnector.findByProductId(productId)).thenReturn(
-                Optional.of(ProductFixture.getDefaultBuilder()
-                    .build()));
-            when(payment.pay(eq(userId), anyLong(), anyString())).thenReturn(false);
-
-            // when
-            final Exception exception = catchException(
-                () -> orderUseCase.orderProduct(orderProductRequest));
-
-            // then
-            assertThat(exception).isInstanceOf(DoesNotOrderedException.class);
         }
 
         @Test
@@ -162,7 +126,6 @@ class OrderServiceTest {
 
             when(cartConnector.findByCartIdAndUserId(cartId, userId)).thenReturn(Optional.of(cart));
             when(idGenerator.generate()).thenReturn(orderId);
-            when(payment.pay(eq(userId), anyLong(), anyString())).thenReturn(true);
 
             // when
             final long result = orderUseCase.orderCartByCartIdAndUserId(cartId, userId);
@@ -186,33 +149,6 @@ class OrderServiceTest {
 
             // then
             assertThat(result).isInstanceOf(DoesNotFindCartException.class);
-        }
-
-        @Test
-        @DisplayName("주문을 실패하면, DoesNotOrderedException을 던진다.")
-        void throwDoesNotOrderedExceptionWhenFailOrder() {
-            // given
-            final long cartId = 2L;
-            final long userId = 1L;
-            final long orderId = 3L;
-
-            final CartProduct cartProduct = CartFixture.getCartProductBuilder().build();
-            final Cart cart = CartFixture.getEmptyCartBuilder()
-                .id(cartId)
-                .userId(userId)
-                .cartProducts(List.of(cartProduct))
-                .build();
-
-            when(cartConnector.findByCartIdAndUserId(cartId, userId)).thenReturn(Optional.of(cart));
-            when(idGenerator.generate()).thenReturn(orderId);
-            when(payment.pay(eq(userId), anyLong(), anyString())).thenReturn(false);
-
-            // when
-            final Exception result = catchException(
-                () -> orderUseCase.orderCartByCartIdAndUserId(cartId, userId));
-
-            // then
-            assertThat(result).isInstanceOf(DoesNotOrderedException.class);
         }
     }
 
