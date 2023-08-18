@@ -25,9 +25,6 @@ class ProductRepositoryImplTest {
     @Autowired
     private ProductRepositoryImpl productRepository;
 
-    @Autowired
-    EntityManager entityManager;
-
     @Nested
     @DisplayName("persist 메서드는")
     class PersistMethod {
@@ -245,9 +242,6 @@ class ProductRepositoryImplTest {
             // when
             productRepository.consumeQuantityByProductId(persistProduct.getId(),
                 persistProduct.getQuantity().getValue());
-
-            entityManager.flush();
-            entityManager.clear();
 
             // then
             final Optional<Product> result = productRepository.findById(persistProduct.getId());

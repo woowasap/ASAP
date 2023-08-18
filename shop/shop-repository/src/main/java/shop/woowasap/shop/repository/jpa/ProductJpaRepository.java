@@ -19,7 +19,7 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
 
     Page<ProductEntity> findAll(final Pageable pageable);
 
-    @Modifying
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("update ProductEntity as p set p.quantity = p.quantity - :consumedQuantity where p.id = :productId")
     void consumeQuantity(@Param("productId") final long productId,
         @Param("consumedQuantity") final long consumedQuantity);
