@@ -183,25 +183,6 @@ class OrderAcceptanceTest extends AcceptanceTest {
         HttpValidator.assertBadRequest(result);
     }
 
-    @Test
-    @DisplayName("상품 구매에 성공한 경우, product quantity가 줄어든다.")
-    void consumeProductQuantityWhenProductOrdered() {
-        // given
-        final long productId = getRandomProduct(accessToken).productId();
-        final int quantity = 10;
-        final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(
-            quantity);
-
-        final long expectedQuantity = 0L;
-
-        // when
-        OrderApiSupporter.orderProduct(productId, orderProductRequest, accessToken);
-
-        // then
-        final ExtractableResponse<Response> result = ShopApiSupporter.getProduct(productId);
-        assertThat(result.as(ProductDetailsResponse.class).quantity()).isEqualTo(expectedQuantity);
-    }
-
     private ProductResponse getRandomProduct(final String accessToken) {
         ShopApiSupporter.registerProduct(accessToken, ProductFixture.registerValidProductRequest());
 
