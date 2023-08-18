@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.domain.exception.NotExistsProductException;
-import shop.woowasap.shop.domain.exception.ProductModificationPermissionException;
 import shop.woowasap.shop.domain.exception.SaleEndedProductException;
 import shop.woowasap.shop.domain.in.product.ProductUseCase;
 import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
@@ -42,13 +41,6 @@ public class ProductService implements ProductUseCase {
     public void update(final long productId, final UpdateProductRequest updateProductRequest) {
         final Product product = getProduct(productId);
 
-        if (isOnSale(product)) {
-            throw new ProductModificationPermissionException(
-                MessageFormat.format("현재 판매 중인 Product 는 수정할 수 없습니다. productId : \"{0}\"",
-                    productId)
-            );
-        }
-
         final Product updateProduct = product.update(
             updateProductRequest.name(),
             updateProductRequest.description(),
@@ -59,11 +51,6 @@ public class ProductService implements ProductUseCase {
         );
 
         productRepository.persist(updateProduct);
-    }
-
-    private boolean isOnSale(final Product product) {
-        final Instant now = Instant.now();
-        return now.isAfter(product.getStartTime()) && now.isBefore(product.getEndTime());
     }
 
     @Override
