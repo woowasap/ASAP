@@ -29,4 +29,16 @@ public class Payment {
         this.payType = payType;
         this.payStatus = payStatus;
     }
+
+    public Payment changeStatus(PayStatus payStatus) {
+        return Payment.builder()
+            .paymentId(paymentId)
+            .userId(userId)
+            .orderId(orderId)
+            .purchasedMoney(purchasedMoney)
+            .createdAt(createdAt)
+            .payType(payType)
+            .payStatus(payStatus)
+            .build();
+    }
 }

@@ -2,6 +2,8 @@ package shop.woowasap.payment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
@@ -10,8 +12,11 @@ import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.in.OrderConnector;
 import shop.woowasap.order.domain.in.event.PaySuccessEvent;
+import shop.woowasap.order.domain.out.event.StockFailEvent;
+import shop.woowasap.order.domain.out.event.StockSuccessEvent;
 import shop.woowasap.payment.domain.PayStatus;
 import shop.woowasap.payment.domain.Payment;
+import shop.woowasap.payment.domain.exception.DoesNotFindPaymentException;
 import shop.woowasap.payment.domain.exception.PayUserNotMatchException;
 import shop.woowasap.payment.domain.in.PaymentUseCase;
 import shop.woowasap.payment.domain.in.request.PaymentRequest;
@@ -33,14 +38,16 @@ public class PaymentService implements PaymentUseCase {
     @Transactional
     public PaymentResponse pay(final PaymentRequest paymentRequest) {
         final Order order = findAndValidateOrder(paymentRequest);
-
-        savePayment(paymentRequest, order);
+        final Payment payment = buildPayment(paymentRequest, order);
 
         if (Boolean.TRUE.equals(paymentRequest.isSuccess())) {
+            paymentRepository.save(payment);
             applicationEventPublisher.publishEvent(
                 new PaySuccessEvent(paymentRequest.orderId(), paymentRequest.userId()));
             return PaymentResponse.success();
         }
+
+        paymentRepository.save(payment.changeStatus(PayStatus.FAIL));
         return PaymentResponse.fail();
     }
 
@@ -55,8 +62,8 @@ public class PaymentService implements PaymentUseCase {
         return order;
     }
 
-    private void savePayment(final PaymentRequest paymentRequest, final Order order) {
-        final Payment payment = Payment.builder()
+    private Payment buildPayment(final PaymentRequest paymentRequest, final Order order) {
+        return Payment.builder()
             .paymentId(idGenerator.generate())
             .orderId(paymentRequest.orderId())
             .userId(paymentRequest.userId())
@@ -65,7 +72,23 @@ public class PaymentService implements PaymentUseCase {
             .purchasedMoney(order.getTotalPrice())
             .createdAt(timeUtil.now())
             .build();
+    }
 
-        paymentRepository.save(payment);
+    @Async
+    @Transactional
+    @EventListener(StockSuccessEvent.class)
+    public void successPayment(StockSuccessEvent stockSuccessEvent) {
+        final Payment payment = paymentRepository.findByOrderId(stockSuccessEvent.orderId())
+            .orElseThrow(() -> new DoesNotFindPaymentException(stockSuccessEvent.orderId()));
+        paymentRepository.save(payment.changeStatus(PayStatus.SUCCESS));
+    }
+
+    @Async
+    @Transactional
+    @EventListener(StockFailEvent.class)
+    public void cancelPayment(StockFailEvent stockFailEvent) {
+        final Payment payment = paymentRepository.findByOrderId(stockFailEvent.orderId())
+            .orElseThrow(() -> new DoesNotFindPaymentException(stockFailEvent.orderId()));
+        paymentRepository.save(payment.changeStatus(PayStatus.FAIL));
     }
 }
