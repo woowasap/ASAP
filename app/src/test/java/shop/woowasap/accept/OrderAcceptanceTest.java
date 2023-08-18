@@ -197,9 +197,10 @@ class OrderAcceptanceTest extends AcceptanceTest {
         final long expectedQuantity = 0L;
 
         // when
-        final ExtractableResponse<Response> result = ShopApiSupporter.getProduct(productId);
+        OrderApiSupporter.orderProduct(productId, orderProductRequest, accessToken);
 
         // then
+        final ExtractableResponse<Response> result = ShopApiSupporter.getProduct(productId);
         assertThat(result.as(ProductDetailsResponse.class).quantity()).isEqualTo(expectedQuantity);
     }
 
