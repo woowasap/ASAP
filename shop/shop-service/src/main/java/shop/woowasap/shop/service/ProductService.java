@@ -44,7 +44,8 @@ public class ProductService implements ProductUseCase {
 
         if (isOnSale(product)) {
             throw new ProductModificationPermissionException(
-                MessageFormat.format("현재 판매 중인 Product 는 수정할 수 없습니다. productId : '{0}'", productId)
+                MessageFormat.format("현재 판매 중인 Product 는 수정할 수 없습니다. productId : \"{0}\"",
+                    productId)
             );
         }
 
@@ -98,7 +99,7 @@ public class ProductService implements ProductUseCase {
         if (product.isEndTimeBefore(Instant.now())) {
             throw new SaleEndedProductException(
                 MessageFormat.format(
-                    "판매가 종료된 product 입니다. productId : '{0}'",
+                    "판매가 종료된 product 입니다. productId : \"{0}\"",
                     productId)
             );
         }
@@ -116,7 +117,7 @@ public class ProductService implements ProductUseCase {
     private Product getProduct(final long productId) {
         return productRepository.findById(productId)
             .orElseThrow(() -> new NotExistsProductException(
-                MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : '{0}'",
+                MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
                     productId)
             ));
     }
