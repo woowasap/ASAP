@@ -6,10 +6,11 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
-import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.out.ProductRepository;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.repository.entity.ProductEntity;
 import shop.woowasap.shop.repository.jpa.ProductJpaRepository;
 
@@ -39,7 +40,8 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public ProductsPaginationResponse findAllValidWithPagination(final int page, final int size) {
-        final PageRequest pageRequest = PageRequest.of(page - 1, size);
+        final PageRequest pageRequest = PageRequest.of(page - 1, size,
+            Sort.by("startTime").ascending());
         final Page<ProductEntity> pagination = productJpaRepository.findAllByEndTimeAfter(
             Instant.now(), pageRequest);
 
@@ -52,7 +54,8 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public ProductsPaginationResponse findAllWithPagination(final int page, final int size) {
-        final PageRequest pageRequest = PageRequest.of(page - 1, size);
+        final PageRequest pageRequest = PageRequest.of(page - 1, size,
+            Sort.by("startTime").ascending());
         final Page<ProductEntity> pagination = productJpaRepository.findAll(pageRequest);
 
         final List<Product> products = pagination.get()
