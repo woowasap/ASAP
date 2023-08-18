@@ -31,16 +31,32 @@ public class PaymentService implements PaymentUseCase {
 
     @Override
     @Transactional
-    public PaymentResponse pay(PaymentRequest paymentRequest) {
-        Order order = orderConnector.findByOrderId(paymentRequest.orderId())
+    public PaymentResponse pay(final PaymentRequest paymentRequest) {
+        final Order order = findAndValidateOrder(paymentRequest);
+
+        savePayment(paymentRequest, order);
+
+        if (Boolean.TRUE.equals(paymentRequest.isSuccess())) {
+            applicationEventPublisher.publishEvent(
+                new PaySuccessEvent(paymentRequest.orderId(), paymentRequest.userId()));
+            return PaymentResponse.success();
+        }
+        return PaymentResponse.fail();
+    }
+
+    private Order findAndValidateOrder(final PaymentRequest paymentRequest) {
+        final Order order = orderConnector.findByOrderId(paymentRequest.orderId())
             .orElseThrow(() -> new DoesNotFindOrderException(paymentRequest.orderId(),
                 paymentRequest.userId()));
 
         if (!paymentRequest.userId().equals(order.getUserId())) {
             throw new PayUserNotMatchException();
         }
+        return order;
+    }
 
-        Payment payment = Payment.builder()
+    private void savePayment(final PaymentRequest paymentRequest, final Order order) {
+        final Payment payment = Payment.builder()
             .paymentId(idGenerator.generate())
             .orderId(paymentRequest.orderId())
             .userId(paymentRequest.userId())
@@ -51,12 +67,5 @@ public class PaymentService implements PaymentUseCase {
             .build();
 
         paymentRepository.save(payment);
-
-        if (Boolean.TRUE.equals(paymentRequest.isSuccess())) {
-            applicationEventPublisher.publishEvent(
-                new PaySuccessEvent(paymentRequest.orderId(), paymentRequest.userId()));
-            return new PaymentResponse(true);
-        }
-        return new PaymentResponse(false);
     }
 }

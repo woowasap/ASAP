@@ -151,7 +151,7 @@ class PaymentServiceTest {
                 isSuccess);
 
             // when
-            Exception exception = catchException(() -> paymentService.pay(paymentRequest));
+            final Exception exception = catchException(() -> paymentService.pay(paymentRequest));
 
             // then
             assertThat(exception).isInstanceOf(DoesNotFindOrderException.class);
@@ -186,7 +186,7 @@ class PaymentServiceTest {
                 isSuccess);
 
             // when
-            Exception exception = catchException(() -> paymentService.pay(paymentRequest));
+            final Exception exception = catchException(() -> paymentService.pay(paymentRequest));
 
             // then
             assertThat(exception).isInstanceOf(PayUserNotMatchException.class);
