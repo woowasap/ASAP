@@ -55,4 +55,16 @@ public class ProductFixture {
             .endTime(SALE_PRIOR_END_TIME.toInstant(ZoneOffset.UTC))
             .build();
     }
+
+    public static Product salePriorProduct(final Long id, final Long quantity) {
+        return Product.builder()
+            .id(id)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(quantity)
+            .startTime(SALE_PRIOR_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(SALE_PRIOR_END_TIME.toInstant(ZoneOffset.UTC))
+            .build();
+    }
 }

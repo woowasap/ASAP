@@ -192,8 +192,6 @@ class OrderAcceptanceTest extends AcceptanceTest {
         final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(
             quantity);
 
-        OrderApiSupporter.orderProduct(productId, orderProductRequest, accessToken);
-
         final long expectedQuantity = 0L;
 
         // when
