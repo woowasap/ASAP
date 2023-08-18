@@ -40,8 +40,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("상품 바로 구매 API는 productId와 quantity를 받아 상품을 구매한후, Created와 Location을 응답한다.")
-    void returnCreatedAndLocationWhenSuccessToBuyProduct() {
+    @DisplayName("상품 바로 구매 API는 productId와 quantity를 받아 상품을 구매한후, Ok와 OrderIdResponse를 응답한다.")
+    void returnOkAndOrderIdResponseWhenSuccessToBuyProduct() {
         // given
         final long productId = getRandomProduct(accessToken).productId();
         final int quantity = 2;
@@ -148,8 +148,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("장바구니 상품 구매 API는 장바구니의 상품을 구매한 후, Created와 Location을 응답한다.")
-    void returnCreatedAndLocationWhenSuccessToBuyCart() {
+    @DisplayName("장바구니 상품 구매 API는 장바구니의 상품을 구매한 후, Ok와 OrderIdResponse를 응답한다.")
+    void returnOkAndOrderIdResponseWhenSuccessToBuyCart() {
         // given
         final ProductResponse product = getRandomProduct(accessToken);
         final int quantity = 2;

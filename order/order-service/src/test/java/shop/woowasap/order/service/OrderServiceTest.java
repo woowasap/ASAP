@@ -23,6 +23,7 @@ import shop.woowasap.order.domain.exception.DoesNotFindProductException;
 import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
 import shop.woowasap.order.domain.in.response.DetailOrderResponse;
+import shop.woowasap.order.domain.in.response.OrderIdResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.response.OrdersPaginationResponse;
@@ -78,10 +79,10 @@ class OrderServiceTest {
                     .build()));
 
             // when
-            final long result = orderUseCase.orderProduct(orderProductRequest);
+            final OrderIdResponse result = orderUseCase.orderProduct(orderProductRequest);
 
             // then
-            assertThat(result).isEqualTo(orderId);
+            assertThat(result.orderId()).isEqualTo(orderId);
         }
 
         @Test
@@ -128,10 +129,10 @@ class OrderServiceTest {
             when(idGenerator.generate()).thenReturn(orderId);
 
             // when
-            final long result = orderUseCase.orderCartByCartIdAndUserId(cartId, userId);
+            final OrderIdResponse result = orderUseCase.orderCartByCartIdAndUserId(cartId, userId);
 
             // then
-            assertThat(result).isEqualTo(orderId);
+            assertThat(result.orderId()).isEqualTo(orderId);
         }
 
         @Test
