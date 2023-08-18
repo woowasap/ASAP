@@ -60,4 +60,8 @@ public final class Product {
             throw new InvalidProductSaleTimeException();
         }
     }
+
+    public boolean isEndTimeBefore(final Instant time) {
+        return endTime.isBefore(time);
+    }
 }

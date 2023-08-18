@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
-import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.out.ProductRepository;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.repository.entity.ProductEntity;
 import shop.woowasap.shop.repository.jpa.ProductJpaRepository;
 
@@ -28,12 +28,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Optional<Product> findById(final long productId) {
         return productJpaRepository.findById(productId)
-            .map(ProductEntity::toDomain);
-    }
-
-    @Override
-    public Optional<Product> findByIdAndValidSaleTime(final long productId) {
-        return productJpaRepository.findByIdAndEndTimeAfter(productId, Instant.now())
             .map(ProductEntity::toDomain);
     }
 

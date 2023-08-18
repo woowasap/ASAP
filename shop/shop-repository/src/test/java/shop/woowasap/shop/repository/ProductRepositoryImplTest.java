@@ -2,7 +2,6 @@ package shop.woowasap.shop.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -14,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import shop.woowasap.BeanScanBaseLocation;
-import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.repository.support.ProductFixture;
 
 @DataJpaTest
@@ -95,57 +94,6 @@ class ProductRepositoryImplTest {
 
             // when
             final Optional<Product> result = productRepository.findById(notExistProductId);
-
-            // then
-            assertThat(result).isEmpty();
-        }
-
-    }
-
-    @Nested
-    @DisplayName("findByAndValidSaleTime 메서드는")
-    class findByAndValidSaleTimeMethod {
-
-        @Test
-        @DisplayName("productId 에 해당하는 product 가 판매 중인 상품이라면 Product 를 반환한다.")
-        void returnValidProductWhenOnSaleProduct() {
-            // given
-            final Product onSaleProduct = ProductFixture.onSaleProduct(1L);
-            productRepository.persist(onSaleProduct);
-
-            // when
-            final Optional<Product> result = productRepository.findByIdAndValidSaleTime(
-                onSaleProduct.getId());
-
-            // then
-            assertThat(result.get()).usingRecursiveComparison().isEqualTo(onSaleProduct);
-        }
-
-        @Test
-        @DisplayName("productId 에 해당하는 product 가 판매 예정인 상품이라면 Product 를 반환한다.")
-        void returnValidProductWhenSalePriorProduct() {
-            // given
-            final Product salePriorProduct = ProductFixture.salePriorProduct(1L);
-            productRepository.persist(salePriorProduct);
-
-            // when
-            final Optional<Product> result = productRepository.findByIdAndValidSaleTime(
-                salePriorProduct.getId());
-
-            // then
-            assertThat(result.get()).usingRecursiveComparison().isEqualTo(salePriorProduct);
-        }
-
-        @Test
-        @DisplayName("productId 에 해당하는 product 가 판매가 지난 상품이라면 Null 을 반환한다.")
-        void returnNullWhenSalePastProduct() {
-            // given
-            final Product salePastProduct = ProductFixture.salePastProduct(1L);
-            productRepository.persist(salePastProduct);
-
-            // when
-            final Optional<Product> result = productRepository.findByIdAndValidSaleTime(
-                salePastProduct.getId());
 
             // then
             assertThat(result).isEmpty();
