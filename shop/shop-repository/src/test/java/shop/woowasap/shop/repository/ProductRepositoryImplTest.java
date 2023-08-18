@@ -1,6 +1,9 @@
 package shop.woowasap.shop.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static shop.woowasap.shop.repository.support.ProductFixture.afterSaleProduct;
+import static shop.woowasap.shop.repository.support.ProductFixture.beforeSaleProduct;
+import static shop.woowasap.shop.repository.support.ProductFixture.onSaleProduct;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,7 +18,6 @@ import org.springframework.test.context.ContextConfiguration;
 import shop.woowasap.BeanScanBaseLocation;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
 import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.repository.support.ProductFixture;
 
 @DataJpaTest
 @ContextConfiguration(classes = {BeanScanBaseLocation.class, ProductRepositoryImpl.class})
@@ -33,7 +35,7 @@ class ProductRepositoryImplTest {
         void saveProduct() {
             // given
             final long productId = 1L;
-            final Product product = ProductFixture.salePriorProduct(productId);
+            final Product product = beforeSaleProduct(productId);
 
             // when
             final Product result = productRepository.persist(product);
@@ -48,7 +50,7 @@ class ProductRepositoryImplTest {
             // given
             final long productId = 1L;
             final String newName = "newName";
-            final Product product = ProductFixture.salePriorProduct(productId);
+            final Product product = beforeSaleProduct(productId);
 
             // when
             product.update(
@@ -76,7 +78,7 @@ class ProductRepositoryImplTest {
         void returnProductWithProductId() {
             // given
             final long productId = 1L;
-            final Product product = ProductFixture.salePriorProduct(productId);
+            final Product product = beforeSaleProduct(productId);
             productRepository.persist(product);
 
             // when
@@ -113,16 +115,16 @@ class ProductRepositoryImplTest {
             final int size = 10;
             final int totalPage = 1;
 
-            final Product salePastProduct = ProductFixture.salePastProduct(1L);
-            final Product salePriorProduct = ProductFixture.salePriorProduct(2L);
-            final Product onSaleProduct = ProductFixture.onSaleProduct(3L);
+            final Product afterSaleProduct = afterSaleProduct(1L);
+            final Product beforeSaleProduct = beforeSaleProduct(2L);
+            final Product onSaleProduct = onSaleProduct(3L);
 
-            productRepository.persist(salePastProduct);
-            productRepository.persist(salePriorProduct);
+            productRepository.persist(afterSaleProduct);
+            productRepository.persist(beforeSaleProduct);
             productRepository.persist(onSaleProduct);
 
             ProductsPaginationResponse expected = new ProductsPaginationResponse(
-                List.of(onSaleProduct, salePriorProduct),
+                List.of(onSaleProduct, beforeSaleProduct),
                 page,
                 totalPage
             );
@@ -149,16 +151,16 @@ class ProductRepositoryImplTest {
             final int size = 10;
             final int totalPage = 1;
 
-            final Product salePastProduct = ProductFixture.salePastProduct(1L);
-            final Product salePriorProduct = ProductFixture.salePriorProduct(2L);
-            final Product onSaleProduct = ProductFixture.onSaleProduct(3L);
+            final Product afterSaleProduct = afterSaleProduct(1L);
+            final Product beforeSaleProduct = beforeSaleProduct(2L);
+            final Product onSaleProduct = onSaleProduct(3L);
 
-            productRepository.persist(salePastProduct);
-            productRepository.persist(salePriorProduct);
+            productRepository.persist(afterSaleProduct);
+            productRepository.persist(beforeSaleProduct);
             productRepository.persist(onSaleProduct);
 
             ProductsPaginationResponse expected = new ProductsPaginationResponse(
-                List.of(onSaleProduct, salePastProduct, salePriorProduct),
+                List.of(afterSaleProduct, onSaleProduct, beforeSaleProduct),
                 page,
                 totalPage
             );
@@ -183,7 +185,7 @@ class ProductRepositoryImplTest {
             final long productId = 1L;
             final long quantity = 10L;
             final Product persistProduct =
-                productRepository.persist(ProductFixture.salePriorProduct(productId, quantity));
+                productRepository.persist(onSaleProduct(productId, quantity));
 
             final long expectedQuantity = 0;
 

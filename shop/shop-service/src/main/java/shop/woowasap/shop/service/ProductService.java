@@ -40,6 +40,7 @@ public class ProductService implements ProductUseCase {
     @Transactional
     public void update(final long productId, final UpdateProductRequest updateProductRequest) {
         final Product product = getProduct(productId);
+
         final Product updateProduct = product.update(
             updateProductRequest.name(),
             updateProductRequest.description(),
@@ -80,10 +81,7 @@ public class ProductService implements ProductUseCase {
 
     @Override
     public ProductDetailsResponse getByProductId(final long productId) {
-        final Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new NotExistsProductException(
-                MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
-                    productId)));
+        final Product product = getProduct(productId);
 
         if (product.isEndTimeBefore(Instant.now())) {
             throw new SaleEndedProductException(
