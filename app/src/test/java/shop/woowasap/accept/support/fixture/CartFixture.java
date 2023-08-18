@@ -25,9 +25,10 @@ public final class CartFixture {
         return new UpdateCartProductRequest(productId, quantity);
     }
 
-    public static CartResponse cartResponse(final long productId, final long quantity) {
+    public static CartResponse cartResponse(final long productId, final long purchaseQuantity,
+        final long remainQuantity) {
         final CartProductResponse cartProduct = new CartProductResponse(productId, NAME, PRICE,
-            quantity);
+            purchaseQuantity, remainQuantity);
 
         return new CartResponse(CART_ID, List.of(cartProduct));
     }
