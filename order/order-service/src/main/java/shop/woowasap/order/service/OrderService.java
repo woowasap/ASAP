@@ -46,7 +46,7 @@ public class OrderService implements OrderUseCase {
         final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product);
 
         orderRepository.persist(order);
-        productConnector.consumeProductByProductId(product.getId(), orderProductRequest.quantity());
+
         return new OrderIdResponse(order.getId());
     }
 
@@ -64,9 +64,7 @@ public class OrderService implements OrderUseCase {
         final Order order = OrderMapper.toDomain(idGenerator, userId, cart);
 
         orderRepository.persist(order);
-        cart.getCartProducts()
-            .forEach(cartProduct -> productConnector.consumeProductByProductId(
-                cartProduct.getProduct().getId(), cartProduct.getQuantity().getValue()));
+
         return new OrderIdResponse(order.getId());
     }
 
