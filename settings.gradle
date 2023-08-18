@@ -32,7 +32,6 @@ include 'core:util'
 include 'core:id-gen'
 
 include 'order'
-include 'order:order-infra'
 include 'order:order-domain'
 include 'order:order-service'
 include 'order:order-controller'

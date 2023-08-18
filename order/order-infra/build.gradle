@@ -1,3 +1,0 @@
-dependencies {
-    implementation project(':order:order-domain')
-}
