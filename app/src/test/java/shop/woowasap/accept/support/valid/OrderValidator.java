@@ -6,6 +6,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
 import shop.woowasap.order.domain.in.response.DetailOrderResponse;
+import shop.woowasap.order.domain.in.response.OrderIdResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 
 public final class OrderValidator {
@@ -15,9 +16,11 @@ public final class OrderValidator {
     }
 
     public static void assertOrdered(ExtractableResponse<Response> result) {
-        HttpValidator.assertCreated(result);
+        HttpValidator.assertOk(result);
 
-        assertThat(result.header(HttpHeaders.LOCATION)).contains("/v1/orders/");
+        OrderIdResponse resultResponse = result.as(OrderIdResponse.class);
+
+        assertThat(resultResponse.orderId()).isPositive();
     }
 
     public static void assertOrders(ExtractableResponse<Response> result, OrdersResponse expected) {

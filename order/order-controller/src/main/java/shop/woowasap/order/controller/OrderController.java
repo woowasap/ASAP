@@ -1,6 +1,5 @@
 package shop.woowasap.order.controller;
 
-import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +23,7 @@ import shop.woowasap.order.domain.exception.InvalidQuantityException;
 import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
 import shop.woowasap.order.domain.in.response.DetailOrderResponse;
+import shop.woowasap.order.domain.in.response.OrderIdResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 
 @RestController
@@ -34,26 +34,28 @@ public class OrderController {
     private final OrderUseCase orderUseCase;
 
     @PostMapping("/products/{product-id}")
-    public ResponseEntity<Void> orderProduct(@PathVariable("product-id") final long productId,
+    public ResponseEntity<OrderIdResponse> orderProduct(
+        @PathVariable("product-id") final long productId,
         @RequestBody final OrderProductQuantityRequest orderProductQuantityRequest,
         @LoginUser final Long userId) {
 
         final OrderProductRequest orderProductRequest = new OrderProductRequest(userId,
             productId,
             orderProductQuantityRequest.quantity());
-        final long orderId = orderUseCase.orderProduct(orderProductRequest);
 
-        return ResponseEntity.created(URI.create("/v1/orders/" + orderId))
-            .build();
+        final OrderIdResponse orderIdResponse = orderUseCase.orderProduct(orderProductRequest);
+
+        return ResponseEntity.ok(orderIdResponse);
     }
 
     @PostMapping("/carts/{cart-id}")
-    public ResponseEntity<Void> orderCart(@PathVariable("cart-id") final long cartId,
+    public ResponseEntity<OrderIdResponse> orderCart(@PathVariable("cart-id") final long cartId,
         @LoginUser final Long userId) {
-        final long orderId = orderUseCase.orderCartByCartIdAndUserId(cartId, userId);
 
-        return ResponseEntity.created(URI.create("/v1/orders/" + orderId))
-            .build();
+        final OrderIdResponse orderIdResponse = orderUseCase.orderCartByCartIdAndUserId(cartId,
+            userId);
+
+        return ResponseEntity.ok(orderIdResponse);
     }
 
     @GetMapping
