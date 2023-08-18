@@ -17,34 +17,75 @@ public class ProductFixture {
     public static final String DESCRIPTION = "productDescription";
     public static final String PRICE = "10000";
     public static final long QUANTITY = 10L;
-    public static final LocalDateTime START_TIME = LocalDateTime.of(2023, 8, 5, 12, 30);
-    public static final LocalDateTime END_TIME = LocalDateTime.of(2023, 8, 5, 14, 30);
+
     public static final int PAGE = 1;
     public static final int TOTAL_PAGE = 1;
-    public static final LocalDateTime INFINITE_START_TIME = LocalDateTime.of(99_999, 12, 31, 23,
-        59);
-    public static final LocalDateTime INFINITE_END_TIME = LocalDateTime.of(999_999, 12, 31, 23, 59);
 
-    public static Product.ProductBuilder productBuilder(final Long id) {
+    public static final LocalDateTime AFTER_SALE_START_TIME = LocalDateTime.of(2022, 8, 5, 12, 30);
+    public static final LocalDateTime AFTER_SALE_END_TIME = LocalDateTime.of(2022, 8, 5, 14, 30);
+
+    public static final LocalDateTime ON_SALE_START_TIME = LocalDateTime.of(2022, 8, 18, 1, 1);
+    public static final LocalDateTime ON_SALE_END_TIME = LocalDateTime.of(2030, 12, 31, 23, 59);
+
+    public static final LocalDateTime BEFORE_SALE_START_TIME = LocalDateTime.of(2030, 12, 1, 23,
+        59);
+    public static final LocalDateTime BEFORE_SALE_END_TIME = LocalDateTime.of(2030, 12, 31, 23, 59);
+
+    public static Product.ProductBuilder onSaleProductBuilder(final Long id) {
         return Product.builder()
             .id(id)
             .name(NAME)
             .description(DESCRIPTION)
             .price(PRICE)
             .quantity(QUANTITY)
-            .startTime(START_TIME.toInstant(ZoneOffset.UTC))
-            .endTime(END_TIME.toInstant(ZoneOffset.UTC));
+            .startTime(ON_SALE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(ON_SALE_END_TIME.toInstant(ZoneOffset.UTC));
     }
 
-    public static Product validProduct(final Long id) {
+    public static Product.ProductBuilder beforeSaleProductBuilder(final Long id) {
         return Product.builder()
             .id(id)
             .name(NAME)
             .description(DESCRIPTION)
             .price(PRICE)
             .quantity(QUANTITY)
-            .startTime(INFINITE_START_TIME.toInstant(ZoneOffset.UTC))
-            .endTime(INFINITE_END_TIME.toInstant(ZoneOffset.UTC))
+            .startTime(BEFORE_SALE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(BEFORE_SALE_END_TIME.toInstant(ZoneOffset.UTC));
+    }
+
+    public static Product beforeSaleProduct(final Long id) {
+        return Product.builder()
+            .id(id)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(QUANTITY)
+            .startTime(BEFORE_SALE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(BEFORE_SALE_END_TIME.toInstant(ZoneOffset.UTC))
+            .build();
+    }
+
+    public static Product onSaleProduct(final Long id) {
+        return Product.builder()
+            .id(id)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(QUANTITY)
+            .startTime(ON_SALE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(ON_SALE_END_TIME.toInstant(ZoneOffset.UTC))
+            .build();
+    }
+
+    public static Product afterSaleProduct(final Long id) {
+        return Product.builder()
+            .id(id)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(QUANTITY)
+            .startTime(AFTER_SALE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(AFTER_SALE_END_TIME.toInstant(ZoneOffset.UTC))
             .build();
     }
 
@@ -64,12 +105,26 @@ public class ProductFixture {
         );
     }
 
-    public static RegisterProductRequest registerProductRequest() {
-        return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, START_TIME, END_TIME);
+    public static RegisterProductRequest registerProductRequest(final Product product) {
+        return new RegisterProductRequest(
+            product.getName().getValue(),
+            product.getDescription().getValue(),
+            product.getPrice().getValue().toString(),
+            product.getQuantity().getValue(),
+            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
+            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul"))
+        );
     }
 
-    public static UpdateProductRequest updateProductRequest() {
-        return new UpdateProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, START_TIME, END_TIME);
+    public static UpdateProductRequest updateProductRequest(final Product product) {
+        return new UpdateProductRequest(
+            product.getName().getValue(),
+            product.getDescription().getValue(),
+            product.getPrice().getValue().toString(),
+            product.getQuantity().getValue(),
+            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
+            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul"))
+        );
     }
 
     public static ProductsResponse productsResponse(final List<Product> products) {

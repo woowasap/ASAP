@@ -5,12 +5,14 @@ import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static shop.woowasap.shop.service.support.fixture.ProductFixture.productBuilder;
+import static shop.woowasap.shop.service.support.fixture.ProductFixture.afterSaleProduct;
+import static shop.woowasap.shop.service.support.fixture.ProductFixture.beforeSaleProduct;
+import static shop.woowasap.shop.service.support.fixture.ProductFixture.beforeSaleProductBuilder;
+import static shop.woowasap.shop.service.support.fixture.ProductFixture.onSaleProduct;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.productsResponse;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.registerProductRequest;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.updateProductRequest;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.domain.exception.NotExistsProductException;
+import shop.woowasap.shop.domain.exception.ProductModificationPermissionException;
 import shop.woowasap.shop.domain.exception.SaleEndedProductException;
 import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
@@ -49,16 +52,17 @@ class ProductServiceTest {
     private ProductRepository productRepository;
 
     @Nested
-    @DisplayName("Product를 생성하는 메서드는")
+    @DisplayName("Product 를 생성하는 메서드는")
     class CreateProduct {
 
         @Test
-        @DisplayName("정상적인 Request 입력 시, Product를 생성한다.")
+        @DisplayName("정상적인 Request 입력 시, Product 를 생성한다.")
         void create() {
             // given
             final Long productId = 1L;
-            final RegisterProductRequest registerProductRequest = registerProductRequest();
-            final Product product = productBuilder(productId).build();
+            final Product product = beforeSaleProduct(productId);
+            final RegisterProductRequest registerProductRequest = registerProductRequest(product);
+
             when(productRepository.persist(any())).thenReturn(product);
             when(idGenerator.generate()).thenReturn(productId);
 
@@ -78,15 +82,15 @@ class ProductServiceTest {
         @DisplayName("Product 를 갱신한다")
         void updateProduct() {
             // given
-            final long noExistProductId = 1L;
-            final UpdateProductRequest updateProductRequest = updateProductRequest();
-            final Product product = productBuilder(noExistProductId).build();
+            final long productId = 1L;
+            final Product product = beforeSaleProduct(productId);
+            final UpdateProductRequest updateProductRequest = updateProductRequest(product);
 
-            when(productRepository.findById(noExistProductId)).thenReturn(Optional.of(product));
+            when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
             // when
             productService.update
-                (noExistProductId, updateProductRequest);
+                (productId, updateProductRequest);
 
             // then
             verify(productRepository).persist(any(Product.class));
@@ -97,7 +101,8 @@ class ProductServiceTest {
         void throwUpdateProductExceptionWhenNoProductExist() {
             // given
             final long noExistProductId = 1L;
-            final UpdateProductRequest updateProductRequest = updateProductRequest();
+            final Product product = onSaleProduct(noExistProductId);
+            final UpdateProductRequest updateProductRequest = updateProductRequest(product);
 
             when(productRepository.findById(noExistProductId)).thenReturn(Optional.empty());
 
@@ -107,7 +112,24 @@ class ProductServiceTest {
 
             // then
             assertThat(exception).isInstanceOf(NotExistsProductException.class);
-            assertThat(exception.getMessage()).contains("productId 에 해당하는 Product 가 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("ProductId 에 해당하는 Product 이 현재 판매 중일 경우, ProductModificationPermissionException 을 던진다")
+        void throwProductModificationPermissionExceptionWhenProductIsOnSale() {
+            // given
+            final long onSaleProductId = 1L;
+            final Product product = onSaleProduct(onSaleProductId);
+            final UpdateProductRequest updateProductRequest = updateProductRequest(product);
+
+            when(productRepository.findById(onSaleProductId)).thenReturn(Optional.of(product));
+
+            // when
+            Exception exception = catchException(
+                () -> productService.update(onSaleProductId, updateProductRequest));
+
+            // then
+            assertThat(exception).isInstanceOf(ProductModificationPermissionException.class);
         }
     }
 
@@ -136,10 +158,7 @@ class ProductServiceTest {
         void throwSaleEndedProductExceptionWhenCannotFindIdMatchedProduct() {
             // given
             final long productId = 1L;
-            final Product saleEndedproduct = productBuilder(productId)
-                .startTime(Instant.now().minusSeconds(10_000))
-                .endTime(Instant.now().minusSeconds(1_000))
-                .build();
+            final Product saleEndedproduct = afterSaleProduct(productId);
 
             when(productRepository.findById(productId)).thenReturn(Optional.of(saleEndedproduct));
 
@@ -155,8 +174,8 @@ class ProductServiceTest {
         void ReturnProductResponseWhenExistsIdMatchedProduct() {
             // given
             final long productId = 1L;
-            final Product product = ProductFixture.validProduct(productId);
-            
+            final Product product = onSaleProduct(productId);
+
             final ProductDetailsResponse expected = ProductDtoFixture.fromProduct(product);
 
             when(productRepository.findById(productId)).thenReturn(
@@ -182,7 +201,7 @@ class ProductServiceTest {
             final int totalPage = 1;
             final int size = 10;
             final List<Product> products = List.of(
-                productBuilder(1L).build(), productBuilder(2L).build());
+                beforeSaleProductBuilder(1L).build(), beforeSaleProductBuilder(2L).build());
 
             when(productRepository.findAllWithPagination(page, size))
                 .thenReturn(new ProductsPaginationResponse(products, page, totalPage));
@@ -209,8 +228,8 @@ class ProductServiceTest {
             final int pageSize = 4;
             final int totalPage = 1;
 
-            Product product1 = ProductFixture.validProduct(1L);
-            Product product2 = ProductFixture.validProduct(2L);
+            Product product1 = onSaleProduct(1L);
+            Product product2 = onSaleProduct(2L);
 
             List<Product> products = List.of(product1, product2);
 
@@ -249,11 +268,11 @@ class ProductServiceTest {
         }
 
         @Test
-        @DisplayName("productId에 해당하는 Product 가 존재한다면, ProductResponse를 반환한다.")
+        @DisplayName("productId에 해당하는 Product 가 존재한다면, ProductResponse 를 반환한다.")
         void ReturnProductResponseWhenExistsIdMatchedProduct() {
             // given
             final long productId = 1L;
-            final Product product = productBuilder(productId).build();
+            final Product product = onSaleProduct(productId);
             final ProductDetailsResponse expected = ProductDtoFixture.fromProduct(product);
 
             when(productRepository.findById(productId)).thenReturn(Optional.of(product));
