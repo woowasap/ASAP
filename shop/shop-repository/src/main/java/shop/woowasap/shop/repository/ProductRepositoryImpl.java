@@ -61,4 +61,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         return new ProductsPaginationResponse(products, page, pagination.getTotalPages());
     }
+
+    @Override
+    public void consumeQuantityByProductId(long productId, long consumedQuantity) {
+        productJpaRepository.consumeQuantity(productId, consumedQuantity);
+    }
 }

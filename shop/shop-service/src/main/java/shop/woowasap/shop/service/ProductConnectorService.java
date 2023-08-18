@@ -19,4 +19,10 @@ public class ProductConnectorService implements ProductConnector {
     public Optional<Product> findByProductId(final long productId) {
         return productRepository.findById(productId);
     }
+
+    @Override
+    @Transactional
+    public void consumeProductByProductId(final long productId, final long consumedQuantity) {
+        productRepository.consumeQuantityByProductId(productId, consumedQuantity);
+    }
 }

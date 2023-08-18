@@ -47,11 +47,13 @@ public class OrderService implements OrderUseCase {
         final Product product = getProductByProductId(orderProductRequest.productId());
         final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product);
 
-        if (!payment.pay(orderProductRequest.userId(), order.getId(), order.getTotalPrice().toString())) {
+        if (!payment.pay(orderProductRequest.userId(), order.getId(),
+            order.getTotalPrice().toString())) {
             throw new DoesNotOrderedException();
         }
 
         orderRepository.persist(order);
+        productConnector.consumeProductByProductId(product.getId(), orderProductRequest.quantity());
         return order.getId();
     }
 
@@ -73,6 +75,9 @@ public class OrderService implements OrderUseCase {
         }
 
         orderRepository.persist(order);
+        cart.getCartProducts()
+            .forEach(cartProduct -> productConnector.consumeProductByProductId(
+                cartProduct.getProduct().getId(), cartProduct.getQuantity().getValue()));
         return order.getId();
     }
 
@@ -83,7 +88,8 @@ public class OrderService implements OrderUseCase {
         final List<Order> orders = ordersPaginationResponse.orders();
 
         final List<OrderResponse> orderResponses = orders.stream()
-            .map(order -> OrderMapper.toOrderResponse(order, getOrderProductResponse(order), locale))
+            .map(
+                order -> OrderMapper.toOrderResponse(order, getOrderProductResponse(order), locale))
             .toList();
 
         return OrderMapper.toOrdersResponse(orderResponses, ordersPaginationResponse.page(),

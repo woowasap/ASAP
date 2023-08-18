@@ -1,6 +1,7 @@
 package shop.woowasap.shop.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -65,6 +66,32 @@ class ProductConnectorServiceTest {
 
             // then
             assertThat(result).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("consumeProductByProductId 메소드는")
+    class consumeProductByProductIdMethod {
+
+        @Test
+        @DisplayName("productId와 consumedQuantity를 받아, product의 count를 consumedQuantity 만큼 줄인다.")
+        void consumeProductByProductIdAndConsumedQuantity() {
+            // given
+            final long productId = 1L;
+            final long consumedQuantity = 10L;
+
+            final Product persistedProduct = ProductFixture.productBuilder(productId)
+                .quantity(consumedQuantity)
+                .build();
+
+            when(productRepository.findById(productId)).thenReturn(Optional.of(persistedProduct));
+
+            // when
+            final Exception result = catchException(
+                () -> productConnector.consumeProductByProductId(productId, consumedQuantity));
+
+            // then
+            assertThat(result).isNull();
         }
     }
 }

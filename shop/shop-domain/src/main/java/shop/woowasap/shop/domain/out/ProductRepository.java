@@ -15,4 +15,6 @@ public interface ProductRepository {
     ProductsPaginationResponse findAllValidWithPagination(final int page, final int size);
 
     ProductsPaginationResponse findAllWithPagination(final int page, final int size);
+
+    void consumeQuantityByProductId(final long productId, final long consumedQuantity);
 }

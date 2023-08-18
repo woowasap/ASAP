@@ -1,5 +1,7 @@
 package shop.woowasap.accept;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.math.BigInteger;
@@ -23,6 +25,7 @@ import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.in.cart.response.CartResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
@@ -148,7 +151,6 @@ class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 상품 구매 API는 장바구니의 상품을 구매한 후, Created와 Location을 응답한다.")
     void returnCreatedAndLocationWhenSuccessToBuyCart() {
         // given
-
         final ProductResponse product = getRandomProduct(accessToken);
         final int quantity = 2;
         final AddCartProductRequest addCartProductRequest = new AddCartProductRequest(
@@ -179,6 +181,25 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         // then
         HttpValidator.assertBadRequest(result);
+    }
+
+    @Test
+    @DisplayName("상품 구매에 성공한 경우, product quantity가 줄어든다.")
+    void consumeProductQuantityWhenProductOrdered() {
+        // given
+        final long productId = getRandomProduct(accessToken).productId();
+        final int quantity = 10;
+        final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(
+            quantity);
+
+        final long expectedQuantity = 0L;
+
+        // when
+        OrderApiSupporter.orderProduct(productId, orderProductRequest, accessToken);
+
+        // then
+        final ExtractableResponse<Response> result = ShopApiSupporter.getProduct(productId);
+        assertThat(result.as(ProductDetailsResponse.class).quantity()).isEqualTo(expectedQuantity);
     }
 
     private ProductResponse getRandomProduct(final String accessToken) {

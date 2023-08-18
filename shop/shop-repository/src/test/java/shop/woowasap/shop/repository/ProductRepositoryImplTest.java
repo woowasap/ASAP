@@ -25,11 +25,8 @@ class ProductRepositoryImplTest {
     @Autowired
     private ProductRepositoryImpl productRepository;
 
-    @Autowired
-    EntityManager entityManager;
-
     @Nested
-    @DisplayName("persis 메서드는")
+    @DisplayName("persist 메서드는")
     class PersistMethod {
 
         @Test
@@ -224,6 +221,32 @@ class ProductRepositoryImplTest {
 
             // then
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+        }
+    }
+
+    @Nested
+    @DisplayName("consumeQuantityByProductId 메서드는")
+    class consumeQuantityByProductIdMethod {
+
+        @Test
+        @DisplayName("product의 quantity를 줄인다.")
+        void consumeProductQuantity() {
+            // given
+            final long productId = 1L;
+            final long quantity = 10L;
+            final Product persistProduct =
+                productRepository.persist(ProductFixture.salePriorProduct(productId, quantity));
+
+            final long expectedQuantity = 0;
+
+            // when
+            productRepository.consumeQuantityByProductId(persistProduct.getId(),
+                persistProduct.getQuantity().getValue());
+
+            // then
+            final Optional<Product> result = productRepository.findById(persistProduct.getId());
+            assertThat(result).isPresent();
+            assertThat(result.get().getQuantity().getValue()).isEqualTo(expectedQuantity);
         }
     }
 }
