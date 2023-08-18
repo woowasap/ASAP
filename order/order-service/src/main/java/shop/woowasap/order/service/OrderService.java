@@ -53,7 +53,7 @@ public class OrderService implements OrderUseCase {
         }
 
         orderRepository.persist(order);
-        productConnector.consumeProductByProductId(product.getId(), 1);
+        productConnector.consumeProductByProductId(product.getId(), orderProductRequest.quantity());
         return order.getId();
     }
 
