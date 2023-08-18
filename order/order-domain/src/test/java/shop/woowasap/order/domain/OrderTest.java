@@ -69,4 +69,26 @@ class OrderTest {
             assertThat(exception).isInstanceOf(InvalidOrderProductException.class);
         }
     }
+
+    @Nested
+    @DisplayName("updateOrderType 메서드는")
+    class updateOrderType {
+
+        @Test
+        @DisplayName("orderType 을 변경할 수 있다.")
+        void createSuccessWhenMoreThanOneProduct() {
+            // given
+            final OrderProduct orderProduct = OrderProductFixture.defaultProduct();
+            final Order.OrderBuilder orderBuilder = OrderFixture.defaultBuilder();
+            final OrderType expected = OrderType.SUCCESS;
+            final Order order = orderBuilder.orderProducts(List.of(orderProduct))
+                .build();
+
+            // when
+            final Order updatedOrderType = order.updateOrderType(expected);
+
+            // then
+            assertThat(updatedOrderType.getOrderType()).isEqualTo(expected);
+        }
+    }
 }

@@ -14,6 +14,7 @@ import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
 import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
 import shop.woowasap.order.domain.in.response.DetailOrderResponse;
+import shop.woowasap.order.domain.in.response.OrderIdResponse;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
@@ -40,13 +41,13 @@ public class OrderService implements OrderUseCase {
 
     @Override
     @Transactional
-    public long orderProduct(final OrderProductRequest orderProductRequest) {
+    public OrderIdResponse orderProduct(final OrderProductRequest orderProductRequest) {
         final Product product = getProductByProductId(orderProductRequest.productId());
         final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product);
 
         orderRepository.persist(order);
-        productConnector.consumeProductByProductId(product.getId(), orderProductRequest.quantity());
-        return order.getId();
+
+        return new OrderIdResponse(order.getId());
     }
 
     private Product getProductByProductId(final long productId) {
@@ -56,17 +57,15 @@ public class OrderService implements OrderUseCase {
 
     @Override
     @Transactional
-    public long orderCartByCartIdAndUserId(final long cartId, final long userId) {
+    public OrderIdResponse orderCartByCartIdAndUserId(final long cartId, final long userId) {
         final Cart cart = cartConnector.findByCartIdAndUserId(cartId, userId)
             .orElseThrow(() -> new DoesNotFindCartException(cartId, userId));
 
         final Order order = OrderMapper.toDomain(idGenerator, userId, cart);
 
         orderRepository.persist(order);
-        cart.getCartProducts()
-            .forEach(cartProduct -> productConnector.consumeProductByProductId(
-                cartProduct.getProduct().getId(), cartProduct.getQuantity().getValue()));
-        return order.getId();
+
+        return new OrderIdResponse(order.getId());
     }
 
     @Override
