@@ -9,7 +9,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import shop.woowasap.shop.domain.exception.InvalidProductSaleDurationException;
 import shop.woowasap.shop.domain.exception.InvalidProductSaleTimeException;
+import shop.woowasap.shop.domain.exception.InvalidProductStartTimeException;
 import shop.woowasap.shop.domain.exception.ProductModificationPermissionException;
 
 @Getter
@@ -109,7 +111,7 @@ public final class Product {
 
     private static void validateStartTime(final Instant nowTime, final Instant startTime) {
         if (startTime.isBefore(nowTime.plusSeconds(MIN_DIFF_NOW_AND_START_SECOND))) {
-            throw new InvalidProductSaleTimeException("startTime 은 현재 시간으로부터 10분 이후여야합니다");
+            throw new InvalidProductStartTimeException();
         }
     }
 
@@ -117,10 +119,7 @@ public final class Product {
         final long saleTimeSeconds = Duration.between(startTime, endTime).getSeconds();
         if (saleTimeSeconds < SECONDS_OF_HOUR * MIN_SALE_DURATION_HOUR
             || saleTimeSeconds > SECONDS_OF_HOUR * MAX_SALE_DURATION_HOUR) {
-            throw new InvalidProductSaleTimeException(
-                MessageFormat.format("판매시간이 유효하지 않습니다. 최소 {0} 시간 / 최대 {1} 시간, 현재 판매 시간 : {2} 초",
-                    MIN_SALE_DURATION_HOUR, MAX_SALE_DURATION_HOUR, saleTimeSeconds)
-            );
+            throw new InvalidProductSaleDurationException();
         }
     }
 
