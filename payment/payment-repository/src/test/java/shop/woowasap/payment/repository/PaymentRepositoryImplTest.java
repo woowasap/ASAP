@@ -84,7 +84,7 @@ class PaymentRepositoryImplTest {
                 .build();
             final PaymentEntity entity = PaymentEntityMapper.toEntity(payment);
 
-            when(paymentEntityRepository.findByOrderIdOrdOrderByUpdatedAtDesc(12L)).thenReturn(
+            when(paymentEntityRepository.findByOrderIdOrderByUpdatedAtDesc(12L)).thenReturn(
                 List.of(entity));
 
             // when

@@ -23,7 +23,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
 
     @Override
     public List<Payment> findAllByOrderId(final long orderId) {
-        final List<PaymentEntity> result = paymentEntityRepository.findByOrderIdOrdOrderByUpdatedAtDesc(
+        final List<PaymentEntity> result = paymentEntityRepository.findByOrderIdOrderByUpdatedAtDesc(
             orderId);
         return result.stream().map(PaymentEntityMapper::toDomain).toList();
     }
