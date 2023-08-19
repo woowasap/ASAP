@@ -50,11 +50,29 @@ class CartTest {
         }
 
         @Test
+        @DisplayName("해당 상품의 재고가 장바구니에 담으려는 재고보다 적고, 해당 상품이 장바구니에 없는 경우 장바구니에 상품의 재고 만큼 추가된다.")
+        void addCartProductWithNotExistsWithMaxProductQuantity() {
+            // given
+            final long remainQuantity = 5L;
+            final Product product = getDefaultBuilder().quantity(remainQuantity).build();
+            final CartProduct cartProduct = getCartProductBuilder(product, 10L).build();
+            final Cart cart = getEmptyCartBuilder().build();
+
+            // when
+            cart.addProduct(cartProduct);
+
+            // then
+            assertThat(cart.getCartProducts()).hasSize(1);
+            assertThat(cart.getCartProducts().get(0).getQuantity().getValue()).isEqualTo(5L);
+        }
+
+        @Test
         @DisplayName("해당 상품이 있는 경우 장바구니의 해당 상품의 개수가 증가한다.")
         void addCartProductWithExists() {
             // given
-            final long quantity = 10L;
-            final CartProduct cartProduct = getCartProductBuilder().build();
+            final long quantity = 3L;
+            final CartProduct cartProduct = getCartProductBuilder().quantity(
+                new CartProductQuantity(quantity)).build();
             final List<CartProduct> cartProducts = new ArrayList<>();
             cartProducts.add(cartProduct);
             final Cart cart = getEmptyCartBuilder()
@@ -67,6 +85,27 @@ class CartTest {
             assertThat(cart.getCartProducts()).hasSize(1);
             assertThat(cart.getCartProducts().get(0).getQuantity()).isEqualTo(
                 new CartProductQuantity(quantity + quantity));
+        }
+
+        @Test
+        @DisplayName("상품의 재고가 기존에 장바구니에 담겨져 있는 재고와 합쳐지는 재고의 양보다 적으면, 상품의 최대 재고로 변경된다.")
+        void addCartProductQuantityWithMaxProductQuantity() {
+            // given
+            final long remainQuantity = 5L;
+            final Product product = getDefaultBuilder().quantity(remainQuantity)
+                .build();
+            final CartProduct cartProduct = getCartProductBuilder(product, 4L).build();
+            final List<CartProduct> cartProducts = new ArrayList<>();
+            cartProducts.add(cartProduct);
+            final Cart cart = getEmptyCartBuilder().cartProducts(cartProducts).build();
+
+            // when
+            cart.addProduct(cartProduct);
+
+            // then
+            assertThat(cart.getCartProducts()).hasSize(1);
+            assertThat(cart.getCartProducts().get(0).getQuantity()).isEqualTo(
+                new CartProductQuantity(remainQuantity));
         }
     }
 
@@ -133,7 +172,7 @@ class CartTest {
             // given
             final List<CartProduct> cartProducts = new ArrayList<>();
             cartProducts.add(getCartProductBuilder().build());
-            final CartProductQuantity updateCartProductQuantity = new CartProductQuantity(20L);
+            final CartProductQuantity updateCartProductQuantity = new CartProductQuantity(5L);
             final CartProduct updateCartProduct = getCartProductBuilder()
                 .quantity(updateCartProductQuantity).build();
             final Cart cart = getEmptyCartBuilder().cartProducts(cartProducts).build();
@@ -145,6 +184,27 @@ class CartTest {
             assertThat(cart.getCartProducts()).hasSize(1);
             assertThat(cart.getCartProducts().get(0).getQuantity()).isEqualTo(
                 updateCartProductQuantity);
+        }
+
+        @Test
+        @DisplayName("상품의 재고가 바꾸려는 개수보다 적으면, 상품의 최대 재고로 변경된다.")
+        void updateCartProductQuantityWithMaxProductQuantity() {
+            // given
+            final long remainQuantity = 5L;
+            final Product product = getDefaultBuilder().quantity(remainQuantity)
+                .build();
+            final List<CartProduct> cartProducts = new ArrayList<>();
+            cartProducts.add(getCartProductBuilder(product, 3L).build());
+            final CartProduct updateCartProduct = getCartProductBuilder(product, 10L).build();
+            final Cart cart = getEmptyCartBuilder().cartProducts(cartProducts).build();
+
+            // when
+            cart.updateCartProduct(updateCartProduct);
+
+            // then
+            assertThat(cart.getCartProducts()).hasSize(1);
+            assertThat(cart.getCartProducts().get(0).getQuantity().getValue())
+                .isEqualTo(remainQuantity);
         }
     }
 }

@@ -5,12 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchException;
 import static shop.woowasap.shop.domain.support.CartFixture.getCartProductBuilder;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.shop.domain.exception.InvalidCartProductQuantityException;
-import shop.woowasap.shop.domain.support.CartFixture;
+import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.support.DomainFixture;
 
 @DisplayName("CartProduct 테스트")
 class CartProductTest {
@@ -29,20 +29,6 @@ class CartProductTest {
         }
 
         @Test
-        @DisplayName("잘못된 상품 수량이 음수로 입력되는 경우, InvalidCartProductQuantityException을 반환한다.")
-        void throwExceptionWhenNegativeQuantity() {
-            // given
-            final Long negativeQuantity = -1L;
-
-            // when
-            final Exception exception = catchException(
-                () -> getCartProductBuilder().quantity(new CartProductQuantity(negativeQuantity)).build());
-
-            // then
-            assertThat(exception).isInstanceOf(InvalidCartProductQuantityException.class);
-        }
-
-        @Test
         @DisplayName("잘못된 상품 수량이 null로 입력되는 경우, InvalidCartProductQuantityException을 반환한다.")
         void throwExceptionWhenNullQuantity() {
             // given
@@ -50,10 +36,55 @@ class CartProductTest {
 
             // when
             final Exception exception = catchException(
-                () -> getCartProductBuilder().quantity(new CartProductQuantity(nullQuantity)).build());
+                () -> getCartProductBuilder().quantity(new CartProductQuantity(nullQuantity))
+                    .build());
 
             // then
             assertThat(exception).isInstanceOf(InvalidCartProductQuantityException.class);
+        }
+
+        @Test
+        @DisplayName("상품 수량이 10개를 초과하여 입력되는 경우 최대 구매 가능 상품 수량으로 고정된다.")
+        void createCartWithOverMaxQuantity() {
+            // given
+            final Long overMaxQuantity = 11L;
+
+            // when
+            final CartProduct cartProduct = getCartProductBuilder().quantity(
+                new CartProductQuantity(overMaxQuantity)).build();
+
+            // then
+            assertThat(cartProduct.getQuantity()).isEqualTo(new CartProductQuantity(10L));
+        }
+
+        @Test
+        @DisplayName("상품 수량이 1개를 미만으로 입력되는 경우 최소 구매 가능 상품 수량으로 고정된다.")
+        void createCartWithUnderMinQuantity() {
+            // given
+            final Long underMinQuantity = 0L;
+
+            // when
+            final CartProduct cartProduct = getCartProductBuilder().quantity(
+                new CartProductQuantity(underMinQuantity)).build();
+
+            // then
+            assertThat(cartProduct.getQuantity()).isEqualTo(new CartProductQuantity(1L));
+        }
+
+        @Test
+        @DisplayName("상품의 재고가 10개 이하인 경우 최대 구매 가능 상품 수량은 현재 상품의 재고로 고정된다.")
+        void createCartWithProductRemainQuantity() {
+            // given
+            final Long productRemainQuantity = 8L;
+            final Product product = DomainFixture.getDefaultBuilder()
+                .quantity(productRemainQuantity).build();
+
+            // when
+            final CartProduct cartProduct = getCartProductBuilder(product, 10L).build();
+
+            // then
+            assertThat(cartProduct.getQuantity()).isEqualTo(
+                new CartProductQuantity(productRemainQuantity));
         }
     }
 
