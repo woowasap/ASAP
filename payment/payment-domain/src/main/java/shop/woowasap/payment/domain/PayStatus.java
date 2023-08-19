@@ -5,6 +5,6 @@ public enum PayStatus {
     PENDING,
     SUCCESS,
     FAIL,
-    CANCELD,
+    CANCELED,
     ;
 }

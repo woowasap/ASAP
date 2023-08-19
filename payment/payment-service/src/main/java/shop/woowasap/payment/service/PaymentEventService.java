@@ -10,17 +10,15 @@ import shop.woowasap.order.domain.out.event.StockSuccessEvent;
 import shop.woowasap.payment.domain.PayStatus;
 import shop.woowasap.payment.domain.Payment;
 import shop.woowasap.payment.domain.exception.DoesNotFindPaymentException;
-import shop.woowasap.payment.domain.in.PaymentEventConsumer;
 import shop.woowasap.payment.domain.out.PaymentRepository;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class PaymentEventService implements PaymentEventConsumer {
+public class PaymentEventService {
 
     private final PaymentRepository paymentRepository;
 
-    @Override
     @Async
     @Transactional
     @EventListener(StockSuccessEvent.class)
@@ -30,13 +28,12 @@ public class PaymentEventService implements PaymentEventConsumer {
         paymentRepository.save(payment.changeStatus(PayStatus.SUCCESS));
     }
 
-    @Override
     @Async
     @Transactional
     @EventListener(StockFailEvent.class)
     public void cancelPayment(final StockFailEvent stockFailEvent) {
         final Payment payment = paymentRepository.findByOrderId(stockFailEvent.orderId())
             .orElseThrow(() -> new DoesNotFindPaymentException(stockFailEvent.orderId()));
-        paymentRepository.save(payment.changeStatus(PayStatus.CANCELD));
+        paymentRepository.save(payment.changeStatus(PayStatus.CANCELED));
     }
 }
