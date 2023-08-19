@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigInteger;
 import java.time.Instant;
-import java.util.Optional;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,7 @@ class PaymentRepositoryImplTest {
     }
 
     @Nested
-    @DisplayName("findByOrderId 메소드")
+    @DisplayName("findAllByOrderId 메소드")
     class FindByOrderIdMethod {
 
         @Test
@@ -84,13 +84,14 @@ class PaymentRepositoryImplTest {
                 .build();
             final PaymentEntity entity = PaymentEntityMapper.toEntity(payment);
 
-            when(paymentEntityRepository.findByOrderId(12L)).thenReturn(Optional.of(entity));
+            when(paymentEntityRepository.findByOrderIdOrdOrderByUpdatedAtDesc(12L)).thenReturn(
+                List.of(entity));
 
             // when
-            final Optional<Payment> result = paymentRepository.findByOrderId(12L);
+            final List<Payment> result = paymentRepository.findAllByOrderId(12L);
 
             // then
-            assertThat(result.get()).usingRecursiveComparison().ignoringFields("createdAt")
+            assertThat(result.get(0)).usingRecursiveComparison().ignoringFields("createdAt")
                 .isEqualTo(payment);
         }
     }

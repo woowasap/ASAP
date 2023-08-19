@@ -1,10 +1,10 @@
 package shop.woowasap.payment.repository.jpa;
 
-import java.util.Optional;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import shop.woowasap.payment.repository.entity.PaymentEntity;
 
 public interface PaymentEntityRepository extends JpaRepository<PaymentEntity, Long> {
 
-    Optional<PaymentEntity> findByOrderId(final long orderId);
+    List<PaymentEntity> findByOrderIdOrdOrderByUpdatedAtDesc(final long orderId);
 }

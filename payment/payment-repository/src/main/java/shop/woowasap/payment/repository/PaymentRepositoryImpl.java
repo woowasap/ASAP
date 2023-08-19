@@ -1,6 +1,6 @@
 package shop.woowasap.payment.repository;
 
-import java.util.Optional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.woowasap.payment.domain.Payment;
@@ -22,8 +22,9 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     }
 
     @Override
-    public Optional<Payment> findByOrderId(final long orderId) {
-        final Optional<PaymentEntity> result = paymentEntityRepository.findByOrderId(orderId);
-        return result.map(PaymentEntityMapper::toDomain);
+    public List<Payment> findAllByOrderId(final long orderId) {
+        final List<PaymentEntity> result = paymentEntityRepository.findByOrderIdOrdOrderByUpdatedAtDesc(
+            orderId);
+        return result.stream().map(PaymentEntityMapper::toDomain).toList();
     }
 }

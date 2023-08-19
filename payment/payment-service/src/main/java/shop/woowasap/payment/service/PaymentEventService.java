@@ -1,5 +1,6 @@
 package shop.woowasap.payment.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -23,8 +24,12 @@ public class PaymentEventService {
     @Transactional
     @EventListener(StockSuccessEvent.class)
     public void successPayment(final StockSuccessEvent stockSuccessEvent) {
-        final Payment payment = paymentRepository.findByOrderId(stockSuccessEvent.orderId())
-            .orElseThrow(() -> new DoesNotFindPaymentException(stockSuccessEvent.orderId()));
+        final List<Payment> payments = paymentRepository.findAllByOrderId(
+            stockSuccessEvent.orderId());
+        if (payments.isEmpty()) {
+            throw new DoesNotFindPaymentException(stockSuccessEvent.orderId());
+        }
+        final Payment payment = payments.get(0);
         paymentRepository.save(payment.changeStatus(PayStatus.SUCCESS));
     }
 
@@ -32,8 +37,12 @@ public class PaymentEventService {
     @Transactional
     @EventListener(StockFailEvent.class)
     public void cancelPayment(final StockFailEvent stockFailEvent) {
-        final Payment payment = paymentRepository.findByOrderId(stockFailEvent.orderId())
-            .orElseThrow(() -> new DoesNotFindPaymentException(stockFailEvent.orderId()));
+        final List<Payment> payments = paymentRepository.findAllByOrderId(
+            stockFailEvent.orderId());
+        if (payments.isEmpty()) {
+            throw new DoesNotFindPaymentException(stockFailEvent.orderId());
+        }
+        final Payment payment = payments.get(0);
         paymentRepository.save(payment.changeStatus(PayStatus.CANCELED));
     }
 }

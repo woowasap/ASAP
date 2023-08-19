@@ -12,6 +12,7 @@ import shop.woowasap.order.domain.in.event.PaySuccessEvent;
 import shop.woowasap.payment.domain.PayStatus;
 import shop.woowasap.payment.domain.Payment;
 import shop.woowasap.payment.domain.exception.DoesNotFindOrderException;
+import shop.woowasap.payment.domain.exception.DuplicatedPayException;
 import shop.woowasap.payment.domain.exception.PayUserNotMatchException;
 import shop.woowasap.payment.domain.in.PaymentUseCase;
 import shop.woowasap.payment.domain.in.request.PaymentRequest;
@@ -47,15 +48,31 @@ public class PaymentService implements PaymentUseCase {
     }
 
     private Order findAndValidateOrder(final PaymentRequest paymentRequest) {
-        final Order order = orderConnector.findByOrderIdAndUserId(paymentRequest.orderId(),
+        final Order order = findOrder(paymentRequest);
+        validateUser(paymentRequest, order);
+        validateDuplicatedPay(paymentRequest);
+        return order;
+    }
+
+    private Order findOrder(PaymentRequest paymentRequest) {
+        return orderConnector.findByOrderIdAndUserId(paymentRequest.orderId(),
                 paymentRequest.userId())
             .orElseThrow(() -> new DoesNotFindOrderException(paymentRequest.orderId(),
                 paymentRequest.userId()));
+    }
 
+    private static void validateUser(PaymentRequest paymentRequest, Order order) {
         if (!paymentRequest.userId().equals(order.getUserId())) {
             throw new PayUserNotMatchException();
         }
-        return order;
+    }
+
+    private void validateDuplicatedPay(PaymentRequest paymentRequest) {
+        paymentRepository.findAllByOrderId(paymentRequest.orderId()).forEach(payment -> {
+            if (!payment.getPayStatus().equals(PayStatus.FAIL)) {
+                throw new DuplicatedPayException(paymentRequest.orderId());
+            }
+        });
     }
 
     private Payment buildPayment(final PaymentRequest paymentRequest, final Order order) {

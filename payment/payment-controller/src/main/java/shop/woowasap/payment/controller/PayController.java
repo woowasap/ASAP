@@ -17,6 +17,7 @@ import shop.woowasap.payment.controller.request.PayRequest;
 import shop.woowasap.payment.domain.PayType;
 import shop.woowasap.payment.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.payment.domain.exception.DoesNotFindPaymentException;
+import shop.woowasap.payment.domain.exception.DuplicatedPayException;
 import shop.woowasap.payment.domain.exception.PayUserNotMatchException;
 import shop.woowasap.payment.domain.in.PaymentUseCase;
 import shop.woowasap.payment.domain.in.request.PaymentRequest;
@@ -40,10 +41,13 @@ public class PayController {
         return ResponseEntity.ok().body(response);
     }
 
-    @ExceptionHandler(value = {MethodArgumentNotValidException.class,
+    @ExceptionHandler(value = {
         DoesNotFindPaymentException.class,
         DoesNotFindOrderException.class,
-        IllegalArgumentException.class})
+        DuplicatedPayException.class,
+        MethodArgumentNotValidException.class,
+        IllegalArgumentException.class
+    })
     public ResponseEntity<String> handleBadRequest(Exception e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }

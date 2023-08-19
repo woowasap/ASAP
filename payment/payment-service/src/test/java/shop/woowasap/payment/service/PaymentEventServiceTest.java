@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigInteger;
 import java.time.Instant;
-import java.util.Optional;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -63,7 +63,7 @@ class PaymentEventServiceTest {
 
             final StockSuccessEvent event = new StockSuccessEvent(1234L);
 
-            when(paymentRepository.findByOrderId(1234L)).thenReturn(Optional.of(payment));
+            when(paymentRepository.findAllByOrderId(1234L)).thenReturn(List.of(payment));
 
             // when
             assertThatCode(() -> paymentEventService.successPayment(event))
@@ -79,7 +79,7 @@ class PaymentEventServiceTest {
             // given
             final StockSuccessEvent event = new StockSuccessEvent(1234L);
 
-            when(paymentRepository.findByOrderId(1234L)).thenReturn(Optional.empty());
+            when(paymentRepository.findAllByOrderId(1234L)).thenReturn(List.of());
 
             // when
             Exception exception = catchException(() -> paymentEventService.successPayment(event));
@@ -110,7 +110,7 @@ class PaymentEventServiceTest {
 
             final StockFailEvent event = new StockFailEvent(1234L);
 
-            when(paymentRepository.findByOrderId(1234L)).thenReturn(Optional.of(payment));
+            when(paymentRepository.findAllByOrderId(1234L)).thenReturn(List.of(payment));
 
             // when
             assertThatCode(() -> paymentEventService.cancelPayment(event))
@@ -126,7 +126,7 @@ class PaymentEventServiceTest {
             // given
             final StockFailEvent event = new StockFailEvent(1234L);
 
-            when(paymentRepository.findByOrderId(1234L)).thenReturn(Optional.empty());
+            when(paymentRepository.findAllByOrderId(1234L)).thenReturn(List.of());
 
             // when
             Exception exception = catchException(() -> paymentEventService.cancelPayment(event));
