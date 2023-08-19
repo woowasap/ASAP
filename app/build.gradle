@@ -17,9 +17,15 @@ dependencies {
 
     implementation project(':core:util')
 
+    implementation project(':payment:payment-domain')
+    implementation project(':payment:payment-service')
+    implementation project(':payment:payment-controller')
+    implementation project(':payment:payment-repository')
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
     testImplementation 'io.rest-assured:rest-assured:5.3.0'
+    testImplementation 'org.awaitility:awaitility:4.2.0'
     runtimeOnly 'com.h2database:h2'
 }

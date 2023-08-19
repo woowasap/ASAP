@@ -93,6 +93,7 @@ public final class CartFixture {
             cartProduct.getProduct().getId(),
             cartProduct.getProduct().getName().getValue(),
             cartProduct.getProduct().getPrice().getValue().toString(),
+            cartProduct.getQuantity().getValue(),
             cartProduct.getProduct().getQuantity().getValue()
         );
     }

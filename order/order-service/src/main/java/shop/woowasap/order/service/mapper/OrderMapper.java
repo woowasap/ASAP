@@ -1,6 +1,7 @@
 package shop.woowasap.order.service.mapper;
 
 import java.math.BigInteger;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -23,16 +24,17 @@ public final class OrderMapper {
     }
 
     public static Order toDomain(final IdGenerator idGenerator,
-        final OrderProductRequest orderProductRequest, final Product product) {
+        final OrderProductRequest orderProductRequest, final Product product, final Instant createdAt) {
         return Order.builder()
             .id(idGenerator.generate())
             .userId(orderProductRequest.userId())
             .orderProducts(List.of(toOrderProduct(product, orderProductRequest.quantity())))
+            .createdAt(createdAt)
             .build();
     }
 
     public static Order toDomain(final IdGenerator idGenerator, final long userId,
-        final Cart cart) {
+        final Cart cart, final Instant createdAt) {
         final List<OrderProduct> orderProducts = cart.getCartProducts()
             .stream()
             .map(cartProduct -> toOrderProduct(cartProduct.getProduct(),
@@ -43,6 +45,7 @@ public final class OrderMapper {
             .id(idGenerator.generate())
             .userId(userId)
             .orderProducts(orderProducts)
+            .createdAt(createdAt)
             .build();
     }
 
@@ -82,7 +85,7 @@ public final class OrderMapper {
         final List<DetailOrderProductResponse> detailOrderProductResponses, final String locale) {
 
         return new DetailOrderResponse(order.getId(), detailOrderProductResponses,
-            order.getTotalPrice().toString(),
+            order.getTotalPrice().toString(), order.getOrderType().toString(),
             LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
     }
 

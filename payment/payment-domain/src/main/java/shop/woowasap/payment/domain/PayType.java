@@ -1,8 +1,14 @@
 package shop.woowasap.payment.domain;
 
-public enum PayType {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-    CARD,
-    DEPOSIT,
+@Getter
+@RequiredArgsConstructor
+public enum PayType {
+    CARD("CARD"),
+    DEPOSIT("DEPOSIT"),
     ;
+
+    private final String value;
 }

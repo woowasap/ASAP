@@ -85,7 +85,8 @@ class CartAcceptanceTest extends AcceptanceTest {
             quantity);
         CartApiSupporter.addCartProduct(accessToken, addCartProductRequest);
 
-        final CartResponse expected = cartResponse(productId, quantity);
+        final CartResponse expected = cartResponse(productId, quantity,
+            registerProductRequest.quantity());
 
         // when
         final ExtractableResponse<Response> response = getCartProducts(accessToken);
@@ -110,7 +111,8 @@ class CartAcceptanceTest extends AcceptanceTest {
             5L);
         CartApiSupporter.addCartProduct(accessToken, addCartProductRequest);
 
-        final CartResponse expected = cartResponse(productId, updatedQuantity);
+        final CartResponse expected = cartResponse(productId, updatedQuantity,
+            updateCartProductRequest.quantity());
 
         // when
         CartApiSupporter.updateCartProduct(accessToken, updateCartProductRequest);
