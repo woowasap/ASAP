@@ -20,10 +20,10 @@ public class OrderProduct {
 
     @Builder
     private OrderProduct(final long productId, final String name, final long quantity, final String price,
-            final Instant startTime, final Instant endTime) {
+            final Instant startTime, final Instant endTime, final Instant nowTime) {
         validPrice(price);
         validQuantity(quantity);
-        validProductSaleTime(startTime, endTime);
+        validProductSaleTime(startTime, endTime, nowTime == null ? Instant.now() : nowTime);
         validName(name);
         this.productId = productId;
         this.name = name;
@@ -56,10 +56,9 @@ public class OrderProduct {
         }
     }
 
-    private void validProductSaleTime(final Instant startTime, final Instant endTime) {
-        final Instant currentTime = Instant.now();
-        if (currentTime.isBefore(startTime) || currentTime.isAfter(endTime)) {
-            throw new InvalidProductSaleTimeException(startTime, currentTime, endTime);
+    private void validProductSaleTime(final Instant startTime, final Instant endTime, final Instant nowTime) {
+        if (nowTime.isBefore(startTime) || nowTime.isAfter(endTime)) {
+            throw new InvalidProductSaleTimeException(startTime, nowTime, endTime);
         }
     }
 

@@ -1,6 +1,8 @@
 package shop.woowasap.accept.support.fixture;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 import shop.woowasap.auth.controller.request.LoginRequest;
@@ -83,6 +85,17 @@ public class ProductFixture {
             QUANTITY,
             BEFORE_SALE_START_TIME,
             BEFORE_SALE_END_TIME
+        );
+    }
+
+    public static RegisterProductRequest registerValidProductRequest(Instant startTime, Instant endTime) {
+        return new RegisterProductRequest(
+            NAME,
+            DESCRIPTION,
+            PRICE,
+            QUANTITY,
+            LocalDateTime.ofInstant(startTime, ZoneId.of("UTC")),
+            LocalDateTime.ofInstant(endTime, ZoneId.of("UTC"))
         );
     }
 

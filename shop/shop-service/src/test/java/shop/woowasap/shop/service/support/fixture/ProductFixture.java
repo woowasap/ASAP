@@ -106,8 +106,8 @@ public class ProductFixture {
             product.getId(),
             product.getName().getValue(),
             product.getPrice().getValue().toString(),
-            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
-            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul"))
+            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("UTC")),
+            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("UTC"))
         );
     }
 
@@ -117,8 +117,8 @@ public class ProductFixture {
             product.getDescription().getValue(),
             product.getPrice().getValue().toString(),
             product.getQuantity().getValue(),
-            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
-            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul"))
+            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("UTC")),
+            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("UTC"))
         );
     }
 
@@ -128,8 +128,8 @@ public class ProductFixture {
             product.getDescription().getValue(),
             product.getPrice().getValue().toString(),
             product.getQuantity().getValue(),
-            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
-            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul"))
+            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("UTC")),
+            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("UTC"))
         );
     }
 
@@ -139,8 +139,8 @@ public class ProductFixture {
                 product.getId(),
                 product.getName().getValue(),
                 product.getPrice().getValue().toString(),
-                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
-                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul"))
+                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("UTC")),
+                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("UTC"))
             )).toList();
 
         return new ProductsResponse(productResponses, PAGE, TOTAL_PAGE);

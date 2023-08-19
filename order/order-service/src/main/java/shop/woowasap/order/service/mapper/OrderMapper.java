@@ -28,7 +28,7 @@ public final class OrderMapper {
         return Order.builder()
             .id(idGenerator.generate())
             .userId(orderProductRequest.userId())
-            .orderProducts(List.of(toOrderProduct(product, orderProductRequest.quantity())))
+            .orderProducts(List.of(toOrderProduct(product, orderProductRequest.quantity(), createdAt)))
             .createdAt(createdAt)
             .build();
     }
@@ -38,7 +38,7 @@ public final class OrderMapper {
         final List<OrderProduct> orderProducts = cart.getCartProducts()
             .stream()
             .map(cartProduct -> toOrderProduct(cartProduct.getProduct(),
-                cartProduct.getQuantity().getValue()))
+                cartProduct.getQuantity().getValue(), createdAt))
             .toList();
 
         return Order.builder()
@@ -49,13 +49,14 @@ public final class OrderMapper {
             .build();
     }
 
-    private static OrderProduct toOrderProduct(final Product product, final long quantity) {
+    private static OrderProduct toOrderProduct(final Product product, final long quantity, final Instant nowTime) {
         return OrderProduct.builder()
             .productId(product.getId())
             .price(product.getPrice().getValue().multiply(BigInteger.valueOf(quantity)).toString())
             .name(product.getName().getValue())
             .quantity(quantity)
             .startTime(product.getStartTime())
+            .nowTime(nowTime)
             .endTime(product.getEndTime())
             .build();
     }

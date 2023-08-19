@@ -3,20 +3,21 @@ package shop.woowasap.accept;
 import static shop.woowasap.accept.support.api.CartApiSupporter.getCartProducts;
 import static shop.woowasap.accept.support.api.ShopApiSupporter.registerProduct;
 import static shop.woowasap.accept.support.fixture.CartFixture.cartResponse;
-import static shop.woowasap.accept.support.fixture.ProductFixture.registerProductRequest;
+import static shop.woowasap.accept.support.fixture.ProductFixture.registerValidProductRequest;
 import static shop.woowasap.accept.support.valid.CartValidator.assertCartProductsFound;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertBadRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertOk;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.accept.support.api.AuthApiSupporter;
 import shop.woowasap.accept.support.api.CartApiSupporter;
 import shop.woowasap.accept.support.fixture.CartFixture;
-import shop.woowasap.accept.support.fixture.ProductFixture;
 import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
 import shop.woowasap.shop.domain.in.cart.response.CartResponse;
@@ -35,9 +36,13 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("POST /v1/carts 요청을 통해서 해당 상품을 장바구니에 추가한다.")
     void addCartProduct() {
         // given
+        final RegisterProductRequest registerProductRequest = registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
+
         final long quantity = 10L;
         final long productId = Long.parseLong(registerProduct(accessToken,
-            ProductFixture.registerProductRequest())
+            registerProductRequest)
             .header("Location")
             .split("/")[4]);
 
@@ -55,8 +60,13 @@ class CartAcceptanceTest extends AcceptanceTest {
         // given
         final long quantity = 10L;
         final long addQuantity = 5L;
+
+        final RegisterProductRequest registerProductRequest = registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
+
         final long productId = Long.parseLong(registerProduct(accessToken,
-            ProductFixture.registerProductRequest())
+            registerProductRequest)
             .header("Location")
             .split("/")[4]);
 
@@ -76,7 +86,10 @@ class CartAcceptanceTest extends AcceptanceTest {
         // given
         final long quantity = 10L;
 
-        final RegisterProductRequest registerProductRequest = registerProductRequest();
+        final RegisterProductRequest registerProductRequest = registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
+
         final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
             registerProductRequest);
         final long productId = Long.parseLong(registerResponse.header("Location").split("/")[4]);
@@ -99,9 +112,12 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니에 있는 상품의 수량을 수정한다.")
     void updateCartProduct() {
         // given
+        final RegisterProductRequest registerProductRequest = registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
+
         final long updatedQuantity = 10L;
-        final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
-            registerProductRequest());
+        final ExtractableResponse<Response> registerResponse = registerProduct(accessToken, registerProductRequest);
 
         final long productId = Long.parseLong(registerResponse.header("Location").split("/")[4]);
         final UpdateCartProductRequest updateCartProductRequest = new UpdateCartProductRequest(
@@ -143,7 +159,10 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니에 있는 상품을 제거한다.")
     void deleteCartProducts() {
         // given
-        final RegisterProductRequest registerProductRequest = registerProductRequest();
+        final RegisterProductRequest registerProductRequest = registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
+
         final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
             registerProductRequest);
         final long productId = Long.parseLong(registerResponse.header("Location").split("/")[4]);

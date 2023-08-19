@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 import io.restassured.RestAssured;
 import java.time.Instant;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,16 +26,11 @@ abstract class AcceptanceTest {
     @LocalServerPort
     int port;
 
-    @MockBean
-    private TimeUtil timeUtil;
+    @Autowired
+    protected TimeUtil timeUtil;
 
     @BeforeEach
     public void setPort() {
         RestAssured.port = port;
-    }
-
-    @BeforeEach
-    void setTime() {
-        when(timeUtil.now()).thenReturn(Instant.parse("2023-08-01T01:00:00.000Z"));
     }
 }

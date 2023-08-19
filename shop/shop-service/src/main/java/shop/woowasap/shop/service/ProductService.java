@@ -32,9 +32,9 @@ public class ProductService implements ProductUseCase {
     private final IdGenerator idGenerator;
     private final TimeUtil timeUtil;
 
-    @Value("${shop.woowasap.locale:Asia/Seoul}")
+    @Value("${shop.woowasap.locale:UTC}")
     private String locale;
-    @Value("${shop.woowasap.offsetid:+09:00}")
+    @Value("${shop.woowasap.offsetid:+00:00}")
     private String offsetId;
 
     @Override

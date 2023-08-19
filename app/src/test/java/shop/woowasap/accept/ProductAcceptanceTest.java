@@ -3,6 +3,7 @@ package shop.woowasap.accept;
 import static shop.woowasap.accept.support.api.ShopApiSupporter.registerProduct;
 import static shop.woowasap.accept.support.fixture.ProductFixture.productsResponse;
 import static shop.woowasap.accept.support.fixture.ProductFixture.registerProductRequest;
+import static shop.woowasap.accept.support.fixture.ProductFixture.registerValidProductRequest;
 import static shop.woowasap.accept.support.fixture.ProductFixture.updateProductRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertBadRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertOk;
@@ -11,6 +12,8 @@ import static shop.woowasap.accept.support.valid.ShopValidator.assertProductsFou
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +42,10 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품 내용을 수정한다.")
     void updateProduct() {
         // given
-        final RegisterProductRequest registerProductRequest = registerProductRequest();
+        final RegisterProductRequest registerProductRequest = registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
+
         final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
             registerProductRequest);
 
@@ -78,9 +84,14 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("POST /products 요청을 통해서 상품을 생성한다.")
     void createProduct() {
+        // given
+        final RegisterProductRequest registerProductRequest = registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
+
         // when
         final ExtractableResponse<Response> response = ShopApiSupporter
-            .registerProduct(accessToken, ProductFixture.registerProductRequest());
+            .registerProduct(accessToken, registerProductRequest);
 
         // then
         assertProductRegistered(response);
@@ -91,7 +102,9 @@ class ProductAcceptanceTest extends AcceptanceTest {
     void findValidProducts() {
         // given
         final RegisterProductRequest invalidRegisterProductRequest = ProductFixture.registerInvalidProductRequest();
-        final RegisterProductRequest validRegisterProductRequest = ProductFixture.registerValidProductRequest();
+        final RegisterProductRequest validRegisterProductRequest = registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
 
         registerProduct(accessToken, invalidRegisterProductRequest);
         registerProduct(accessToken, validRegisterProductRequest);
@@ -112,7 +125,9 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("GET /v1/admin/products 요청을 통해서 등록 되어 있는 전체 상품을 조회할 수 있다.")
     void getAdminProducts() {
         // given
-        final RegisterProductRequest registerProductRequest = registerProductRequest();
+        final RegisterProductRequest registerProductRequest = registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
         final ExtractableResponse<Response> registerResponse = registerProduct(accessToken,
             registerProductRequest);
         final long productId = Long.parseLong(registerResponse.header("Location").split("/")[4]);
@@ -129,7 +144,9 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("저장되어있는 특정 상품을 조회할경우, 상품의 정보가 응답된다.")
     void findSpecificProduct() {
         // given
-        final RegisterProductRequest registerProductRequest = ProductFixture.registerValidProductRequest();
+        final RegisterProductRequest registerProductRequest = registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
 
         ShopApiSupporter.registerProduct(accessToken, registerProductRequest);
 
@@ -166,7 +183,9 @@ class ProductAcceptanceTest extends AcceptanceTest {
     void findSpecificProductWithAdmin() {
         // given
 
-        final RegisterProductRequest registerProductRequest = ProductFixture.registerProductRequest();
+        final RegisterProductRequest registerProductRequest = registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
 
         ShopApiSupporter.registerProduct(accessToken, registerProductRequest);
 

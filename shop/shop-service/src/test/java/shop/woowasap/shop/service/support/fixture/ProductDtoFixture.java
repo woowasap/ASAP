@@ -16,8 +16,8 @@ public final class ProductDtoFixture {
         return new ProductDetailsResponse(product.getId(), product.getName().getValue(),
             product.getDescription().getValue(), product.getPrice().getValue().toString(),
             product.getQuantity().getValue(),
-            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
-            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul")));
+            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("UTC")),
+            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("UTC")));
     }
 
 }
