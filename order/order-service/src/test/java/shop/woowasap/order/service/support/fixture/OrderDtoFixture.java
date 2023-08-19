@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import shop.woowasap.order.domain.Order;
+import shop.woowasap.order.domain.OrderType;
 import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
 import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
@@ -54,6 +55,6 @@ public final class OrderDtoFixture {
             .toList();
 
         return new DetailOrderResponse(order.getId(), detailOrderProductResponses, order.getTotalPrice().toString(),
-            LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
+            OrderType.PENDING.toString(), LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
     }
 }

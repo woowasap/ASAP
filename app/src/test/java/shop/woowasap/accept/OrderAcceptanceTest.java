@@ -1,7 +1,5 @@
 package shop.woowasap.accept;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.math.BigInteger;
@@ -25,7 +23,6 @@ import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.in.cart.response.CartResponse;
-import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
@@ -122,7 +119,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
                 quantity);
         final DetailOrderResponse expectedDetailOrderResponse = new DetailOrderResponse(orderId,
             List.of(expectedDetailOrderProductResponse),
-            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(),
+            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(), "PENDING",
             LocalDateTime.now());
 
         // when

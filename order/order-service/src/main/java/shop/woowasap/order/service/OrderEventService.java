@@ -68,7 +68,6 @@ public class OrderEventService implements OrderEventConsumer {
     }
 
     private void persistOrderType(final Order order, final OrderType orderType) {
-        order.updateOrderType(orderType);
-        orderRepository.persist(order);
+        orderRepository.persist(order.updateOrderType(orderType));
     }
 }

@@ -15,6 +15,11 @@ dependencies {
     implementation project(':order:order-controller')
     implementation project(':order:order-repository')
 
+    implementation project(':payment:payment-domain')
+    implementation project(':payment:payment-service')
+    implementation project(':payment:payment-controller')
+    implementation project(':payment:payment-repository')
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
