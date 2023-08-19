@@ -16,6 +16,7 @@ import shop.woowasap.order.domain.in.event.PaySuccessEvent;
 import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.event.StockFailEvent;
 import shop.woowasap.order.domain.out.event.StockSuccessEvent;
+import shop.woowasap.order.service.config.OrderAsyncConfig;
 import shop.woowasap.shop.domain.in.product.ProductConnector;
 
 @Service
@@ -27,8 +28,8 @@ public class OrderEventService implements OrderEventConsumer {
     private final ProductConnector productConnector;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    @Async
     @Override
+    @Async(OrderAsyncConfig.PAY_FAIL)
     @EventListener(PayFailEvent.class)
     public void listenPayFailEvent(final PayFailEvent payFailEvent) {
         final Order order = getOrder(payFailEvent.orderId(), payFailEvent.userId());
@@ -36,8 +37,8 @@ public class OrderEventService implements OrderEventConsumer {
         persistOrderType(order, OrderType.FAIL);
     }
 
-    @Async
     @Override
+    @Async(OrderAsyncConfig.PAY_SUCCESS)
     @EventListener(PaySuccessEvent.class)
     public void listenPaySuccessEvent(final PaySuccessEvent paySuccessEvent) {
         final Order order = getOrder(paySuccessEvent.orderId(), paySuccessEvent.userId());
