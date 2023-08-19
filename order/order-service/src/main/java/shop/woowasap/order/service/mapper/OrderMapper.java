@@ -85,7 +85,7 @@ public final class OrderMapper {
         final List<DetailOrderProductResponse> detailOrderProductResponses, final String locale) {
 
         return new DetailOrderResponse(order.getId(), detailOrderProductResponses,
-            order.getTotalPrice().toString(),
+            order.getTotalPrice().toString(), order.getOrderType().toString(),
             LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
     }
 

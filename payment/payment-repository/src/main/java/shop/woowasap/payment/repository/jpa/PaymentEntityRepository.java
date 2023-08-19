@@ -6,5 +6,5 @@ import shop.woowasap.payment.repository.entity.PaymentEntity;
 
 public interface PaymentEntityRepository extends JpaRepository<PaymentEntity, Long> {
 
-    List<PaymentEntity> findByOrderIdOrdOrderByUpdatedAtDesc(final long orderId);
+    List<PaymentEntity> findByOrderIdOrderByUpdatedAtDesc(final long orderId);
 }
