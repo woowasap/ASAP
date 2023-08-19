@@ -12,6 +12,7 @@ import shop.woowasap.payment.domain.PayStatus;
 import shop.woowasap.payment.domain.Payment;
 import shop.woowasap.payment.domain.exception.DoesNotFindPaymentException;
 import shop.woowasap.payment.domain.out.PaymentRepository;
+import shop.woowasap.payment.service.config.PaymentAsyncConfig;
 
 @Service
 @RequiredArgsConstructor
@@ -20,9 +21,9 @@ public class PaymentEventService {
 
     private final PaymentRepository paymentRepository;
 
-    @Async
     @Transactional
     @EventListener(StockSuccessEvent.class)
+    @Async(PaymentAsyncConfig.STOCK_SUCCESS)
     public void successPayment(final StockSuccessEvent stockSuccessEvent) {
         final List<Payment> payments = paymentRepository.findAllByOrderId(
             stockSuccessEvent.orderId());
@@ -33,9 +34,9 @@ public class PaymentEventService {
         paymentRepository.save(payment.changeStatus(PayStatus.SUCCESS));
     }
 
-    @Async
     @Transactional
     @EventListener(StockFailEvent.class)
+    @Async(PaymentAsyncConfig.STOCK_FAIL)
     public void cancelPayment(final StockFailEvent stockFailEvent) {
         final List<Payment> payments = paymentRepository.findAllByOrderId(
             stockFailEvent.orderId());

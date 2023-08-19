@@ -13,3 +13,4 @@ exclude shop/woowasap/*/repository/entity/*
 exclude shop/woowasap/payment/domain/*
 exclude shop/woowasap/core/util/time/*
 exclude shop/woowasap/*/domain/*/event/*
+exclude shop/woowasap/*/service/config/*
