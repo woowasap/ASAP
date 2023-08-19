@@ -5,7 +5,7 @@ import shop.woowasap.payment.domain.Payment;
 
 public interface PaymentRepository {
 
-    Payment save(Payment payment);
+    Payment save(final Payment payment);
 
-    Optional<Payment> findByOrderId(long orderId);
+    Optional<Payment> findByOrderId(final long orderId);
 }

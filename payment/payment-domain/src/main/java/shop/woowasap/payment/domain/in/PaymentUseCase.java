@@ -5,5 +5,5 @@ import shop.woowasap.payment.domain.in.response.PaymentResponse;
 
 public interface PaymentUseCase {
 
-    PaymentResponse pay(PaymentRequest paymentRequest);
+    PaymentResponse pay(final PaymentRequest paymentRequest);
 }

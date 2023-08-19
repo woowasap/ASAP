@@ -30,7 +30,7 @@ public class Payment {
         this.payStatus = payStatus;
     }
 
-    public Payment changeStatus(PayStatus payStatus) {
+    public Payment changeStatus(final PayStatus payStatus) {
         return Payment.builder()
             .paymentId(paymentId)
             .userId(userId)

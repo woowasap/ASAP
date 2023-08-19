@@ -77,7 +77,7 @@ public class PaymentService implements PaymentUseCase {
     @Async
     @Transactional
     @EventListener(StockSuccessEvent.class)
-    public void successPayment(StockSuccessEvent stockSuccessEvent) {
+    public void successPayment(final StockSuccessEvent stockSuccessEvent) {
         final Payment payment = paymentRepository.findByOrderId(stockSuccessEvent.orderId())
             .orElseThrow(() -> new DoesNotFindPaymentException(stockSuccessEvent.orderId()));
         paymentRepository.save(payment.changeStatus(PayStatus.SUCCESS));
@@ -86,9 +86,9 @@ public class PaymentService implements PaymentUseCase {
     @Async
     @Transactional
     @EventListener(StockFailEvent.class)
-    public void cancelPayment(StockFailEvent stockFailEvent) {
+    public void cancelPayment(final StockFailEvent stockFailEvent) {
         final Payment payment = paymentRepository.findByOrderId(stockFailEvent.orderId())
             .orElseThrow(() -> new DoesNotFindPaymentException(stockFailEvent.orderId()));
-        paymentRepository.save(payment.changeStatus(PayStatus.FAIL));
+        paymentRepository.save(payment.changeStatus(PayStatus.CANCELD));
     }
 }
