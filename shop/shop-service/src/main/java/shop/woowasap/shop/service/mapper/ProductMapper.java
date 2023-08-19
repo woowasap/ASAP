@@ -1,16 +1,19 @@
 package shop.woowasap.shop.service.mapper;
 
+import static shop.woowasap.shop.domain.product.Product.createProduct;
+
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import shop.woowasap.core.id.api.IdGenerator;
+import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
-import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.product.Product;
 
 public final class ProductMapper {
 
@@ -18,19 +21,22 @@ public final class ProductMapper {
     }
 
     public static Product toDomain(final IdGenerator idGenerator,
-        final RegisterProductRequest registerProductRequest, final String offsetId) {
-        return Product.builder()
-            .id(idGenerator.generate())
-            .name(registerProductRequest.name())
-            .description(registerProductRequest.description())
-            .price(registerProductRequest.price())
-            .quantity(registerProductRequest.quantity())
-            .startTime(registerProductRequest.startTime().toInstant(ZoneOffset.of(offsetId)))
-            .endTime(registerProductRequest.endTime().toInstant(ZoneOffset.of(offsetId)))
-            .build();
+        final RegisterProductRequest registerProductRequest, final String offsetId,
+        final Instant nowTime) {
+        return createProduct(
+            idGenerator.generate(),
+            registerProductRequest.name(),
+            registerProductRequest.description(),
+            registerProductRequest.price(),
+            registerProductRequest.quantity(),
+            registerProductRequest.startTime().toInstant(ZoneOffset.of(offsetId)),
+            registerProductRequest.endTime().toInstant(ZoneOffset.of(offsetId)),
+            nowTime
+        );
     }
 
-    public static ProductDetailsResponse toProductResponse(final Product product, final ZoneId zoneId) {
+    public static ProductDetailsResponse toProductResponse(final Product product,
+        final ZoneId zoneId) {
         return new ProductDetailsResponse(product.getId(), product.getName().getValue(),
             product.getDescription().getValue(), product.getPrice().getValue().toString(),
             product.getQuantity().getValue(),

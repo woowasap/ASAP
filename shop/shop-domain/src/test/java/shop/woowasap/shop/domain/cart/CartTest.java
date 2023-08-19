@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchException;
 import static shop.woowasap.shop.domain.support.CartFixture.getCartProductBuilder;
 import static shop.woowasap.shop.domain.support.CartFixture.getEmptyCartBuilder;
-import static shop.woowasap.shop.domain.support.DomainFixture.getDefaultBuilder;
+import static shop.woowasap.shop.domain.support.ProductFixture.getDefaultBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

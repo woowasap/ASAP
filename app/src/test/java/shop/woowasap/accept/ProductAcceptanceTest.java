@@ -170,7 +170,8 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         ShopApiSupporter.registerProduct(accessToken, registerProductRequest);
 
-        final ProductsResponse productsResponse = ShopApiSupporter.getRegisteredProducts(accessToken)
+        final ProductsResponse productsResponse = ShopApiSupporter.getRegisteredProducts(
+                accessToken)
             .as(ProductsResponse.class);
 
         final long anyProductId = productsResponse.products().get(0).productId();
@@ -179,7 +180,8 @@ class ProductAcceptanceTest extends AcceptanceTest {
             registerProductRequest);
 
         // when
-        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(accessToken,
+        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(
+            accessToken,
             anyProductId);
 
         // then
@@ -193,7 +195,8 @@ class ProductAcceptanceTest extends AcceptanceTest {
         final long notFoundProductId = 123L;
 
         // when
-        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(accessToken,
+        final ExtractableResponse<Response> result = ShopApiSupporter.getProductWithAdmin(
+            accessToken,
             notFoundProductId);
 
         // then

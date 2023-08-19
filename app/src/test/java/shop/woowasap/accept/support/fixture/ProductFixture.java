@@ -18,15 +18,18 @@ public class ProductFixture {
     public static final String NAME = "productName";
     public static final String DESCRIPTION = "productDescription";
     public static final String PRICE = "10000";
+
     public static final long QUANTITY = 10L;
-    public static final LocalDateTime START_TIME = LocalDateTime.of(2023, 8, 5, 12, 30);
-    public static final LocalDateTime END_TIME = LocalDateTime.of(2023, 8, 5, 14, 30);
-    public static final LocalDateTime INFINITE_START_TIME = LocalDateTime.of(2000, 12, 1, 23, 59);
-    public static final LocalDateTime INFINITE_END_TIME = LocalDateTime.of(2030, 12, 31, 23, 59);
+
+    public static final LocalDateTime AFTER_SALE_START_TIME = LocalDateTime.of(2022, 8, 5, 12, 30);
+    public static final LocalDateTime AFTER_SALE_END_TIME = LocalDateTime.of(2022, 8, 5, 14, 30);
+
+    public static final LocalDateTime BEFORE_SALE_START_TIME = LocalDateTime.of(2023, 8, 2, 0, 0);
+    public static final LocalDateTime BEFORE_SALE_END_TIME = LocalDateTime.of(2023, 8, 2, 1, 0);
+
     public static final long UNKNOWN_ID = 1L;
     public static final int PAGE = 1;
     public static final int TOTAL_PAGE = 1;
-
 
     public static LoginRequest loginRequest() {
         return new LoginRequest(USERNAME, PASSWORD);
@@ -37,29 +40,61 @@ public class ProductFixture {
     }
 
     public static RegisterProductRequest registerProductRequest() {
-        return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, START_TIME, END_TIME);
+        return new RegisterProductRequest(
+            NAME,
+            DESCRIPTION,
+            PRICE,
+            QUANTITY,
+            BEFORE_SALE_START_TIME,
+            BEFORE_SALE_END_TIME
+        );
     }
 
     public static UpdateProductRequest updateProductRequest() {
-        return new UpdateProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, START_TIME, END_TIME);
+        return new UpdateProductRequest(
+            NAME,
+            DESCRIPTION,
+            PRICE,
+            QUANTITY,
+            BEFORE_SALE_START_TIME,
+            BEFORE_SALE_END_TIME
+        );
     }
 
     public static ProductsResponse productsResponse(final Long productId) {
         return new ProductsResponse(
-            List.of(new ProductResponse(productId, NAME, PRICE, START_TIME, END_TIME)),
+            List.of(new ProductResponse(
+                productId,
+                NAME,
+                PRICE,
+                BEFORE_SALE_START_TIME,
+                BEFORE_SALE_END_TIME
+            )),
             1,
             1
         );
     }
 
     public static RegisterProductRequest registerValidProductRequest() {
-        return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY, INFINITE_START_TIME,
-            INFINITE_END_TIME);
+        return new RegisterProductRequest(
+            NAME,
+            DESCRIPTION,
+            PRICE,
+            QUANTITY,
+            BEFORE_SALE_START_TIME,
+            BEFORE_SALE_END_TIME
+        );
     }
 
     public static RegisterProductRequest registerInvalidProductRequest() {
-        return new RegisterProductRequest(NAME, DESCRIPTION, PRICE, QUANTITY,
-            LocalDateTime.now().minusHours(3), LocalDateTime.now().minusHours(2));
+        return new RegisterProductRequest(
+            NAME,
+            DESCRIPTION,
+            PRICE,
+            QUANTITY,
+            AFTER_SALE_START_TIME,
+            AFTER_SALE_END_TIME
+        );
     }
 
     public static ProductsResponse productsResponse(

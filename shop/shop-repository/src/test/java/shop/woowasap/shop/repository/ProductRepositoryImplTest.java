@@ -5,6 +5,8 @@ import static shop.woowasap.shop.repository.support.ProductFixture.afterSaleProd
 import static shop.woowasap.shop.repository.support.ProductFixture.beforeSaleProduct;
 import static shop.woowasap.shop.repository.support.ProductFixture.onSaleProduct;
 
+import ch.qos.logback.core.util.TimeUtil;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import shop.woowasap.BeanScanBaseLocation;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
@@ -25,6 +28,9 @@ class ProductRepositoryImplTest {
 
     @Autowired
     private ProductRepositoryImpl productRepository;
+
+    @MockBean
+    private TimeUtil timeUtil;
 
     @Nested
     @DisplayName("persist 메서드는")
@@ -59,7 +65,8 @@ class ProductRepositoryImplTest {
                 product.getPrice().getValue().toString(),
                 product.getQuantity().getValue(),
                 LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
-                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul"))
+                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul")),
+                Instant.parse("2023-08-01T00:00:00.000Z")
             );
 
             final Product result = productRepository.persist(product);
@@ -119,6 +126,8 @@ class ProductRepositoryImplTest {
             final Product beforeSaleProduct = beforeSaleProduct(2L);
             final Product onSaleProduct = onSaleProduct(3L);
 
+            final Instant nowTime = Instant.parse("2023-08-01T01:00:00.000Z");
+
             productRepository.persist(afterSaleProduct);
             productRepository.persist(beforeSaleProduct);
             productRepository.persist(onSaleProduct);
@@ -130,8 +139,8 @@ class ProductRepositoryImplTest {
             );
 
             // when
-            final ProductsPaginationResponse result = productRepository.findAllValidWithPagination(
-                page, size);
+            final ProductsPaginationResponse result = productRepository
+                .findAllValidWithPagination(page, size, nowTime);
 
             // then
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);

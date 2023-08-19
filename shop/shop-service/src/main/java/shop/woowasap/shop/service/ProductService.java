@@ -4,13 +4,13 @@ import static shop.woowasap.shop.service.mapper.ProductMapper.toDomain;
 import static shop.woowasap.shop.service.mapper.ProductMapper.toProductsResponse;
 
 import java.text.MessageFormat;
-import java.time.Instant;
 import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
+import shop.woowasap.core.util.time.TimeUtil;
 import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.exception.SaleEndedProductException;
 import shop.woowasap.shop.domain.in.product.ProductUseCase;
@@ -30,6 +30,7 @@ public class ProductService implements ProductUseCase {
 
     private final ProductRepository productRepository;
     private final IdGenerator idGenerator;
+    private final TimeUtil timeUtil;
 
     @Value("${shop.woowasap.locale:Asia/Seoul}")
     private String locale;
@@ -47,7 +48,8 @@ public class ProductService implements ProductUseCase {
             updateProductRequest.price(),
             updateProductRequest.quantity(),
             updateProductRequest.startTime(),
-            updateProductRequest.endTime()
+            updateProductRequest.endTime(),
+            timeUtil.now()
         );
 
         productRepository.persist(updateProduct);
@@ -57,16 +59,15 @@ public class ProductService implements ProductUseCase {
     @Transactional
     public Long registerProduct(final RegisterProductRequest registerProductRequest) {
         final Product persistProduct = productRepository.persist(
-            toDomain(idGenerator, registerProductRequest, offsetId));
+            toDomain(idGenerator, registerProductRequest, offsetId, timeUtil.now()));
 
         return persistProduct.getId();
     }
 
     @Override
     public ProductsResponse getValidProducts(final int page, final int size) {
-        final ProductsPaginationResponse pagination = productRepository.findAllValidWithPagination(
-            page,
-            size);
+        final ProductsPaginationResponse pagination = productRepository
+            .findAllValidWithPagination(page, size, timeUtil.now());
 
         return ProductMapper.toProductsResponse(pagination, ZoneId.of(locale));
     }
@@ -83,7 +84,7 @@ public class ProductService implements ProductUseCase {
     public ProductDetailsResponse getByProductId(final long productId) {
         final Product product = getProduct(productId);
 
-        if (product.isEndTimeBefore(Instant.now())) {
+        if (product.isEndTimeBefore(timeUtil.now())) {
             throw new SaleEndedProductException(
                 MessageFormat.format(
                     "판매가 종료된 product 입니다. productId : \"{0}\"",

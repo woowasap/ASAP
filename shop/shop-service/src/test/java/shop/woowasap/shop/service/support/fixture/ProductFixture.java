@@ -1,5 +1,6 @@
 package shop.woowasap.shop.service.support.fixture;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -24,12 +25,14 @@ public class ProductFixture {
     public static final LocalDateTime AFTER_SALE_START_TIME = LocalDateTime.of(2022, 8, 5, 12, 30);
     public static final LocalDateTime AFTER_SALE_END_TIME = LocalDateTime.of(2022, 8, 5, 14, 30);
 
-    public static final LocalDateTime ON_SALE_START_TIME = LocalDateTime.of(2022, 8, 18, 1, 1);
-    public static final LocalDateTime ON_SALE_END_TIME = LocalDateTime.of(2030, 12, 31, 23, 59);
+    public static final LocalDateTime ON_SALE_START_TIME = LocalDateTime.of(2023, 8, 1, 0, 0);
+    public static final LocalDateTime ON_SALE_END_TIME = LocalDateTime.of(2023, 8, 1, 3, 0);
 
-    public static final LocalDateTime BEFORE_SALE_START_TIME = LocalDateTime.of(2030, 12, 1, 23,
-        59);
-    public static final LocalDateTime BEFORE_SALE_END_TIME = LocalDateTime.of(2030, 12, 31, 23, 59);
+    public static final LocalDateTime BEFORE_SALE_START_TIME = LocalDateTime.of(2023, 8, 2, 0, 0);
+    public static final LocalDateTime BEFORE_SALE_END_TIME = LocalDateTime.of(2023, 8, 2, 1, 0);
+
+    private static final Instant BEFORE_ALL_TIME = Instant.parse("2022-08-01T00:00:00.000Z");
+    private static final Instant NOW_TIME = Instant.parse("2023-08-01T00:00:00.000Z");
 
     public static Product.ProductBuilder onSaleProductBuilder(final Long id) {
         return Product.builder()
@@ -54,39 +57,42 @@ public class ProductFixture {
     }
 
     public static Product beforeSaleProduct(final Long id) {
-        return Product.builder()
-            .id(id)
-            .name(NAME)
-            .description(DESCRIPTION)
-            .price(PRICE)
-            .quantity(QUANTITY)
-            .startTime(BEFORE_SALE_START_TIME.toInstant(ZoneOffset.UTC))
-            .endTime(BEFORE_SALE_END_TIME.toInstant(ZoneOffset.UTC))
-            .build();
+        return Product.createProduct(
+            id,
+            NAME,
+            DESCRIPTION,
+            PRICE,
+            QUANTITY,
+            BEFORE_SALE_START_TIME.toInstant(ZoneOffset.UTC),
+            BEFORE_SALE_END_TIME.toInstant(ZoneOffset.UTC),
+            NOW_TIME
+        );
     }
 
     public static Product onSaleProduct(final Long id) {
-        return Product.builder()
-            .id(id)
-            .name(NAME)
-            .description(DESCRIPTION)
-            .price(PRICE)
-            .quantity(QUANTITY)
-            .startTime(ON_SALE_START_TIME.toInstant(ZoneOffset.UTC))
-            .endTime(ON_SALE_END_TIME.toInstant(ZoneOffset.UTC))
-            .build();
+        return Product.createProduct(
+            id,
+            NAME,
+            DESCRIPTION,
+            PRICE,
+            QUANTITY,
+            ON_SALE_START_TIME.toInstant(ZoneOffset.UTC),
+            ON_SALE_END_TIME.toInstant(ZoneOffset.UTC),
+            BEFORE_ALL_TIME
+        );
     }
 
     public static Product afterSaleProduct(final Long id) {
-        return Product.builder()
-            .id(id)
-            .name(NAME)
-            .description(DESCRIPTION)
-            .price(PRICE)
-            .quantity(QUANTITY)
-            .startTime(AFTER_SALE_START_TIME.toInstant(ZoneOffset.UTC))
-            .endTime(AFTER_SALE_END_TIME.toInstant(ZoneOffset.UTC))
-            .build();
+        return Product.createProduct(
+            id,
+            NAME,
+            DESCRIPTION,
+            PRICE,
+            QUANTITY,
+            AFTER_SALE_START_TIME.toInstant(ZoneOffset.UTC),
+            AFTER_SALE_END_TIME.toInstant(ZoneOffset.UTC),
+            BEFORE_ALL_TIME
+        );
     }
 
     public static List<ProductResponse> productsOfProductsResponse(final List<Product> products) {
