@@ -5,6 +5,6 @@ import shop.woowasap.order.domain.Order;
 
 public interface OrderConnector {
 
-    Optional<Order> findByOrderId(final long orderId);
+    Optional<Order> findByOrderIdAndUserId(final long orderId, final long userId);
 
 }
