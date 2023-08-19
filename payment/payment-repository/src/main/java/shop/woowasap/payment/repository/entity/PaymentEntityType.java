@@ -1,11 +1,11 @@
-package shop.woowasap.payment.domain;
+package shop.woowasap.payment.repository.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PayType {
+public enum PaymentEntityType {
     CARD("CARD"),
     DEPOSIT("DEPOSIT"),
     ;

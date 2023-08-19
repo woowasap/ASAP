@@ -1,4 +1,8 @@
 dependencies {
+    implementation project(':core:util')
+    implementation project(':core:id-gen')
     implementation project(':order:order-domain')
     implementation project(':payment:payment-domain')
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }
