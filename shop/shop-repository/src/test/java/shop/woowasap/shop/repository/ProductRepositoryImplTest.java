@@ -64,8 +64,8 @@ class ProductRepositoryImplTest {
                 product.getDescription().getValue(),
                 product.getPrice().getValue().toString(),
                 product.getQuantity().getValue(),
-                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
-                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul")),
+                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("UTC")),
+                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("UTC")),
                 Instant.parse("2023-08-01T00:00:00.000Z")
             );
 
