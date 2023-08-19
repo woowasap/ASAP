@@ -3,6 +3,8 @@ package shop.woowasap.accept;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.concurrent.TimeUnit;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,6 +48,9 @@ class PayOrderAcceptanceTest extends AcceptanceTest {
         // when
         PayApiSupporter.pay(payRequest, orderIdResponse.orderId(), accessToken);
 
+        Awaitility.waitAtMost(1, TimeUnit.MINUTES)
+            .until(() -> waitUntilSuccess(orderIdResponse));
+
         // then
         final ProductDetailsResponse productResponse = ShopApiSupporter.getProduct(productId)
             .as(ProductDetailsResponse.class);
@@ -87,7 +92,7 @@ class PayOrderAcceptanceTest extends AcceptanceTest {
 
     @Test
     @DisplayName("결제 실패 후, 재결재를 하면, Product quantity가 줄어들고, Order의 상태가 SUCCESS로 변경된다")
-    void decreaseProductQuantityWhenPayReSuccess() {
+    void decreaseProductQuantityWhenPayReSuccess() throws Exception {
         // given
         final long productId = getRandomProduct(accessToken).productId();
         final int quantity = 2;
@@ -104,6 +109,9 @@ class PayOrderAcceptanceTest extends AcceptanceTest {
         PayApiSupporter.pay(payFailRequest, orderIdResponse.orderId(), accessToken);
         PayApiSupporter.pay(paySuccessRequest, orderIdResponse.orderId(), accessToken);
 
+        Awaitility.waitAtMost(1, TimeUnit.MINUTES)
+            .until(() -> waitUntilSuccess(orderIdResponse));
+
         // then
         final ProductDetailsResponse productResponse = ShopApiSupporter.getProduct(productId)
             .as(ProductDetailsResponse.class);
@@ -113,6 +121,14 @@ class PayOrderAcceptanceTest extends AcceptanceTest {
 
         assertThat(productResponse.quantity()).isEqualTo(8);
         assertThat(orderResponse.type()).isEqualTo("SUCCESS");
+    }
+
+    private boolean waitUntilSuccess(final OrderIdResponse orderIdResponse) {
+        final DetailOrderResponse orderResponse = OrderApiSupporter.getOrderByOrderId(orderIdResponse.orderId(),
+                accessToken)
+            .as(DetailOrderResponse.class);
+
+        return orderResponse.type().equals("SUCCESS");
     }
 
     private ProductResponse getRandomProduct(final String accessToken) {
