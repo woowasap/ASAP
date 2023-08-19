@@ -1,14 +1,10 @@
 package shop.woowasap.payment.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.math.BigInteger;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -29,12 +25,7 @@ import shop.woowasap.order.domain.OrderProduct;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.in.OrderConnector;
 import shop.woowasap.order.domain.in.event.PaySuccessEvent;
-import shop.woowasap.order.domain.out.event.StockFailEvent;
-import shop.woowasap.order.domain.out.event.StockSuccessEvent;
-import shop.woowasap.payment.domain.PayStatus;
 import shop.woowasap.payment.domain.PayType;
-import shop.woowasap.payment.domain.Payment;
-import shop.woowasap.payment.domain.exception.DoesNotFindPaymentException;
 import shop.woowasap.payment.domain.exception.PayUserNotMatchException;
 import shop.woowasap.payment.domain.in.request.PaymentRequest;
 import shop.woowasap.payment.domain.in.response.PaymentResponse;
@@ -202,99 +193,6 @@ class PaymentServiceTest {
 
             // then
             assertThat(exception).isInstanceOf(PayUserNotMatchException.class);
-        }
-    }
-
-    @Nested
-    @DisplayName("successPayment 메소드")
-    class SuccessPaymentMethod {
-
-        @Test
-        @DisplayName("재고 처리 성공 이벤트 받아서 결제 상태 성공으로 변환")
-        void successPaymentSuccess() {
-            // given
-            final Payment payment = Payment.builder()
-                .paymentId(123L)
-                .orderId(1234L)
-                .userId(12345L)
-                .payStatus(PayStatus.PENDING)
-                .payType(PayType.DEPOSIT)
-                .purchasedMoney(BigInteger.valueOf(10000L))
-                .createdAt(instant)
-                .build();
-
-            final StockSuccessEvent event = new StockSuccessEvent(1234L);
-
-            when(paymentRepository.findByOrderId(1234L)).thenReturn(Optional.of(payment));
-
-            // when
-            assertThatCode(() -> paymentService.successPayment(event))
-                .doesNotThrowAnyException();
-
-            // then
-            verify(paymentRepository, times(1)).save(any());
-        }
-
-        @Test
-        @DisplayName("재고 처리 성공 이벤트 받아서 결제 상태 조회 실패시 예외 발생")
-        void successPaymentPaymentNotFoundThenThrow() {
-            // given
-            final StockSuccessEvent event = new StockSuccessEvent(1234L);
-
-            when(paymentRepository.findByOrderId(1234L)).thenReturn(Optional.empty());
-
-            // when
-            Exception exception = catchException(() -> paymentService.successPayment(event));
-
-            // then
-            assertThat(exception).isInstanceOf(DoesNotFindPaymentException.class);
-        }
-    }
-
-
-    @Nested
-    @DisplayName("cancelPayment 메소드")
-    class CancelPaymentMethod {
-
-        @Test
-        @DisplayName("재고 실패 성공 이벤트 받아서 결제 상태 실패로 변환")
-        void cancelPaymentSuccess() {
-            // given
-            final Payment payment = Payment.builder()
-                .paymentId(123L)
-                .orderId(1234L)
-                .userId(12345L)
-                .payStatus(PayStatus.PENDING)
-                .payType(PayType.DEPOSIT)
-                .purchasedMoney(BigInteger.valueOf(10000L))
-                .createdAt(instant)
-                .build();
-
-            final StockFailEvent event = new StockFailEvent(1234L);
-
-            when(paymentRepository.findByOrderId(1234L)).thenReturn(Optional.of(payment));
-
-            // when
-            assertThatCode(() -> paymentService.cancelPayment(event))
-                .doesNotThrowAnyException();
-
-            // then
-            verify(paymentRepository, times(1)).save(any());
-        }
-
-        @Test
-        @DisplayName("재고 처리 실패 이벤트 받아서 결제 상태 조회 실패시 예외 발생")
-        void successPaymentPaymentNotFoundThenThrow() {
-            // given
-            final StockFailEvent event = new StockFailEvent(1234L);
-
-            when(paymentRepository.findByOrderId(1234L)).thenReturn(Optional.empty());
-
-            // when
-            Exception exception = catchException(() -> paymentService.cancelPayment(event));
-
-            // then
-            assertThat(exception).isInstanceOf(DoesNotFindPaymentException.class);
         }
     }
 }

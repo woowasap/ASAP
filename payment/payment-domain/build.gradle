@@ -1,3 +1,4 @@
 dependencies {
+    implementation project(':order:order-domain')
     testImplementation 'org.assertj:assertj-core:3.24.2'
 }
