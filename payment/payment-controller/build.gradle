@@ -1,6 +1,5 @@
 dependencies {
     implementation project(':payment:payment-domain')
-    implementation project(':order:order-domain')
     implementation project(':auth:auth-domain')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
