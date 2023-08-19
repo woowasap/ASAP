@@ -54,20 +54,20 @@ public class PaymentService implements PaymentUseCase {
         return order;
     }
 
-    private Order findOrder(PaymentRequest paymentRequest) {
+    private Order findOrder(final PaymentRequest paymentRequest) {
         return orderConnector.findByOrderIdAndUserId(paymentRequest.orderId(),
                 paymentRequest.userId())
             .orElseThrow(() -> new DoesNotFindOrderException(paymentRequest.orderId(),
                 paymentRequest.userId()));
     }
 
-    private static void validateUser(PaymentRequest paymentRequest, Order order) {
+    private static void validateUser(final PaymentRequest paymentRequest, Order order) {
         if (!paymentRequest.userId().equals(order.getUserId())) {
             throw new PayUserNotMatchException();
         }
     }
 
-    private void validateDuplicatedPay(PaymentRequest paymentRequest) {
+    private void validateDuplicatedPay(final PaymentRequest paymentRequest) {
         paymentRepository.findAllByOrderId(paymentRequest.orderId()).forEach(payment -> {
             if (!payment.getPayStatus().equals(PayStatus.FAIL)) {
                 throw new DuplicatedPayException(paymentRequest.orderId());
