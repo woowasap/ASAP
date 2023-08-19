@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
+import shop.woowasap.core.util.time.TimeUtil;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.exception.DoesNotFindCartException;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
@@ -14,15 +15,16 @@ import shop.woowasap.order.domain.in.OrderUseCase;
 import shop.woowasap.order.domain.in.request.OrderProductRequest;
 import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
 import shop.woowasap.order.domain.in.response.DetailOrderResponse;
+import shop.woowasap.order.domain.in.response.OrderIdResponse;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.response.OrdersPaginationResponse;
 import shop.woowasap.order.service.mapper.OrderMapper;
+import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.in.cart.CartConnector;
 import shop.woowasap.shop.domain.in.product.ProductConnector;
-import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.product.Product;
 
 @Service
@@ -34,19 +36,20 @@ public class OrderService implements OrderUseCase {
     private final ProductConnector productConnector;
     private final CartConnector cartConnector;
     private final OrderRepository orderRepository;
+    private final TimeUtil timeUtil;
 
     @Value("${shop.woowasap.locale:Asia/Seoul}")
     private String locale;
 
     @Override
     @Transactional
-    public long orderProduct(final OrderProductRequest orderProductRequest) {
+    public OrderIdResponse orderProduct(final OrderProductRequest orderProductRequest) {
         final Product product = getProductByProductId(orderProductRequest.productId());
-        final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product);
+        final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product, timeUtil.now());
 
         orderRepository.persist(order);
-        productConnector.consumeProductByProductId(product.getId(), orderProductRequest.quantity());
-        return order.getId();
+
+        return new OrderIdResponse(order.getId());
     }
 
     private Product getProductByProductId(final long productId) {
@@ -56,17 +59,15 @@ public class OrderService implements OrderUseCase {
 
     @Override
     @Transactional
-    public long orderCartByCartIdAndUserId(final long cartId, final long userId) {
+    public OrderIdResponse orderCartByCartIdAndUserId(final long cartId, final long userId) {
         final Cart cart = cartConnector.findByCartIdAndUserId(cartId, userId)
             .orElseThrow(() -> new DoesNotFindCartException(cartId, userId));
 
-        final Order order = OrderMapper.toDomain(idGenerator, userId, cart);
+        final Order order = OrderMapper.toDomain(idGenerator, userId, cart, timeUtil.now());
 
         orderRepository.persist(order);
-        cart.getCartProducts()
-            .forEach(cartProduct -> productConnector.consumeProductByProductId(
-                cartProduct.getProduct().getId(), cartProduct.getQuantity().getValue()));
-        return order.getId();
+
+        return new OrderIdResponse(order.getId());
     }
 
     @Override

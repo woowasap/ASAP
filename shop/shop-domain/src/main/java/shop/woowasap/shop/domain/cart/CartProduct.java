@@ -24,7 +24,7 @@ public class CartProduct {
     public CartProduct addQuantity(final CartProductQuantity quantity) {
         return CartProduct.builder()
             .product(this.product)
-            .quantity(this.quantity.addQuantity(quantity))
+            .quantity(this.quantity.addQuantity(quantity, this.product.getQuantity()))
             .build();
     }
 

@@ -87,7 +87,8 @@ class PaymentServiceTest {
             final PaymentRequest paymentRequest = new PaymentRequest(orderId, userId, payType,
                 isSuccess);
 
-            when(orderConnector.findByOrderId(orderId)).thenReturn(Optional.of(order));
+            when(orderConnector.findByOrderIdAndUserId(orderId, userId)).thenReturn(
+                Optional.of(order));
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
             when(paymentRepository.save(any())).thenReturn(null);
@@ -127,7 +128,8 @@ class PaymentServiceTest {
             final PaymentRequest paymentRequest = new PaymentRequest(orderId, userId, payType,
                 isSuccess);
 
-            when(orderConnector.findByOrderId(orderId)).thenReturn(Optional.of(order));
+            when(orderConnector.findByOrderIdAndUserId(orderId, userId)).thenReturn(
+                Optional.of(order));
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
             when(paymentRepository.save(any())).thenReturn(null);
@@ -151,7 +153,8 @@ class PaymentServiceTest {
             final PaymentRequest paymentRequest = new PaymentRequest(orderId, userId, payType,
                 isSuccess);
 
-            when(orderConnector.findByOrderId(orderId)).thenReturn(Optional.empty());
+            when(orderConnector.findByOrderIdAndUserId(orderId, userId)).thenReturn(
+                Optional.empty());
 
             // when
             final Exception exception = catchException(() -> paymentService.pay(paymentRequest));
@@ -186,7 +189,8 @@ class PaymentServiceTest {
             final PaymentRequest paymentRequest = new PaymentRequest(orderId, userId, payType,
                 isSuccess);
 
-            when(orderConnector.findByOrderId(orderId)).thenReturn(Optional.of(order));
+            when(orderConnector.findByOrderIdAndUserId(orderId, userId)).thenReturn(
+                Optional.of(order));
 
             // when
             final Exception exception = catchException(() -> paymentService.pay(paymentRequest));

@@ -3,6 +3,8 @@ package shop.woowasap.order.repository.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -12,6 +14,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.woowasap.order.domain.Order;
+import shop.woowasap.order.domain.OrderType;
 
 @Entity
 @Getter
@@ -32,6 +35,10 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "total_price", nullable = false)
     private String totalPrice;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "order_type", length = 10, nullable = false)
+    private OrderEntityType orderType;
+
     public OrderEntity(final Order order) {
         this.id = order.getId();
         this.userId = order.getUserId();
@@ -41,6 +48,7 @@ public class OrderEntity extends BaseEntity {
             .toList();
         this.totalPrice = order.getTotalPrice().toString();
         this.createdAt = order.getCreatedAt();
+        this.orderType = OrderEntityType.valueOf(order.getOrderType().toString());
     }
 
     public Order toDomain() {
@@ -51,6 +59,7 @@ public class OrderEntity extends BaseEntity {
                 .map(OrderProductEntity::toDomain)
                 .toList())
             .createdAt(this.createdAt)
+            .orderType(OrderType.valueOf(this.orderType.toString()))
             .build();
     }
 }

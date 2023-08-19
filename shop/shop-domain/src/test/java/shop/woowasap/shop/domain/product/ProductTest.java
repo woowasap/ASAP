@@ -19,6 +19,7 @@ import shop.woowasap.shop.domain.exception.InvalidProductNameException;
 import shop.woowasap.shop.domain.exception.InvalidProductPriceException;
 import shop.woowasap.shop.domain.exception.InvalidProductQuantityException;
 import shop.woowasap.shop.domain.exception.InvalidProductSaleTimeException;
+import shop.woowasap.shop.domain.exception.ProductModificationPermissionException;
 
 @DisplayName("Product 테스트")
 class ProductTest {
@@ -167,5 +168,72 @@ class ProductTest {
 
             assertThat(update).usingRecursiveAssertion().isEqualTo(expected);
         }
+
+        @Test
+        @DisplayName("Product 가 현재 판매중일 경우, ProductModificationPermissionException 를 던진다.")
+        void throwProductModificationPermissionExceptionWhenProductIsOnSale() {
+            // given
+            final Product original = getDefaultBuilder()
+                .startTime(Instant.now().minusSeconds(10_000))
+                .endTime(Instant.now().plusSeconds(10_000))
+                .build();
+
+            final String name = "newProductName";
+            final String description = "newProductDescription";
+            final String price = "100";
+            final long quantity = 8;
+            final LocalDateTime startTime = LocalDateTime.of(2023, 8, 5, 11, 30);
+            final LocalDateTime endTime = LocalDateTime.of(2023, 9, 5, 14, 30);
+
+            // when
+            final Exception exception = catchException(
+                () -> original.update(name, description, price, quantity, startTime, endTime));
+
+            // then
+            assertThat(exception).isInstanceOf(ProductModificationPermissionException.class);
+
+        }
     }
+
+    @Nested
+    @DisplayName("isEndTimeBefore 메서드는")
+    class IsEndTimeBefore_Method {
+
+        @Test
+        @DisplayName("EndTime 이 time 이전이라면 true 를 반환한다.")
+        void returnTrueWhenEndTimeIsBeforeTime() {
+            // given
+            final Product product = getDefaultBuilder()
+                .startTime(Instant.now().minusSeconds(1_000))
+                .endTime(Instant.now().plusSeconds(1_000))
+                .build();
+
+            final Instant time = Instant.now().plusSeconds(10_000);
+
+            // when
+            final boolean result = product.isEndTimeBefore(time);
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("EndTime 이 time 이후라면 false 를 반환한다.")
+        void returnFalseWhenEndTimeIsAfterTime() {
+            // given
+            final Product product = getDefaultBuilder()
+                .startTime(Instant.now().minusSeconds(1_000))
+                .endTime(Instant.now().plusSeconds(1_000))
+                .build();
+
+            final Instant time = Instant.now();
+
+            // when
+            final boolean result = product.isEndTimeBefore(time);
+
+            // then
+            assertThat(result).isFalse();
+        }
+    }
+
 }

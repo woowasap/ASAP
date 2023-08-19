@@ -1,8 +1,10 @@
 package shop.woowasap.shop.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static shop.woowasap.shop.repository.support.ProductFixture.afterSaleProduct;
+import static shop.woowasap.shop.repository.support.ProductFixture.beforeSaleProduct;
+import static shop.woowasap.shop.repository.support.ProductFixture.onSaleProduct;
 
-import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -14,9 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import shop.woowasap.BeanScanBaseLocation;
-import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
-import shop.woowasap.shop.repository.support.ProductFixture;
+import shop.woowasap.shop.domain.product.Product;
 
 @DataJpaTest
 @ContextConfiguration(classes = {BeanScanBaseLocation.class, ProductRepositoryImpl.class})
@@ -34,7 +35,7 @@ class ProductRepositoryImplTest {
         void saveProduct() {
             // given
             final long productId = 1L;
-            final Product product = ProductFixture.salePriorProduct(productId);
+            final Product product = beforeSaleProduct(productId);
 
             // when
             final Product result = productRepository.persist(product);
@@ -49,7 +50,7 @@ class ProductRepositoryImplTest {
             // given
             final long productId = 1L;
             final String newName = "newName";
-            final Product product = ProductFixture.salePriorProduct(productId);
+            final Product product = beforeSaleProduct(productId);
 
             // when
             product.update(
@@ -77,7 +78,7 @@ class ProductRepositoryImplTest {
         void returnProductWithProductId() {
             // given
             final long productId = 1L;
-            final Product product = ProductFixture.salePriorProduct(productId);
+            final Product product = beforeSaleProduct(productId);
             productRepository.persist(product);
 
             // when
@@ -103,78 +104,27 @@ class ProductRepositoryImplTest {
     }
 
     @Nested
-    @DisplayName("findByAndValidSaleTime 메서드는")
-    class findByAndValidSaleTimeMethod {
-
-        @Test
-        @DisplayName("productId 에 해당하는 product 가 판매 중인 상품이라면 Product 를 반환한다.")
-        void returnValidProductWhenOnSaleProduct() {
-            // given
-            final Product onSaleProduct = ProductFixture.onSaleProduct(1L);
-            productRepository.persist(onSaleProduct);
-
-            // when
-            final Optional<Product> result = productRepository.findByIdAndValidSaleTime(
-                onSaleProduct.getId());
-
-            // then
-            assertThat(result.get()).usingRecursiveComparison().isEqualTo(onSaleProduct);
-        }
-
-        @Test
-        @DisplayName("productId 에 해당하는 product 가 판매 예정인 상품이라면 Product 를 반환한다.")
-        void returnValidProductWhenSalePriorProduct() {
-            // given
-            final Product salePriorProduct = ProductFixture.salePriorProduct(1L);
-            productRepository.persist(salePriorProduct);
-
-            // when
-            final Optional<Product> result = productRepository.findByIdAndValidSaleTime(
-                salePriorProduct.getId());
-
-            // then
-            assertThat(result.get()).usingRecursiveComparison().isEqualTo(salePriorProduct);
-        }
-
-        @Test
-        @DisplayName("productId 에 해당하는 product 가 판매가 지난 상품이라면 Null 을 반환한다.")
-        void returnNullWhenSalePastProduct() {
-            // given
-            final Product salePastProduct = ProductFixture.salePastProduct(1L);
-            productRepository.persist(salePastProduct);
-
-            // when
-            final Optional<Product> result = productRepository.findByIdAndValidSaleTime(
-                salePastProduct.getId());
-
-            // then
-            assertThat(result).isEmpty();
-        }
-
-    }
-
-    @Nested
     @DisplayName("findAllValidWithPagination 메서드는")
     class findAllValidWithPaginationMethod {
 
         @Test
-        @DisplayName("판매 예정이거나 판매 중인 Product 들을 반환한다.")
+        @DisplayName("판매 예정이거나 판매 중인 Product 들을 startTime 기준 오름차순으로 반환한다.")
         void returnAllValidProducts() {
             // given
             final int page = 1;
             final int size = 10;
             final int totalPage = 1;
 
-            final Product salePastProduct = ProductFixture.salePastProduct(1L);
-            final Product onSaleProduct = ProductFixture.onSaleProduct(2L);
-            final Product salePriorProduct = ProductFixture.salePriorProduct(3L);
+            final Product afterSaleProduct = afterSaleProduct(1L);
+            final Product beforeSaleProduct = beforeSaleProduct(2L);
+            final Product onSaleProduct = onSaleProduct(3L);
 
-            productRepository.persist(salePastProduct);
+            productRepository.persist(afterSaleProduct);
+            productRepository.persist(beforeSaleProduct);
             productRepository.persist(onSaleProduct);
-            productRepository.persist(salePriorProduct);
 
             ProductsPaginationResponse expected = new ProductsPaginationResponse(
-                List.of(onSaleProduct, salePriorProduct),
+                List.of(onSaleProduct, beforeSaleProduct),
                 page,
                 totalPage
             );
@@ -194,23 +144,23 @@ class ProductRepositoryImplTest {
     class findAllWithPaginationMethod {
 
         @Test
-        @DisplayName("모든 Product 들을 반환한다.")
+        @DisplayName("모든 Product 들을 startTime 기준 오름차순으로 반환한다.")
         void returnAllProducts() {
             // given
             final int page = 1;
             final int size = 10;
             final int totalPage = 1;
 
-            final Product salePastProduct = ProductFixture.salePastProduct(1L);
-            final Product onSaleProduct = ProductFixture.onSaleProduct(2L);
-            final Product salePriorProduct = ProductFixture.salePriorProduct(3L);
+            final Product afterSaleProduct = afterSaleProduct(1L);
+            final Product beforeSaleProduct = beforeSaleProduct(2L);
+            final Product onSaleProduct = onSaleProduct(3L);
 
-            productRepository.persist(salePastProduct);
+            productRepository.persist(afterSaleProduct);
+            productRepository.persist(beforeSaleProduct);
             productRepository.persist(onSaleProduct);
-            productRepository.persist(salePriorProduct);
 
             ProductsPaginationResponse expected = new ProductsPaginationResponse(
-                List.of(salePastProduct, onSaleProduct, salePriorProduct),
+                List.of(afterSaleProduct, onSaleProduct, beforeSaleProduct),
                 page,
                 totalPage
             );
@@ -235,7 +185,7 @@ class ProductRepositoryImplTest {
             final long productId = 1L;
             final long quantity = 10L;
             final Product persistProduct =
-                productRepository.persist(ProductFixture.salePriorProduct(productId, quantity));
+                productRepository.persist(onSaleProduct(productId, quantity));
 
             final long expectedQuantity = 0;
 

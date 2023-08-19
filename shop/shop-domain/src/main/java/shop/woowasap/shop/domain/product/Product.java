@@ -1,5 +1,6 @@
 package shop.woowasap.shop.domain.product;
 
+import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -8,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import shop.woowasap.shop.domain.exception.InvalidProductSaleTimeException;
+import shop.woowasap.shop.domain.exception.ProductModificationPermissionException;
 
 @Getter
 @ToString
@@ -44,6 +46,7 @@ public final class Product {
         final LocalDateTime startTime,
         final LocalDateTime endTime
     ) {
+        validateUpdateTime();
         return Product.builder()
             .id(id)
             .name(name)
@@ -55,9 +58,26 @@ public final class Product {
             .build();
     }
 
+    private void validateUpdateTime() {
+        if (isOnSale()) {
+            throw new ProductModificationPermissionException(
+                MessageFormat.format("현재 판매 중인 Product 는 수정할 수 없습니다. productId : \"{0}\"", id)
+            );
+        }
+    }
+
+    private boolean isOnSale() {
+        final Instant now = Instant.now();
+        return now.isAfter(startTime) && now.isBefore(endTime);
+    }
+
     private void validateProductSaleTime(final Instant startTime, final Instant endTime) {
         if (!startTime.isBefore(endTime)) {
             throw new InvalidProductSaleTimeException();
         }
+    }
+
+    public boolean isEndTimeBefore(final Instant time) {
+        return endTime.isBefore(time);
     }
 }

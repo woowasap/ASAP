@@ -14,6 +14,8 @@ import static shop.woowasap.shop.service.support.fixture.CartFixture.cartProduct
 import static shop.woowasap.shop.service.support.fixture.CartFixture.cartResponse;
 import static shop.woowasap.shop.service.support.fixture.CartFixture.emptyCart;
 import static shop.woowasap.shop.service.support.fixture.CartFixture.updateCartProductRequest;
+import static shop.woowasap.shop.service.support.fixture.ProductFixture.onSaleProduct;
+import static shop.woowasap.shop.service.support.fixture.ProductFixture.onSaleProductBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,16 +29,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
-import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
-import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
+import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.out.CartRepository;
 import shop.woowasap.shop.domain.out.ProductRepository;
+import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.service.support.fixture.CartFixture;
-import shop.woowasap.shop.service.support.fixture.ProductFixture;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("CartService 클래스")
@@ -67,7 +68,7 @@ class CartServiceTest {
             final long userId = 1L;
             final long productId = 1L;
             final Cart cart = CartFixture.cart(cartId);
-            final Product product = ProductFixture.validProduct(productId);
+            final Product product = onSaleProduct(productId);
 
             when(cartRepository.existCartByUserId(userId)).thenReturn(false);
             when(idGenerator.generate()).thenReturn(cartId);
@@ -90,7 +91,7 @@ class CartServiceTest {
             final long userId = 1L;
             final long productId = 1L;
             final Cart cart = CartFixture.cart(cartId);
-            final Product product = ProductFixture.validProduct(productId);
+            final Product product = onSaleProduct(productId);
 
             when(cartRepository.existCartByUserId(userId)).thenReturn(true);
             when(idGenerator.generate()).thenReturn(cartId);
@@ -164,7 +165,7 @@ class CartServiceTest {
             final long userId = 1L;
             final long productId = 1L;
             final long updateQuantity = 20L;
-            final Product product = ProductFixture.validProduct(productId);
+            final Product product = onSaleProduct(productId);
             final List<CartProduct> cartProducts = new ArrayList<>();
             cartProducts.add(CartFixture.getCartProductBuilder(product).build());
             final Cart cart = CartFixture.getEmptyCartBuilder().cartProducts(cartProducts)
@@ -176,7 +177,8 @@ class CartServiceTest {
             when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
             // when
-            cartService.updateCartProduct(userId, updateCartProductRequest(productId, updateQuantity));
+            cartService.updateCartProduct(userId,
+                updateCartProductRequest(productId, updateQuantity));
 
             // then
             verify(cartRepository, times(1)).persist(cart);
@@ -191,7 +193,7 @@ class CartServiceTest {
             final long productId = 1L;
             final long updateQuantity = 20L;
             final Cart cart = CartFixture.cart(cartId);
-            final Product product = ProductFixture.validProduct(productId);
+            final Product product = onSaleProduct(productId);
 
             when(cartRepository.existCartByUserId(userId)).thenReturn(false);
             when(idGenerator.generate()).thenReturn(cartId);
@@ -219,7 +221,8 @@ class CartServiceTest {
             final long userId = 1L;
             final long deleteProductId = 1L;
 
-            final Product deleteProduct = ProductFixture.productBuilder(deleteProductId).build();
+            final Product deleteProduct = onSaleProductBuilder(deleteProductId)
+                .build();
             final CartProduct deleteCartProduct = CartFixture.getCartProductBuilder(deleteProduct)
                 .build();
             final Cart cart = Cart(userId, new ArrayList<>(List.of(deleteCartProduct)));
@@ -268,7 +271,7 @@ class CartServiceTest {
             final long userId = 1L;
             final long productId = 1L;
 
-            final Product product = ProductFixture.productBuilder(productId).build();
+            final Product product = onSaleProduct(productId);
             final Cart emptyCart = emptyCart(userId);
 
             when(cartRepository.existCartByUserId(userId)).thenReturn(false);

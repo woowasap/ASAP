@@ -47,7 +47,8 @@ public class PaymentService implements PaymentUseCase {
     }
 
     private Order findAndValidateOrder(final PaymentRequest paymentRequest) {
-        final Order order = orderConnector.findByOrderId(paymentRequest.orderId())
+        final Order order = orderConnector.findByOrderIdAndUserId(paymentRequest.orderId(),
+                paymentRequest.userId())
             .orElseThrow(() -> new DoesNotFindOrderException(paymentRequest.orderId(),
                 paymentRequest.userId()));
 

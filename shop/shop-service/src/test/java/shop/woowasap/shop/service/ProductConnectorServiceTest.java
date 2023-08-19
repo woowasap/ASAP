@@ -3,6 +3,8 @@ package shop.woowasap.shop.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.Mockito.when;
+import static shop.woowasap.shop.service.support.fixture.ProductFixture.onSaleProduct;
+import static shop.woowasap.shop.service.support.fixture.ProductFixture.onSaleProductBuilder;
 
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -14,9 +16,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.shop.domain.in.product.ProductConnector;
-import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.out.ProductRepository;
-import shop.woowasap.shop.service.support.fixture.ProductFixture;
+import shop.woowasap.shop.domain.product.Product;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("ProductConnectorService 클래스")
@@ -38,10 +39,10 @@ class ProductConnectorServiceTest {
         void returnProductWhenReceiveProductId() {
             // given
             final long productId = 1L;
-            final Product expected = ProductFixture.validProduct(productId);
+            final Product expected = onSaleProduct(productId);
 
             when(productRepository.findById(productId))
-                .thenReturn(Optional.of(ProductFixture.validProduct(productId)));
+                .thenReturn(Optional.of(onSaleProduct(productId)));
 
             // when
             final Optional<Product> result = productConnector.findByProductId(productId);
@@ -80,7 +81,7 @@ class ProductConnectorServiceTest {
             final long productId = 1L;
             final long consumedQuantity = 10L;
 
-            final Product persistedProduct = ProductFixture.productBuilder(productId)
+            final Product persistedProduct = onSaleProductBuilder(productId)
                 .quantity(consumedQuantity)
                 .build();
 

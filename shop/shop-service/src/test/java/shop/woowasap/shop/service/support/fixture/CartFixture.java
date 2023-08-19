@@ -1,16 +1,16 @@
 package shop.woowasap.shop.service.support.fixture;
 
-import static shop.woowasap.shop.service.support.fixture.ProductFixture.productBuilder;
+import static shop.woowasap.shop.service.support.fixture.ProductFixture.onSaleProductBuilder;
 
-import java.util.List;
-import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
-import shop.woowasap.shop.domain.in.cart.response.CartProductResponse;
-import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import java.util.ArrayList;
-import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
+import java.util.List;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
 import shop.woowasap.shop.domain.cart.CartProductQuantity;
+import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.response.CartProductResponse;
+import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.product.Product;
 
 public final class CartFixture {
@@ -45,16 +45,18 @@ public final class CartFixture {
             .build();
     }
 
-    public static AddCartProductRequest addCartProductRequest(final Long productId, final Long quantity) {
+    public static AddCartProductRequest addCartProductRequest(final Long productId,
+        final Long quantity) {
         return new AddCartProductRequest(productId, quantity);
     }
 
-    public static UpdateCartProductRequest updateCartProductRequest(final Long productId, final Long quantity) {
+    public static UpdateCartProductRequest updateCartProductRequest(final Long productId,
+        final Long quantity) {
         return new UpdateCartProductRequest(productId, quantity);
     }
 
     public static CartProduct cartProduct() {
-        final Product product = productBuilder(PRODUCT_ID).build();
+        final Product product = onSaleProductBuilder(PRODUCT_ID).build();
 
         return CartProduct.builder()
             .product(product)
@@ -91,6 +93,7 @@ public final class CartFixture {
             cartProduct.getProduct().getId(),
             cartProduct.getProduct().getName().getValue(),
             cartProduct.getProduct().getPrice().getValue().toString(),
+            cartProduct.getQuantity().getValue(),
             cartProduct.getProduct().getQuantity().getValue()
         );
     }
