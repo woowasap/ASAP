@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
+import shop.woowasap.core.util.time.TimeUtil;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.exception.DoesNotFindCartException;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
@@ -21,9 +22,9 @@ import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.response.OrdersPaginationResponse;
 import shop.woowasap.order.service.mapper.OrderMapper;
+import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.in.cart.CartConnector;
 import shop.woowasap.shop.domain.in.product.ProductConnector;
-import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.product.Product;
 
 @Service
@@ -35,6 +36,7 @@ public class OrderService implements OrderUseCase {
     private final ProductConnector productConnector;
     private final CartConnector cartConnector;
     private final OrderRepository orderRepository;
+    private final TimeUtil timeUtil;
 
     @Value("${shop.woowasap.locale:Asia/Seoul}")
     private String locale;
@@ -43,7 +45,7 @@ public class OrderService implements OrderUseCase {
     @Transactional
     public OrderIdResponse orderProduct(final OrderProductRequest orderProductRequest) {
         final Product product = getProductByProductId(orderProductRequest.productId());
-        final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product);
+        final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product, timeUtil.now());
 
         orderRepository.persist(order);
 
@@ -61,7 +63,7 @@ public class OrderService implements OrderUseCase {
         final Cart cart = cartConnector.findByCartIdAndUserId(cartId, userId)
             .orElseThrow(() -> new DoesNotFindCartException(cartId, userId));
 
-        final Order order = OrderMapper.toDomain(idGenerator, userId, cart);
+        final Order order = OrderMapper.toDomain(idGenerator, userId, cart, timeUtil.now());
 
         orderRepository.persist(order);
 

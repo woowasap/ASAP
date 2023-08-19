@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.Mockito.when;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
+import shop.woowasap.core.util.time.TimeUtil;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.OrderProduct;
 import shop.woowasap.order.domain.exception.DoesNotFindCartException;
@@ -32,10 +35,10 @@ import shop.woowasap.order.service.support.fixture.OrderDtoFixture;
 import shop.woowasap.order.service.support.fixture.OrderFixture;
 import shop.woowasap.order.service.support.fixture.OrderProductFixture;
 import shop.woowasap.order.service.support.fixture.ProductFixture;
-import shop.woowasap.shop.domain.in.cart.CartConnector;
-import shop.woowasap.shop.domain.in.product.ProductConnector;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
+import shop.woowasap.shop.domain.in.cart.CartConnector;
+import shop.woowasap.shop.domain.in.product.ProductConnector;
 import shop.woowasap.shop.domain.product.Product;
 
 @DisplayName("OrderService 클래스")
@@ -57,6 +60,14 @@ class OrderServiceTest {
 
     @MockBean
     private OrderRepository orderRepository;
+
+    @MockBean
+    private TimeUtil timeUtil;
+
+    @BeforeEach
+    void setUpTime() {
+        when(timeUtil.now()).thenReturn(Instant.now());
+    }
 
     @Nested
     @DisplayName("orderProduct 메소드는")
