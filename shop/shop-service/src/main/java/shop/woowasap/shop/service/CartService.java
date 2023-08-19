@@ -41,7 +41,7 @@ public class CartService implements CartUseCase {
 
         cart.updateCartProduct(CartProduct.builder()
             .product(product)
-            .quantity(new CartProductQuantity(updateCartProductRequest.quantity()))
+            .quantity(new CartProductQuantity(updateCartProductRequest.quantity(), product.getQuantity()))
             .build());
         cartRepository.persist(cart);
     }
@@ -59,7 +59,7 @@ public class CartService implements CartUseCase {
 
         cart.addProduct(CartProduct.builder()
             .product(product)
-            .quantity(new CartProductQuantity(addCartProductRequest.quantity()))
+            .quantity(new CartProductQuantity(addCartProductRequest.quantity(), product.getQuantity()))
             .build());
         cartRepository.persist(cart);
     }
