@@ -1,12 +1,11 @@
-package shop.woowasap.payment.domain;
-
+package shop.woowasap.payment.repository.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PayStatus {
+public enum PaymentEntityStatus {
 
     PENDING("PENDING"),
     SUCCESS("SUCCESS"),
