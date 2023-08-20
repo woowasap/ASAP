@@ -1,8 +1,11 @@
 package shop.woowasap.accept;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +42,8 @@ class PayOrderAcceptanceTest extends AcceptanceTest {
         final int quantity = 2;
         final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(
             quantity);
+
+        timeUtil.clock(Clock.fixed(Instant.now().plus(25, ChronoUnit.MINUTES), ZoneId.of("UTC")));
         final OrderIdResponse orderIdResponse = OrderApiSupporter.orderProduct(productId,
             orderProductRequest,
             accessToken).as(OrderIdResponse.class);
@@ -70,6 +75,8 @@ class PayOrderAcceptanceTest extends AcceptanceTest {
         final int quantity = 2;
         final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(
             quantity);
+
+        timeUtil.clock(Clock.fixed(Instant.now().plus(25, ChronoUnit.MINUTES), ZoneId.of("UTC")));
         final OrderIdResponse orderIdResponse = OrderApiSupporter.orderProduct(productId,
             orderProductRequest,
             accessToken).as(OrderIdResponse.class);
@@ -98,6 +105,8 @@ class PayOrderAcceptanceTest extends AcceptanceTest {
         final int quantity = 2;
         final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(
             quantity);
+
+        timeUtil.clock(Clock.fixed(Instant.now().plus(25, ChronoUnit.MINUTES), ZoneId.of("UTC")));
         final OrderIdResponse orderIdResponse = OrderApiSupporter.orderProduct(productId,
             orderProductRequest,
             accessToken).as(OrderIdResponse.class);
@@ -132,7 +141,9 @@ class PayOrderAcceptanceTest extends AcceptanceTest {
     }
 
     private ProductResponse getRandomProduct(final String accessToken) {
-        ShopApiSupporter.registerProduct(accessToken, ProductFixture.registerValidProductRequest());
+        ShopApiSupporter.registerProduct(accessToken, ProductFixture.registerValidProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES)));
 
         return ShopApiSupporter.getAllProducts().as(ProductsResponse.class)
             .products().get(0);

@@ -33,11 +33,12 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public ProductsPaginationResponse findAllValidWithPagination(final int page, final int size) {
+    public ProductsPaginationResponse findAllValidWithPagination(final int page, final int size,
+        final Instant nowTime) {
         final PageRequest pageRequest = PageRequest.of(page - 1, size,
             Sort.by("startTime").ascending());
         final Page<ProductEntity> pagination = productJpaRepository.findAllByEndTimeAfter(
-            Instant.now(), pageRequest);
+            nowTime, pageRequest);
 
         final List<Product> products = pagination.get()
             .map(ProductEntity::toDomain)

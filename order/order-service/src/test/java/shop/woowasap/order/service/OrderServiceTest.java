@@ -187,7 +187,7 @@ class OrderServiceTest {
                 Optional.of(product));
 
             final OrdersResponse expected = OrderDtoFixture.ordersResponse(List.of(defaultOrder),
-                "Asia/Seoul", page, size, product.getName().getValue(),
+                "UTC", page, size, product.getName().getValue(),
                 product.getPrice().getValue().toString());
 
             // when
@@ -239,7 +239,7 @@ class OrderServiceTest {
 
             final DetailOrderResponse expected = OrderDtoFixture.detailOrderResponse(order,
                 product.getName().getValue(),
-                product.getPrice().getValue().toString(), "Asia/Seoul");
+                product.getPrice().getValue().toString(), "UTC");
 
             // when
             final DetailOrderResponse result = orderUseCase.getOrderByOrderIdAndUserId(orderId,

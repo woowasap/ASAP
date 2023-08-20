@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.in.product.ProductUseCase;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
-import shop.woowasap.shop.domain.exception.NotExistsProductException;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +28,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductsResponse> findValidProduct(@RequestParam(defaultValue = "1") final int page,
+    public ResponseEntity<ProductsResponse> findValidProduct(
+        @RequestParam(defaultValue = "1") final int page,
         @RequestParam(defaultValue = "20") final int size) {
         return ResponseEntity.ok(productUseCase.getValidProducts(page, size));
     }

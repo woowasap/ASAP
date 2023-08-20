@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import shop.woowasap.shop.domain.exception.InvalidCartProductQuantityException;
 import shop.woowasap.shop.domain.product.Product;
-import shop.woowasap.shop.domain.support.DomainFixture;
+import shop.woowasap.shop.domain.support.ProductFixture;
 
 @DisplayName("CartProduct 테스트")
 class CartProductTest {
@@ -76,7 +76,7 @@ class CartProductTest {
         void createCartWithProductRemainQuantity() {
             // given
             final Long productRemainQuantity = 8L;
-            final Product product = DomainFixture.getDefaultBuilder()
+            final Product product = ProductFixture.getDefaultBuilder()
                 .quantity(productRemainQuantity).build();
 
             // when

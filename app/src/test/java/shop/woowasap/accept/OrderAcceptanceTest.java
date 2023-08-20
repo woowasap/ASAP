@@ -3,11 +3,16 @@ package shop.woowasap.accept;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.math.BigInteger;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import shop.woowasap.accept.support.api.AuthApiSupporter;
 import shop.woowasap.accept.support.api.CartApiSupporter;
 import shop.woowasap.accept.support.api.OrderApiSupporter;
@@ -15,6 +20,7 @@ import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.fixture.ProductFixture;
 import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.OrderValidator;
+import shop.woowasap.core.util.time.TimeUtil;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
 import shop.woowasap.order.domain.in.response.DetailOrderResponse;
@@ -44,6 +50,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
         final int quantity = 2;
         final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(
             quantity);
+
+        timeUtil.clock(Clock.fixed(Instant.now().plus(25, ChronoUnit.MINUTES), ZoneId.of("UTC")));
 
         // when
         final ExtractableResponse<Response> result = OrderApiSupporter.orderProduct(productId,
@@ -81,6 +89,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
         final OrderProductQuantityRequest orderProductQuantityRequest = new OrderProductQuantityRequest(
             quantity);
 
+        timeUtil.clock(Clock.fixed(Instant.now().plus(25, ChronoUnit.MINUTES), ZoneId.of("UTC")));
         OrderApiSupporter.orderProduct(product.productId(), orderProductQuantityRequest,
             accessToken);
 
@@ -107,6 +116,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
         final long quantity = 10;
         final OrderProductQuantityRequest orderProductQuantityRequest = new OrderProductQuantityRequest(
             quantity);
+
+        timeUtil.clock(Clock.fixed(Instant.now().plus(25, ChronoUnit.MINUTES), ZoneId.of("UTC")));
         OrderApiSupporter.orderProduct(product.productId(), orderProductQuantityRequest,
             accessToken);
 
@@ -158,6 +169,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
         final long cartId = CartApiSupporter.getCartProducts(accessToken).as(CartResponse.class)
             .cartId();
 
+        timeUtil.clock(Clock.fixed(Instant.now().plus(25, ChronoUnit.MINUTES), ZoneId.of("UTC")));
+
         // when
         final ExtractableResponse<Response> result = OrderApiSupporter.orderCart(cartId,
             accessToken);
@@ -181,7 +194,9 @@ class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     private ProductResponse getRandomProduct(final String accessToken) {
-        ShopApiSupporter.registerProduct(accessToken, ProductFixture.registerValidProductRequest());
+        ShopApiSupporter.registerProduct(accessToken,
+            ProductFixture.registerValidProductRequest(Instant.now().plus(20, ChronoUnit.MINUTES),
+                Instant.now().plus(60 * 6, ChronoUnit.MINUTES)));
 
         return ShopApiSupporter.getAllProducts().as(ProductsResponse.class)
             .products().get(0);

@@ -13,8 +13,10 @@ import static shop.woowasap.shop.service.support.fixture.ProductFixture.products
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.registerProductRequest;
 import static shop.woowasap.shop.service.support.fixture.ProductFixture.updateProductRequest;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
+import shop.woowasap.core.util.time.TimeUtil;
 import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.exception.ProductModificationPermissionException;
 import shop.woowasap.shop.domain.exception.SaleEndedProductException;
@@ -50,6 +53,14 @@ class ProductServiceTest {
 
     @MockBean
     private ProductRepository productRepository;
+
+    @MockBean
+    private TimeUtil timeUtil;
+
+    @BeforeEach
+    void setUpTime() {
+        when(timeUtil.now()).thenReturn(Instant.parse("2023-08-01T01:00:00.000Z"));
+    }
 
     @Nested
     @DisplayName("Product 를 생성하는 메서드는")
@@ -101,7 +112,7 @@ class ProductServiceTest {
         void throwUpdateProductExceptionWhenNoProductExist() {
             // given
             final long noExistProductId = 1L;
-            final Product product = onSaleProduct(noExistProductId);
+            final Product product = beforeSaleProduct(noExistProductId);
             final UpdateProductRequest updateProductRequest = updateProductRequest(product);
 
             when(productRepository.findById(noExistProductId)).thenReturn(Optional.empty());
@@ -174,7 +185,7 @@ class ProductServiceTest {
         void ReturnProductResponseWhenExistsIdMatchedProduct() {
             // given
             final long productId = 1L;
-            final Product product = onSaleProduct(productId);
+            final Product product = beforeSaleProduct(productId);
 
             final ProductDetailsResponse expected = ProductDtoFixture.fromProduct(product);
 
@@ -228,12 +239,14 @@ class ProductServiceTest {
             final int pageSize = 4;
             final int totalPage = 1;
 
-            Product product1 = onSaleProduct(1L);
-            Product product2 = onSaleProduct(2L);
+            Product product1 = beforeSaleProduct(1L);
+            Product product2 = beforeSaleProduct(2L);
+
+            final Instant nowTime = Instant.parse("2023-08-01T01:00:00.000Z");
 
             List<Product> products = List.of(product1, product2);
 
-            when(productRepository.findAllValidWithPagination(page, pageSize)).thenReturn(
+            when(productRepository.findAllValidWithPagination(page, pageSize, nowTime)).thenReturn(
                 new ProductsPaginationResponse(products, page, totalPage));
 
             // when
@@ -272,7 +285,7 @@ class ProductServiceTest {
         void ReturnProductResponseWhenExistsIdMatchedProduct() {
             // given
             final long productId = 1L;
-            final Product product = onSaleProduct(productId);
+            final Product product = beforeSaleProduct(productId);
             final ProductDetailsResponse expected = ProductDtoFixture.fromProduct(product);
 
             when(productRepository.findById(productId)).thenReturn(Optional.of(product));

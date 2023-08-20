@@ -5,6 +5,7 @@ import static shop.woowasap.shop.repository.support.ProductFixture.afterSaleProd
 import static shop.woowasap.shop.repository.support.ProductFixture.beforeSaleProduct;
 import static shop.woowasap.shop.repository.support.ProductFixture.onSaleProduct;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -58,8 +59,9 @@ class ProductRepositoryImplTest {
                 product.getDescription().getValue(),
                 product.getPrice().getValue().toString(),
                 product.getQuantity().getValue(),
-                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("Asia/Seoul")),
-                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("Asia/Seoul"))
+                LocalDateTime.ofInstant(product.getSaleTime().getStartTime(), ZoneId.of("UTC")),
+                LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), ZoneId.of("UTC")),
+                Instant.parse("2023-08-01T00:00:00.000Z")
             );
 
             final Product result = productRepository.persist(product);
@@ -119,6 +121,8 @@ class ProductRepositoryImplTest {
             final Product beforeSaleProduct = beforeSaleProduct(2L);
             final Product onSaleProduct = onSaleProduct(3L);
 
+            final Instant nowTime = Instant.parse("2023-08-01T01:00:00.000Z");
+
             productRepository.persist(afterSaleProduct);
             productRepository.persist(beforeSaleProduct);
             productRepository.persist(onSaleProduct);
@@ -130,8 +134,8 @@ class ProductRepositoryImplTest {
             );
 
             // when
-            final ProductsPaginationResponse result = productRepository.findAllValidWithPagination(
-                page, size);
+            final ProductsPaginationResponse result = productRepository
+                .findAllValidWithPagination(page, size, nowTime);
 
             // then
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);

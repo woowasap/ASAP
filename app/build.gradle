@@ -15,6 +15,8 @@ dependencies {
     implementation project(':order:order-controller')
     implementation project(':order:order-repository')
 
+    implementation project(':core:util')
+
     implementation project(':payment:payment-domain')
     implementation project(':payment:payment-service')
     implementation project(':payment:payment-controller')

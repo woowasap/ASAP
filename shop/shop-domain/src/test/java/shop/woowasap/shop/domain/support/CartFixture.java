@@ -1,5 +1,7 @@
 package shop.woowasap.shop.domain.support;
 
+import static shop.woowasap.shop.domain.support.ProductFixture.getDefaultBuilder;
+
 import java.util.ArrayList;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
@@ -20,7 +22,7 @@ public final class CartFixture {
 
     public static CartProduct.CartProductBuilder getCartProductBuilder() {
         return CartProduct.builder()
-            .product(DomainFixture.getDefaultBuilder().build())
+            .product(getDefaultBuilder().build())
             .quantity(new CartProductQuantity(10L));
     }
 

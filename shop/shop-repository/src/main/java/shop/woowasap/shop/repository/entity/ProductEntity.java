@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.product.SaleTime;
 
 @Entity
 @Getter
@@ -49,8 +50,8 @@ public class ProductEntity extends BaseEntity {
             product.getDescription().getValue(),
             product.getPrice().getValue().toString(),
             product.getQuantity().getValue(),
-            product.getStartTime(),
-            product.getEndTime()
+            product.getSaleTime().getStartTime(),
+            product.getSaleTime().getEndTime()
         );
     }
 
@@ -61,8 +62,7 @@ public class ProductEntity extends BaseEntity {
             .description(this.description)
             .price(this.price)
             .quantity(this.quantity)
-            .startTime(this.startTime)
-            .endTime(this.endTime)
+            .saleTime(SaleTime.builder().startTime(startTime).endTime(endTime).build())
             .build();
     }
 }

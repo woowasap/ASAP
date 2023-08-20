@@ -38,7 +38,7 @@ public class OrderService implements OrderUseCase {
     private final OrderRepository orderRepository;
     private final TimeUtil timeUtil;
 
-    @Value("${shop.woowasap.locale:Asia/Seoul}")
+    @Value("${shop.woowasap.locale:UTC}")
     private String locale;
 
     @Override

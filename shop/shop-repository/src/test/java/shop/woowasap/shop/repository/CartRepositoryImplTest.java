@@ -18,6 +18,7 @@ import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
 import shop.woowasap.shop.domain.cart.CartProductQuantity;
 import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.product.SaleTime;
 import shop.woowasap.shop.repository.entity.ProductEntity;
 import shop.woowasap.shop.repository.jpa.ProductJpaRepository;
 
@@ -38,14 +39,20 @@ class CartRepositoryImplTest {
     void setUp() {
         final Instant startTime = Instant.now().minusSeconds(100);
         final Instant endTime = Instant.now().plusSeconds(100);
+        final SaleTime saleTime = SaleTime.builder()
+            .startTime(startTime)
+            .endTime(endTime)
+            .build();
+
         product = Product.builder()
             .id(1L)
             .name("name")
             .description("description")
             .price("10000")
             .quantity(1000L)
-            .startTime(startTime)
-            .endTime(endTime).build();
+            .saleTime(saleTime)
+            .build();
+
         productJpaRepository.save(ProductEntity.from(product));
     }
 
