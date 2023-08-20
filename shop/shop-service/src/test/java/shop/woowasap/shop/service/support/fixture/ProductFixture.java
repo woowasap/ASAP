@@ -11,6 +11,7 @@ import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.product.SaleTime;
 
 public class ProductFixture {
 
@@ -35,63 +36,86 @@ public class ProductFixture {
     private static final Instant NOW_TIME = Instant.parse("2023-08-01T00:00:00.000Z");
 
     public static Product.ProductBuilder onSaleProductBuilder(final Long id) {
+        final SaleTime saleTime = SaleTime.builder()
+            .startTime(ON_SALE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(ON_SALE_END_TIME.toInstant(ZoneOffset.UTC))
+            .build();
+
         return Product.builder()
             .id(id)
             .name(NAME)
             .description(DESCRIPTION)
             .price(PRICE)
             .quantity(QUANTITY)
-            .startTime(ON_SALE_START_TIME.toInstant(ZoneOffset.UTC))
-            .endTime(ON_SALE_END_TIME.toInstant(ZoneOffset.UTC));
+            .saleTime(saleTime);
     }
 
     public static Product.ProductBuilder beforeSaleProductBuilder(final Long id) {
+        final SaleTime saleTime = SaleTime.builder()
+            .startTime(BEFORE_SALE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(BEFORE_SALE_END_TIME.toInstant(ZoneOffset.UTC))
+            .build();
+
         return Product.builder()
             .id(id)
             .name(NAME)
             .description(DESCRIPTION)
             .price(PRICE)
             .quantity(QUANTITY)
-            .startTime(BEFORE_SALE_START_TIME.toInstant(ZoneOffset.UTC))
-            .endTime(BEFORE_SALE_END_TIME.toInstant(ZoneOffset.UTC));
+            .saleTime(saleTime);
     }
 
     public static Product beforeSaleProduct(final Long id) {
-        return Product.builder()
-            .id(id)
-            .name(NAME)
-            .description(DESCRIPTION)
-            .price(PRICE)
-            .quantity(QUANTITY)
+
+        final SaleTime saleTime = SaleTime.builder()
             .startTime(BEFORE_SALE_START_TIME.toInstant(ZoneOffset.UTC))
             .endTime(BEFORE_SALE_END_TIME.toInstant(ZoneOffset.UTC))
             .nowTime(NOW_TIME)
             .build();
-    }
 
-    public static Product onSaleProduct(final Long id) {
         return Product.builder()
             .id(id)
             .name(NAME)
             .description(DESCRIPTION)
             .price(PRICE)
             .quantity(QUANTITY)
+            .saleTime(saleTime)
+            .build();
+    }
+
+    public static Product onSaleProduct(final Long id) {
+
+        final SaleTime saleTime = SaleTime.builder()
             .startTime(ON_SALE_START_TIME.toInstant(ZoneOffset.UTC))
             .endTime(ON_SALE_END_TIME.toInstant(ZoneOffset.UTC))
             .nowTime(BEFORE_ALL_TIME)
             .build();
-    }
 
-    public static Product afterSaleProduct(final Long id) {
         return Product.builder()
             .id(id)
             .name(NAME)
             .description(DESCRIPTION)
             .price(PRICE)
             .quantity(QUANTITY)
+            .saleTime(saleTime)
+            .build();
+    }
+
+    public static Product afterSaleProduct(final Long id) {
+
+        final SaleTime saleTime = SaleTime.builder()
             .startTime(AFTER_SALE_START_TIME.toInstant(ZoneOffset.UTC))
             .endTime(AFTER_SALE_END_TIME.toInstant(ZoneOffset.UTC))
             .nowTime(BEFORE_ALL_TIME)
+            .build();
+
+        return Product.builder()
+            .id(id)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(QUANTITY)
+            .saleTime(saleTime)
             .build();
     }
 
@@ -102,12 +126,13 @@ public class ProductFixture {
     }
 
     private static ProductResponse productOfProductsResponse(final Product product) {
+
         return new ProductResponse(
             product.getId(),
             product.getName().getValue(),
             product.getPrice().getValue().toString(),
-            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("UTC")),
-            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("UTC"))
+            LocalDateTime.ofInstant(product.getSaleTime().getStartTime(), ZoneId.of("UTC")),
+            LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), ZoneId.of("UTC"))
         );
     }
 
@@ -117,8 +142,8 @@ public class ProductFixture {
             product.getDescription().getValue(),
             product.getPrice().getValue().toString(),
             product.getQuantity().getValue(),
-            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("UTC")),
-            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("UTC"))
+            LocalDateTime.ofInstant(product.getSaleTime().getStartTime(), ZoneId.of("UTC")),
+            LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), ZoneId.of("UTC"))
         );
     }
 
@@ -128,8 +153,8 @@ public class ProductFixture {
             product.getDescription().getValue(),
             product.getPrice().getValue().toString(),
             product.getQuantity().getValue(),
-            LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("UTC")),
-            LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("UTC"))
+            LocalDateTime.ofInstant(product.getSaleTime().getStartTime(), ZoneId.of("UTC")),
+            LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), ZoneId.of("UTC"))
         );
     }
 
@@ -139,8 +164,8 @@ public class ProductFixture {
                 product.getId(),
                 product.getName().getValue(),
                 product.getPrice().getValue().toString(),
-                LocalDateTime.ofInstant(product.getStartTime(), ZoneId.of("UTC")),
-                LocalDateTime.ofInstant(product.getEndTime(), ZoneId.of("UTC"))
+                LocalDateTime.ofInstant(product.getSaleTime().getStartTime(), ZoneId.of("UTC")),
+                LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), ZoneId.of("UTC"))
             )).toList();
 
         return new ProductsResponse(productResponses, PAGE, TOTAL_PAGE);

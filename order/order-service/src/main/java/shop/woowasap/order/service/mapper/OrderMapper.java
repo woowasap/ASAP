@@ -24,11 +24,13 @@ public final class OrderMapper {
     }
 
     public static Order toDomain(final IdGenerator idGenerator,
-        final OrderProductRequest orderProductRequest, final Product product, final Instant createdAt) {
+        final OrderProductRequest orderProductRequest, final Product product,
+        final Instant createdAt) {
         return Order.builder()
             .id(idGenerator.generate())
             .userId(orderProductRequest.userId())
-            .orderProducts(List.of(toOrderProduct(product, orderProductRequest.quantity(), createdAt)))
+            .orderProducts(
+                List.of(toOrderProduct(product, orderProductRequest.quantity(), createdAt)))
             .createdAt(createdAt)
             .build();
     }
@@ -49,15 +51,16 @@ public final class OrderMapper {
             .build();
     }
 
-    private static OrderProduct toOrderProduct(final Product product, final long quantity, final Instant nowTime) {
+    private static OrderProduct toOrderProduct(final Product product, final long quantity,
+        final Instant nowTime) {
         return OrderProduct.builder()
             .productId(product.getId())
             .price(product.getPrice().getValue().multiply(BigInteger.valueOf(quantity)).toString())
             .name(product.getName().getValue())
             .quantity(quantity)
-            .startTime(product.getStartTime())
+            .startTime(product.getSaleTime().getStartTime())
             .nowTime(nowTime)
-            .endTime(product.getEndTime())
+            .endTime(product.getSaleTime().getEndTime())
             .build();
     }
 

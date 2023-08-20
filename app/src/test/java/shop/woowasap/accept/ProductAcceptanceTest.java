@@ -2,7 +2,6 @@ package shop.woowasap.accept;
 
 import static shop.woowasap.accept.support.api.ShopApiSupporter.registerProduct;
 import static shop.woowasap.accept.support.fixture.ProductFixture.productsResponse;
-import static shop.woowasap.accept.support.fixture.ProductFixture.registerProductRequest;
 import static shop.woowasap.accept.support.fixture.ProductFixture.registerValidProductRequest;
 import static shop.woowasap.accept.support.fixture.ProductFixture.updateProductRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertBadRequest;
@@ -53,10 +52,13 @@ class ProductAcceptanceTest extends AcceptanceTest {
             .header("Location")
             .split("/")[4]);
 
-        final UpdateProductRequest updateProductRequest = updateProductRequest();
+        final UpdateProductRequest updateProductRequest = updateProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
 
         // when
-        final ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,
+        final ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(
+            accessToken,
             productId,
             updateProductRequest);
 
@@ -69,8 +71,9 @@ class ProductAcceptanceTest extends AcceptanceTest {
     void updateProductWithNotFound() {
         // given
         final long invalidProductId = 123;
-
-        final UpdateProductRequest updateProductRequest = updateProductRequest();
+        final UpdateProductRequest updateProductRequest = updateProductRequest(
+            Instant.now().plus(20, ChronoUnit.MINUTES),
+            Instant.now().plus(60 * 6, ChronoUnit.MINUTES));
 
         // when
         final ExtractableResponse<Response> response = ShopApiSupporter.updateProduct(accessToken,

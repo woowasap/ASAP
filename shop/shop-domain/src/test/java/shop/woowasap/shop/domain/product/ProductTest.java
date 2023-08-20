@@ -104,11 +104,19 @@ class ProductTest {
             assertThat(exception).isInstanceOf(InvalidProductQuantityException.class);
         }
 
-    }
+        @Test
+        @DisplayName("saleTime 이 null 인 경우, InvalidProductSaleTimeException 을 반환한다.")
+        void throwExceptionWhenNullSaleTime() {
+            // given
+            final SaleTime saleTime = null;
 
-    @Nested
-    @DisplayName("createProduct")
-    class createProduct_Method {
+            // when
+            final Exception exception = catchException(
+                () -> getDefaultBuilder().saleTime(saleTime).build());
+
+            // then
+            assertThat(exception).isInstanceOf(InvalidProductSaleTimeException.class);
+        }
 
         @Test
         @DisplayName("판매 시작 시간이 판매 종료 시간과 동일한 경우, InvalidProductSaleTimeException을 반환한다.")
@@ -188,6 +196,7 @@ class ProductTest {
             // then
             assertThat(exception).isInstanceOf(InvalidProductSaleDurationException.class);
         }
+
     }
 
     @Nested
@@ -209,20 +218,24 @@ class ProductTest {
             final LocalDateTime endTime = LocalDateTime.of(2023, 8, 5, 14, 30);
             final Instant updateTime = nowTime.plusSeconds(60 * 10);
 
-            // when
-            Product update = original.update(name, description, price, quantity, startTime,
-                endTime, updateTime);
+            final SaleTime saleTime = SaleTime.builder()
+                .startTime(startTime.atZone(ZoneOffset.UTC).toInstant())
+                .endTime(endTime.atZone(ZoneOffset.UTC).toInstant())
+                .build();
 
-            // then
             Product expected = Product.builder()
                 .id(original.getId())
                 .name(name).description(description)
                 .price(price)
                 .quantity(quantity)
-                .startTime(startTime.atZone(ZoneOffset.UTC).toInstant())
-                .endTime(endTime.atZone(ZoneOffset.UTC).toInstant())
+                .saleTime(saleTime)
                 .build();
 
+            // when
+            final Product update = original.update(name, description, price, quantity, startTime,
+                endTime, updateTime);
+
+            // then
             assertThat(update).usingRecursiveAssertion().isEqualTo(expected);
         }
 
@@ -232,9 +245,14 @@ class ProductTest {
             // given
             final Instant nowTime = Instant.parse("2023-08-01T00:00:00.000Z");
 
-            final Product original = getDefaultBuilder()
+            final SaleTime saleTime = SaleTime.builder()
                 .startTime(nowTime.plusSeconds(60 * 60))
                 .endTime(nowTime.plusSeconds(60 * 60 * 3))
+                .nowTime(nowTime)
+                .build();
+
+            final Product original = getDefaultBuilder()
+                .saleTime(saleTime)
                 .build();
 
             final String name = "newProductName";
@@ -266,9 +284,14 @@ class ProductTest {
             // given
             final Instant nowTime = Instant.parse("2023-08-01T00:00:00.000Z");
 
-            final Product product = getDefaultBuilder()
+            final SaleTime saleTime = SaleTime.builder()
                 .startTime(nowTime.plusSeconds(60 * 60))
                 .endTime(nowTime.plusSeconds(60 * 60 * 2))
+                .nowTime(nowTime)
+                .build();
+
+            final Product product = getDefaultBuilder()
+                .saleTime(saleTime)
                 .build();
 
             final Instant time = nowTime.plusSeconds(60 * 60 * 3);
@@ -286,9 +309,14 @@ class ProductTest {
             // given
             final Instant nowTime = Instant.parse("2023-08-01T00:00:00.000Z");
 
-            final Product product = getDefaultBuilder()
+            final SaleTime saleTime = SaleTime.builder()
                 .startTime(nowTime.plusSeconds(60 * 60))
                 .endTime(nowTime.plusSeconds(60 * 60 * 2))
+                .nowTime(nowTime)
+                .build();
+
+            final Product product = getDefaultBuilder()
+                .saleTime(saleTime)
                 .build();
 
             final Instant time = nowTime.plusSeconds(60 * 60);

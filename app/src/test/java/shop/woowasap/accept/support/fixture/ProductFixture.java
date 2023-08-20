@@ -52,14 +52,14 @@ public class ProductFixture {
         );
     }
 
-    public static UpdateProductRequest updateProductRequest() {
+    public static UpdateProductRequest updateProductRequest(Instant startTime, Instant endTime) {
         return new UpdateProductRequest(
             NAME,
             DESCRIPTION,
             PRICE,
             QUANTITY,
-            BEFORE_SALE_START_TIME,
-            BEFORE_SALE_END_TIME
+            LocalDateTime.ofInstant(startTime, ZoneId.of("UTC")),
+            LocalDateTime.ofInstant(endTime, ZoneId.of("UTC"))
         );
     }
 
@@ -88,7 +88,8 @@ public class ProductFixture {
         );
     }
 
-    public static RegisterProductRequest registerValidProductRequest(Instant startTime, Instant endTime) {
+    public static RegisterProductRequest registerValidProductRequest(Instant startTime,
+        Instant endTime) {
         return new RegisterProductRequest(
             NAME,
             DESCRIPTION,
