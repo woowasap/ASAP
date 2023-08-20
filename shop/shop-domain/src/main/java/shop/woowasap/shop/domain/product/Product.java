@@ -59,19 +59,17 @@ public final class Product {
     ) {
         validateUpdateTime(nowTime);
 
-        final SaleTime saleTime = SaleTime.builder()
-            .startTime(startTime.atZone(ZoneOffset.UTC).toInstant())
-            .endTime(endTime.atZone(ZoneOffset.UTC).toInstant())
-            .nowTime(nowTime)
-            .build();
-
         return Product.builder()
             .id(id)
             .name(name)
             .description(description)
             .price(price)
             .quantity(quantity)
-            .saleTime(saleTime)
+            .saleTime(SaleTime.builder()
+                .startTime(startTime.atZone(ZoneOffset.UTC).toInstant())
+                .endTime(endTime.atZone(ZoneOffset.UTC).toInstant())
+                .nowTime(nowTime)
+                .build())
             .build();
     }
 
