@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -40,8 +41,12 @@ public final class Product {
         final String price,
         final Long quantity,
         final Instant startTime,
-        final Instant endTime
+        final Instant endTime,
+        final Instant nowTime
     ) {
+        if (!Objects.isNull(nowTime)) {
+            validateTime(nowTime, startTime, endTime);
+        }
         this.id = id;
         this.name = new Name(name);
         this.description = new Description(description);
@@ -63,29 +68,6 @@ public final class Product {
         validateUpdateTime(nowTime);
 
         return Product.builder()
-            .id(id)
-            .name(name)
-            .description(description)
-            .price(price)
-            .quantity(quantity)
-            .startTime(startTime.atZone(ZoneOffset.UTC).toInstant())
-            .endTime(endTime.atZone(ZoneOffset.UTC).toInstant())
-            .build();
-    }
-
-    public static Product createProduct(
-        final Long id,
-        final String name,
-        final String description,
-        final String price,
-        final Long quantity,
-        final Instant startTime,
-        final Instant endTime,
-        final Instant nowTime
-    ) {
-        validateTime(nowTime, startTime, endTime);
-
-        return builder()
             .id(id)
             .name(name)
             .description(description)

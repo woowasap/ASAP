@@ -24,54 +24,54 @@ public class ProductFixture {
     private static final Instant BEFORE_ALL_TIME = Instant.parse("2022-08-01T00:00:00.000Z");
 
     public static Product beforeSaleProduct(final Long id) {
-        return Product.createProduct(
-            id,
-            NAME,
-            DESCRIPTION,
-            PRICE,
-            QUANTITY,
-            BEFORE_SALE_START_TIME.toInstant(ZoneOffset.UTC),
-            BEFORE_SALE_END_TIME.toInstant(ZoneOffset.UTC),
-            BEFORE_ALL_TIME
-        );
+        return Product.builder()
+            .id(id)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(QUANTITY)
+            .startTime(BEFORE_SALE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(BEFORE_SALE_END_TIME.toInstant(ZoneOffset.UTC))
+            .nowTime(BEFORE_ALL_TIME)
+            .build();
     }
 
     public static Product onSaleProduct(final Long id) {
-        return Product.createProduct(
-            id,
-            NAME,
-            DESCRIPTION,
-            PRICE,
-            QUANTITY,
-            ON_SALE_START_TIME.toInstant(ZoneOffset.UTC),
-            ON_SALE_END_TIME.toInstant(ZoneOffset.UTC),
-            BEFORE_ALL_TIME
-        );
+        return Product.builder()
+            .id(id)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(QUANTITY)
+            .startTime(ON_SALE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(ON_SALE_END_TIME.toInstant(ZoneOffset.UTC))
+            .nowTime(BEFORE_ALL_TIME)
+            .build();
+    }
+
+    public static Product onSaleProduct(final Long id, final long quantity) {
+        return Product.builder()
+            .id(id)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(quantity)
+            .startTime(ON_SALE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(ON_SALE_END_TIME.toInstant(ZoneOffset.UTC))
+            .nowTime(BEFORE_ALL_TIME)
+            .build();
     }
 
     public static Product afterSaleProduct(final Long id) {
-        return Product.createProduct(
-            id,
-            NAME,
-            DESCRIPTION,
-            PRICE,
-            QUANTITY,
-            AFTER_SALE_START_TIME.toInstant(ZoneOffset.UTC),
-            AFTER_SALE_END_TIME.toInstant(ZoneOffset.UTC),
-            BEFORE_ALL_TIME
-        );
-    }
-
-    public static Product onSaleProduct(final Long id, final Long quantity) {
-        return Product.createProduct(
-            id,
-            NAME,
-            DESCRIPTION,
-            PRICE,
-            QUANTITY,
-            ON_SALE_START_TIME.toInstant(ZoneOffset.UTC),
-            ON_SALE_END_TIME.toInstant(ZoneOffset.UTC),
-            BEFORE_ALL_TIME
-        );
+        return Product.builder()
+            .id(id)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(QUANTITY)
+            .startTime(AFTER_SALE_START_TIME.toInstant(ZoneOffset.UTC))
+            .endTime(AFTER_SALE_END_TIME.toInstant(ZoneOffset.UTC))
+            .nowTime(BEFORE_ALL_TIME)
+            .build();
     }
 }

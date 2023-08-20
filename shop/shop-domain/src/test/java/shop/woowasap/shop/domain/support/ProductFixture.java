@@ -30,15 +30,15 @@ public class ProductFixture {
         final Instant endTime,
         final Instant nowTime
     ) {
-        return Product.createProduct(
-            1L,
-            NAME,
-            DESCRIPTION,
-            PRICE,
-            QUANTITY,
-            startTime,
-            endTime,
-            nowTime
-        );
+        return Product.builder()
+            .id(1L)
+            .name(NAME)
+            .description(DESCRIPTION)
+            .price(PRICE)
+            .quantity(QUANTITY)
+            .startTime(startTime)
+            .endTime(endTime)
+            .nowTime(nowTime)
+            .build();
     }
 }

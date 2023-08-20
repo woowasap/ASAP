@@ -1,7 +1,5 @@
 package shop.woowasap.shop.service.mapper;
 
-import static shop.woowasap.shop.domain.product.Product.createProduct;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,16 +21,16 @@ public final class ProductMapper {
     public static Product toDomain(final IdGenerator idGenerator,
         final RegisterProductRequest registerProductRequest, final String offsetId,
         final Instant nowTime) {
-        return createProduct(
-            idGenerator.generate(),
-            registerProductRequest.name(),
-            registerProductRequest.description(),
-            registerProductRequest.price(),
-            registerProductRequest.quantity(),
-            registerProductRequest.startTime().toInstant(ZoneOffset.of(offsetId)),
-            registerProductRequest.endTime().toInstant(ZoneOffset.of(offsetId)),
-            nowTime
-        );
+        return Product.builder()
+            .id(idGenerator.generate())
+            .name(registerProductRequest.name())
+            .description(registerProductRequest.description())
+            .price(registerProductRequest.price())
+            .quantity(registerProductRequest.quantity())
+            .startTime(registerProductRequest.startTime().toInstant(ZoneOffset.of(offsetId)))
+            .endTime(registerProductRequest.endTime().toInstant(ZoneOffset.of(offsetId)))
+            .nowTime(nowTime)
+            .build();
     }
 
     public static ProductDetailsResponse toProductResponse(final Product product,
