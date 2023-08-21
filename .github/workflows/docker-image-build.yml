@@ -1,29 +1,32 @@
 name: docker-image-build
 
 on:
-#  workflow_run:
-#    workflows:
-#      - acceptance-test-analyze-with-sonarcloud
-#    types:
-#      - completed
+  workflow_run:
+    workflows:
+      - acceptance-test-analyze-with-sonarcloud
+    types:
+      - completed
   push:
     branches:
-#      - 'release/v0.0.1'
-      - 'protoseo/base-#220' # TEST FOR DOCKER IMAGE BUILD
+      - 'develop'
+      - 'main'
+      - 'release*'
+      - 'protoseo/base-#220'
 
 jobs:
   build:
     name: docker image build
     runs-on: ubuntu-latest
     steps:
-      - name: branch
+      - name: Set Branch
+        id: set-branch
         run: |
           echo ${{ github.head_ref }}
           echo ${{ github.base_ref }}
           echo ${{ env.BRANCH }}
           echo ${{ env.TAG }}
           echo $GITHUB_REF
-          echo HELLOWORLD
+          echo "::set-output name=BRANCH::$(echo $GITHUB_REF | sed 's/refs\/heads\///')"
           echo $(echo $GITHUB_REF | sed 's/refs\/heads\///')
       - name: Checkout
         uses: actions/checkout@v3
@@ -55,4 +58,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/asap:develop
+            ghcr.io/${{ github.repository_owner }}/asap:${{ steps.set-branch.outputs.BRANCH }}
