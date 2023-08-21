@@ -8,7 +8,7 @@ on:
 #      - completed
   push:
     branches:
-#      - 'release'
+#      - 'release/v0.0.1'
       - 'protoseo/base-#220' # TEST FOR DOCKER IMAGE BUILD
 
 jobs:
@@ -20,6 +20,8 @@ jobs:
         run: |
           echo ${{ github.head_ref }}
           echo ${{ github.base_ref }}
+          echo ${{ env.BRANCH }}
+          echo ${{ env.TAG }}
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -50,4 +52,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/asap:${{ github.head_ref }}
+            ghcr.io/${{ github.repository_owner }}/asap:develop
