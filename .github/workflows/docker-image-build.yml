@@ -24,6 +24,7 @@ jobs:
           echo ${{ env.TAG }}
           echo $GITHUB_REF
           echo HELLOWORLD
+          echo $(echo $GITHUB_REF | sed 's/refs\/heads\///')
       - name: Checkout
         uses: actions/checkout@v3
         with:
