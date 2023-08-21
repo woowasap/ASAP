@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import shop.woowasap.core.util.web.ErrorTemplate;
+import shop.woowasap.shop.domain.exception.ProductException;
 import shop.woowasap.shop.domain.in.product.ProductUseCase;
 import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
@@ -60,8 +62,9 @@ public class ProductAdminController {
         return ResponseEntity.ok(productResponse);
     }
 
-    @ExceptionHandler(NotExistsProductException.class)
-    public ResponseEntity<Void> handleException() {
-        return ResponseEntity.badRequest().build();
+    @ExceptionHandler(ProductException.class)
+    public ResponseEntity<ErrorTemplate> handleException(final ProductException productException) {
+        return ResponseEntity.badRequest()
+            .body(ErrorTemplate.of(productException.getMessage()));
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.woowasap.auth.domain.in.LoginUser;
+import shop.woowasap.core.util.web.ErrorTemplate;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 import shop.woowasap.order.domain.exception.DoesNotFindCartException;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
@@ -82,7 +83,8 @@ public class OrderController {
         InvalidQuantityException.class,
         DoesNotFindOrderException.class,
         DoesNotFindCartException.class})
-    private ResponseEntity<Void> handleBadRequest() {
-        return ResponseEntity.badRequest().build();
+    private ResponseEntity<ErrorTemplate> handleBadRequest(final Exception exception) {
+        return ResponseEntity.badRequest()
+            .body(ErrorTemplate.of(exception.getMessage()));
     }
 }

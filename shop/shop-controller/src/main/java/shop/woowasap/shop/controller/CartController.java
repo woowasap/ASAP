@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import shop.woowasap.core.util.web.ErrorTemplate;
 import shop.woowasap.shop.domain.in.cart.CartUseCase;
 import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
@@ -58,7 +59,8 @@ public class CartController {
     }
 
     @ExceptionHandler({NotExistsCartProductException.class, NotExistsProductException.class})
-    public ResponseEntity<Void> handleException() {
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<ErrorTemplate> handleException(final Exception exception) {
+        return ResponseEntity.badRequest()
+            .body(ErrorTemplate.of(exception.getMessage()));
     }
 }
