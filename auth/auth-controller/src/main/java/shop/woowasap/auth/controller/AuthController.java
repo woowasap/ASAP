@@ -2,7 +2,6 @@ package shop.woowasap.auth.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,7 +18,6 @@ import shop.woowasap.auth.domain.in.UserUseCase;
 import shop.woowasap.auth.domain.in.request.UserCreateRequest;
 import shop.woowasap.auth.domain.in.response.LoginResponse;
 
-@Slf4j
 @RestController
 @RequestMapping("/v1")
 @RequiredArgsConstructor
@@ -47,7 +45,6 @@ public class AuthController {
     public ResponseEntity<String> handleAuthExceptions(
         final DuplicatedUsernameException duplicatedUsernameException) {
 
-        log.info(duplicatedUsernameException.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(duplicatedUsernameException.getMessage());
     }
@@ -56,7 +53,6 @@ public class AuthController {
     public ResponseEntity<String> handleAuthExceptions(
         final AuthDomainBaseException authDomainBaseException) {
 
-        log.info(authDomainBaseException.getMessage());
         return ResponseEntity.badRequest().body(authDomainBaseException.getMessage());
     }
 
@@ -69,9 +65,8 @@ public class AuthController {
             .getAllErrors()
             .stream()
             .findFirst()
-            .get()
+            .orElseThrow()
             .getDefaultMessage();
-        log.info(defaultMessage);
         return ResponseEntity.badRequest()
             .body(defaultMessage);
     }

@@ -3,7 +3,6 @@ package shop.woowasap.auth.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import shop.woowasap.auth.domain.User;
 import shop.woowasap.auth.domain.UserType;
 import shop.woowasap.auth.repository.jpa.UserJpaRepository;
 
-@Slf4j
 @DataJpaTest
 @DisplayName("인증 서비스 테스트")
 @ContextConfiguration(classes = {BeanScanBaseLocation.class, UserRepositoryImpl.class})
