@@ -41,9 +41,12 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
         uses: docker/build-push-action@v4
+        run: |
+          echo ${{ github.base_ref }}
+          echo ${{ github.head_ref }}
         with:
           context: .
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/asap:${{ github.base_ref }}
+            ghcr.io/${{ github.repository_owner }}/asap:${{ github.head_ref }}
