@@ -9,7 +9,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
-import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import shop.woowasap.auth.domain.in.response.UserResponse;
+import shop.woowasap.core.util.time.TimeUtil;
 
 @Slf4j
 @SpringBootTest
@@ -38,7 +38,7 @@ class JwtTokenProviderTest {
     private JwtTokenProvider tokenProvider;
 
     @MockBean
-    private Clock clock;
+    private TimeUtil timeUtil;
 
     @Value("${jwt.secret.key}")
     private String key;
@@ -60,7 +60,7 @@ class JwtTokenProviderTest {
             final UserResponse userResponse = new UserResponse(id, username, userType);
             final SecretKey secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
             final Instant fixedInstant = Instant.parse("2023-08-15T00:00:01.00Z");
-            when(Instant.now(clock)).thenReturn(fixedInstant);
+            when(timeUtil.now()).thenReturn(fixedInstant);
 
             // when
             final String accessToken = tokenProvider.generateToken(userResponse);
@@ -93,7 +93,7 @@ class JwtTokenProviderTest {
             // given
             final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVHlwZSI6IlJPTEVfVVNFUiIsInVzZXJJZCI6MSwiaWF0IjoxNjkyMDU3NjAxLCJleHAiOjE2OTIyNzM2MDF9.bVVPMLAxm2Vc6zy697wvJBSkYWPkAzEDP_LQ6ZJj9K8";
             final Instant fixedInstant = Instant.parse("2023-08-15T00:00:02.00Z");
-            when(Instant.now(clock)).thenReturn(fixedInstant);
+            when(timeUtil.now()).thenReturn(fixedInstant);
 
             // when
             final boolean result = tokenProvider.validateToken(accessToken);
@@ -112,7 +112,7 @@ class JwtTokenProviderTest {
         void validateTokenThenReturnFalse(final String accessToken) {
             // given
             final Instant fixedInstant = Instant.parse("2023-08-20T00:00:02.00Z");
-            when(Instant.now(clock)).thenReturn(fixedInstant);
+            when(timeUtil.now()).thenReturn(fixedInstant);
 
             // when
             final boolean result = tokenProvider.validateToken(accessToken);
@@ -163,7 +163,7 @@ class JwtTokenProviderTest {
             // given
             final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVHlwZSI6IlJPTEVfVVNFUiIsInVzZXJJZCI6MSwiaWF0IjoxNjkyMDU3NjAxLCJleHAiOjE2OTIyNzM2MDF9.bVVPMLAxm2Vc6zy697wvJBSkYWPkAzEDP_LQ6ZJj9K8";
             final Instant fixedInstant = Instant.parse("2023-08-15T00:00:02.00Z");
-            when(Instant.now(clock)).thenReturn(fixedInstant);
+            when(timeUtil.now()).thenReturn(fixedInstant);
 
             // when
             final List<String> authorities = tokenProvider.getAuthorities(accessToken);
@@ -181,7 +181,7 @@ class JwtTokenProviderTest {
             // given
             final String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInVzZXJUeXBlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY5MjA1NzYwMSwiZXhwIjoxNjkyMjczNjAxfQ.l3lYH9ZaslvCSDffuxjWsmRYi0dKPQgFBnYLXJ4rhfo";
             final Instant fixedInstant = Instant.parse("2023-08-15T00:00:02.00Z");
-            when(Instant.now(clock)).thenReturn(fixedInstant);
+            when(timeUtil.now()).thenReturn(fixedInstant);
 
             // when
             final List<String> authorities = tokenProvider.getAuthorities(accessToken);
@@ -204,7 +204,7 @@ class JwtTokenProviderTest {
             // given
             final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVHlwZSI6IlJPTEVfVVNFUiIsInVzZXJJZCI6MSwiaWF0IjoxNjkyMDU3NjAxLCJleHAiOjE2OTIyNzM2MDF9.bVVPMLAxm2Vc6zy697wvJBSkYWPkAzEDP_LQ6ZJj9K8";
             final Instant fixedInstant = Instant.parse("2023-08-15T00:00:02.00Z");
-            when(Instant.now(clock)).thenReturn(fixedInstant);
+            when(timeUtil.now()).thenReturn(fixedInstant);
 
             // when
             final String userId = tokenProvider.getUserId(accessToken);

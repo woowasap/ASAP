@@ -7,7 +7,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
-import java.time.Clock;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +21,7 @@ import org.springframework.util.StringUtils;
 import shop.woowasap.auth.domain.UserType;
 import shop.woowasap.auth.domain.in.TokenProvider;
 import shop.woowasap.auth.domain.in.response.UserResponse;
+import shop.woowasap.core.util.time.TimeUtil;
 
 @Slf4j
 @Service
@@ -33,7 +33,7 @@ public class JwtTokenProvider implements TokenProvider {
     private static final String BEARER_PREFIX = "Bearer ";
     private static final int BEARER_PREFIX_LENGTH = 7;
 
-    private final Clock clock;
+    private final TimeUtil timeUtil;
 
     @Value("${jwt.secret.expiration}")
     private long expiration;
@@ -50,7 +50,7 @@ public class JwtTokenProvider implements TokenProvider {
         this.secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
         this.header = Map.of("alg", "HS256", "typ", "JWT");
         this.jwtParser = Jwts.parserBuilder()
-            .setClock(() -> Date.from(Instant.now(clock)))
+            .setClock(() -> Date.from(timeUtil.now()))
             .setSigningKey(secretKey)
             .build();
     }
@@ -62,7 +62,7 @@ public class JwtTokenProvider implements TokenProvider {
             USER_ID, userResponse.id(),
             USER_TYPE, userResponse.userType()
         );
-        final Instant now = Instant.now(clock);
+        final Instant now = timeUtil.now();
 
         final String accessToken = Jwts.builder()
             .setHeader(header)
