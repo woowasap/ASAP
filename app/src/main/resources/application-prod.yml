@@ -1,30 +1,27 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MySQL;
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
   flyway:
     enabled: true
     baseline-on-migrate: true
     baseline-version: 1
     locations: classpath:/db/migration
-    url: jdbc:h2:mem:testdb;MODE=MySQL;
-    user: sa
-    password:
 
 jwt:
   secret:
-    key: thisissecretkeyforissuejwtfortemporary
-    expiration: 216000000
+    key: ${JWT_SECRET_KEY}
+    expiration: ${JWT_SECRET_EXPIRATION}
 
 sentry:
   dsn: ${SENTRY_DSN}

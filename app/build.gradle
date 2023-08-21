@@ -37,6 +37,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    implementation 'mysql:mysql-connector-java:8.0.32'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+
     implementation 'io.sentry:sentry-logback:6.28.0'
     implementation 'io.sentry:sentry-spring-boot-starter-jakarta:6.28.0'
 

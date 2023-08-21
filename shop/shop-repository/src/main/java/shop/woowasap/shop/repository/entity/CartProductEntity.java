@@ -30,7 +30,7 @@ public class CartProductEntity {
     @JoinColumn(name = "product_id")
     private ProductEntity productEntity;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private Long quantity;
 
     protected CartProductEntity(final ProductEntity productEntity, final Long quantity) {
