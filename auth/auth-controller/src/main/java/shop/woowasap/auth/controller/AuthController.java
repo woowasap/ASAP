@@ -17,6 +17,7 @@ import shop.woowasap.auth.domain.exception.DuplicatedUsernameException;
 import shop.woowasap.auth.domain.in.UserUseCase;
 import shop.woowasap.auth.domain.in.request.UserCreateRequest;
 import shop.woowasap.auth.domain.in.response.LoginResponse;
+import shop.woowasap.core.util.web.ErrorTemplate;
 
 @RestController
 @RequestMapping("/v1")
@@ -42,22 +43,23 @@ public class AuthController {
     }
 
     @ExceptionHandler(DuplicatedUsernameException.class)
-    public ResponseEntity<String> handleAuthExceptions(
+    public ResponseEntity<ErrorTemplate> handleAuthExceptions(
         final DuplicatedUsernameException duplicatedUsernameException) {
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
-            .body(duplicatedUsernameException.getMessage());
+            .body(ErrorTemplate.of(duplicatedUsernameException.getMessage()));
     }
 
     @ExceptionHandler(AuthDomainBaseException.class)
-    public ResponseEntity<String> handleAuthExceptions(
+    public ResponseEntity<ErrorTemplate> handleAuthExceptions(
         final AuthDomainBaseException authDomainBaseException) {
 
-        return ResponseEntity.badRequest().body(authDomainBaseException.getMessage());
+        return ResponseEntity.badRequest()
+            .body(ErrorTemplate.of(authDomainBaseException.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(
+    public ResponseEntity<ErrorTemplate> handleMethodArgumentNotValidException(
         final MethodArgumentNotValidException methodArgumentNotValidException) {
 
         String defaultMessage = methodArgumentNotValidException
@@ -68,6 +70,6 @@ public class AuthController {
             .orElseThrow()
             .getDefaultMessage();
         return ResponseEntity.badRequest()
-            .body(defaultMessage);
+            .body(ErrorTemplate.of(defaultMessage));
     }
 }

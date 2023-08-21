@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shop.woowasap.auth.domain.in.LoginUser;
+import shop.woowasap.core.util.web.ErrorTemplate;
 import shop.woowasap.payment.controller.request.PayRequest;
 import shop.woowasap.payment.domain.PayType;
 import shop.woowasap.payment.domain.exception.DoesNotFindOrderException;
@@ -46,12 +47,14 @@ public class PayController {
         MethodArgumentNotValidException.class,
         IllegalArgumentException.class
     })
-    public ResponseEntity<String> handleBadRequest(Exception e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorTemplate> handleBadRequest(final Exception exception) {
+        return ResponseEntity.badRequest()
+            .body(ErrorTemplate.of(exception.getMessage()));
     }
 
     @ExceptionHandler(value = PayUserNotMatchException.class)
-    public ResponseEntity<String> handleForbidden(Exception e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    public ResponseEntity<ErrorTemplate> handleForbidden(Exception exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(ErrorTemplate.of(exception.getMessage()));
     }
 }
