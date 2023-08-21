@@ -1,10 +1,15 @@
 name: docker-image-build
 
 on:
+#  workflow_run:
+#    workflows:
+#      - acceptance-test-analyze-with-sonarcloud
+#    types:
+#      - completed
   push:
     branches:
-      - 'main'
-      - 'protoseo/base-#220' # TEST FOR DOCKER BUILD
+#      - 'release'
+      - 'protoseo/base-#220' # TEST FOR DOCKER IMAGE BUILD
 
 jobs:
   build:
@@ -41,4 +46,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/asap:develop
+            ghcr.io/${{ github.repository_owner }}/asap:${{ github.base_ref }}
