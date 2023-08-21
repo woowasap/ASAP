@@ -3,14 +3,11 @@ plugins {
 }
 
 sentry {
-    // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
-    // This enables source context, allowing you to see your source
-    // code as part of your stack traces in Sentry.
     includeSourceContext = true
 
-    org = "SENTRY_ORG"
-    projectName = "SENTRY_PROJECT_NAME"
-    authToken = "SENTRY_AUTH_TOKEN"
+    org = System.getProperty("SENTRY_ORG")
+    projectName = System.getProperty("SENTRY_PROJECT_NAME")
+    authToken = System.getProperty("SENTRY_AUTH_TOKEN")
 }
 
 dependencies {
