@@ -1,11 +1,6 @@
 name: docker-image-build
 
 on:
-  workflow_run:
-    workflows:
-      - acceptance-test-analyze-with-sonarcloud
-    types:
-      - completed
   push:
     branches:
       - 'develop'
