@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
+    locations: classpath:/db/migration
+
+jwt:
+  secret:
+    key: ${JWT_SECRET_KEY}
+    expiration: ${JWT_SECRET_EXPIRATION}
+
+shop:
+  woowasap:
+    auth:
+      path:
+        get:
+          /*/products/**
+        post:
+          /*/signup,
+          /*/login
+        admin:
+          /*/admin/**
