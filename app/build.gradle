@@ -29,3 +29,7 @@ dependencies {
     testImplementation 'org.awaitility:awaitility:4.2.0'
     runtimeOnly 'com.h2database:h2'
 }
+
+jar {
+    enabled = false
+}
