@@ -12,6 +12,14 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
+    locations: classpath:/db/migration
+    url: jdbc:h2:mem:testdb;MODE=MySQL;
+    user: sa
+    password:
 
 jwt:
   secret:
