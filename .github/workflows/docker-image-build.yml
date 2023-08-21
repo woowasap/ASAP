@@ -22,6 +22,8 @@ jobs:
           echo ${{ github.base_ref }}
           echo ${{ env.BRANCH }}
           echo ${{ env.TAG }}
+          echo $GITHUB_REF
+          echo HELLOWORLD
       - name: Checkout
         uses: actions/checkout@v3
         with:
