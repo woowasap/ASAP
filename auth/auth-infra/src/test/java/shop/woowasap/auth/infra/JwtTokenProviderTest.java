@@ -14,7 +14,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import javax.crypto.SecretKey;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import shop.woowasap.auth.domain.in.response.UserResponse;
 
-@Slf4j
 @SpringBootTest
 @DisplayName("토큰 생성기 테스트")
 @ContextConfiguration(classes = JwtTokenProvider.class)
@@ -64,7 +62,6 @@ class JwtTokenProviderTest {
 
             // when
             final String accessToken = tokenProvider.generateToken(userResponse);
-            log.info(accessToken);
             final Claims claims = Jwts.parserBuilder()
                 .setClock(() -> Date.from(fixedInstant))
                 .setSigningKey(secretKey).build()

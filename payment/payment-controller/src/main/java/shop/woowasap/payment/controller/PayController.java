@@ -2,7 +2,6 @@ package shop.woowasap.payment.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,7 +22,6 @@ import shop.woowasap.payment.domain.in.PaymentUseCase;
 import shop.woowasap.payment.domain.in.request.PaymentRequest;
 import shop.woowasap.payment.domain.in.response.PaymentResponse;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/pays")
@@ -55,11 +53,5 @@ public class PayController {
     @ExceptionHandler(value = PayUserNotMatchException.class)
     public ResponseEntity<String> handleForbidden(Exception e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-    }
-
-    @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<String> handleAllExceptions(Exception e) {
-        log.error("예상치 못한 예외 발생", e);
-        return ResponseEntity.internalServerError().body("예상치 못한 에러가 발생했습니다.");
     }
 }
