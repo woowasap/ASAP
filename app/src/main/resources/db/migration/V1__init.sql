@@ -7,7 +7,7 @@ create table if not exists users
     created_at TIMESTAMP(6) not null,
     updated_at TIMESTAMP(6) not null
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb3;
+  DEFAULT CHARSET = utf8mb4;
 
 create table if not exists product
 (
@@ -21,7 +21,7 @@ create table if not exists product
     created_at  TIMESTAMP(6) not null,
     updated_at  TIMESTAMP(6) not null
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb3;
+  DEFAULT CHARSET = utf8mb4;
 
 create table if not exists cart
 (
@@ -30,16 +30,16 @@ create table if not exists cart
     created_at TIMESTAMP(6) not null,
     updated_at TIMESTAMP(6) not null
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb3;
+  DEFAULT CHARSET = utf8mb4;
 
 create table if not exists cart_product
 (
     cart_id    bigint not null references cart (cart_id),
     product_id bigint not null references product (product_id),
-    quantity   bigint,
+    quantity   bigint not null,
     primary key (cart_id, product_id)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb3;
+  DEFAULT CHARSET = utf8mb4;
 
 create table if not exists orders
 (
@@ -49,7 +49,7 @@ create table if not exists orders
     order_type  varchar(10)  not null check (order_type in ('PENDING', 'SUCCESS', 'FAIL')),
     created_at  TIMESTAMP(6) not null
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb3;
+  DEFAULT CHARSET = utf8mb4;
 
 create table if not exists order_product
 (
@@ -61,7 +61,7 @@ create table if not exists order_product
     created_at TIMESTAMP(6) not null,
     primary key (order_id, product_id)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb3;
+  DEFAULT CHARSET = utf8mb4;
 
 create table if not exists payment
 (
@@ -75,4 +75,4 @@ create table if not exists payment
     updated_at      TIMESTAMP(6)   not null,
     index index_order_id (order_id)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb3;
+  DEFAULT CHARSET = utf8mb4;
