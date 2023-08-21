@@ -1,6 +1,7 @@
 package shop.woowasap.order.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ import shop.woowasap.order.domain.in.response.DetailOrderResponse;
 import shop.woowasap.order.domain.in.response.OrderIdResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/orders")
@@ -84,6 +86,8 @@ public class OrderController {
         DoesNotFindOrderException.class,
         DoesNotFindCartException.class})
     private ResponseEntity<ErrorTemplate> handleBadRequest(final Exception exception) {
+        log.info(exception.getMessage());
+
         return ResponseEntity.badRequest()
             .body(ErrorTemplate.of(exception.getMessage()));
     }

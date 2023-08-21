@@ -2,6 +2,7 @@ package shop.woowasap.auth.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +20,7 @@ import shop.woowasap.auth.domain.in.request.UserCreateRequest;
 import shop.woowasap.auth.domain.in.response.LoginResponse;
 import shop.woowasap.core.util.web.ErrorTemplate;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1")
 @RequiredArgsConstructor
@@ -45,6 +47,7 @@ public class AuthController {
     @ExceptionHandler(DuplicatedUsernameException.class)
     public ResponseEntity<ErrorTemplate> handleAuthExceptions(
         final DuplicatedUsernameException duplicatedUsernameException) {
+        log.info(duplicatedUsernameException.getMessage());
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(ErrorTemplate.of(duplicatedUsernameException.getMessage()));
@@ -53,6 +56,7 @@ public class AuthController {
     @ExceptionHandler(AuthDomainBaseException.class)
     public ResponseEntity<ErrorTemplate> handleAuthExceptions(
         final AuthDomainBaseException authDomainBaseException) {
+        log.info(authDomainBaseException.getMessage());
 
         return ResponseEntity.badRequest()
             .body(ErrorTemplate.of(authDomainBaseException.getMessage()));
@@ -61,6 +65,7 @@ public class AuthController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorTemplate> handleMethodArgumentNotValidException(
         final MethodArgumentNotValidException methodArgumentNotValidException) {
+        log.info(methodArgumentNotValidException.getMessage());
 
         String defaultMessage = methodArgumentNotValidException
             .getBindingResult()
