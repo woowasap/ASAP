@@ -34,7 +34,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Execute Gradle build
-        run: ./gradlew build -x test
+        run: ./gradlew build -x test -DSENTRY_ORG=${{ secrets.SENTRY_ORG }} -DSENTRY_PROJECT_NAME=${{ secrets.SENTRY_PROJECT_NAME }} -DSENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
