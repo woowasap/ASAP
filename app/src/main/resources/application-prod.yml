@@ -38,3 +38,9 @@ shop:
           /*/login
         admin:
           /*/admin/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus

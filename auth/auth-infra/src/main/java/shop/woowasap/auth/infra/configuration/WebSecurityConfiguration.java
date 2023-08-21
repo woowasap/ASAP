@@ -43,6 +43,7 @@ public class WebSecurityConfiguration {
             .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(authorize ->
                 authorize
+                    .requestMatchers("/actuator/**").permitAll()
                     .requestMatchers(HttpMethod.GET, getPaths).permitAll()
                     .requestMatchers(HttpMethod.POST, postPaths).permitAll()
                     .requestMatchers(adminPaths).hasRole("ADMIN")
