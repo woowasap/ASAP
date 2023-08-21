@@ -11,6 +11,7 @@ on:
       - 'develop'
       - 'main'
       - 'release:*'
+      - 'protoseo/base-#220'
 
 jobs:
   build:
