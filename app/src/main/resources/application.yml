@@ -26,6 +26,10 @@ jwt:
     key: thisissecretkeyforissuejwtfortemporary
     expiration: 216000000
 
+sentry:
+  dsn: SENTRY_DSN
+  traces-sample-rate: 1.0
+
 shop:
   woowasap:
     auth:
