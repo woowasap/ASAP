@@ -23,6 +23,10 @@ jwt:
     key: ${JWT_SECRET_KEY}
     expiration: ${JWT_SECRET_EXPIRATION}
 
+sentry:
+  dsn: ${SENTRY_DSN}
+  traces-sample-rate: 1.0
+
 shop:
   woowasap:
     auth:
