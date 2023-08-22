@@ -3,10 +3,10 @@ package shop.woowasap.payment.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 import shop.woowasap.order.domain.out.event.StockFailEvent;
 import shop.woowasap.order.domain.out.event.StockSuccessEvent;
 import shop.woowasap.payment.domain.PayStatus;
@@ -24,7 +24,7 @@ public class PaymentEventService {
     private final PaymentRepository paymentRepository;
 
     @Transactional
-    @EventListener(StockSuccessEvent.class)
+    @TransactionalEventListener(StockSuccessEvent.class)
     @Async(PaymentAsyncConfig.STOCK_SUCCESS)
     public void successPayment(final StockSuccessEvent stockSuccessEvent) {
         log.info("stock Success, order id : " + stockSuccessEvent.orderId());
@@ -38,7 +38,7 @@ public class PaymentEventService {
     }
 
     @Transactional
-    @EventListener(StockFailEvent.class)
+    @TransactionalEventListener(StockFailEvent.class)
     @Async(PaymentAsyncConfig.STOCK_FAIL)
     public void cancelPayment(final StockFailEvent stockFailEvent) {
         log.info("stock Success, order id : " + stockFailEvent.orderId());
