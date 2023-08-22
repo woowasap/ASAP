@@ -10,20 +10,47 @@
   <!-- Configure the Sentry appender, overriding the logging threshold to the WARN level -->
   <appender name="Sentry" class="io.sentry.logback.SentryAppender">
     <options>
-      <dsn>https://c3c1572293ee46d8b7d48d2b1372a910@o4505740223578112.ingest.sentry.io/4505740339249152</dsn>
+      <dsn>
+        https://c3c1572293ee46d8b7d48d2b1372a910@o4505740223578112.ingest.sentry.io/4505740339249152
+      </dsn>
     </options>
+  </appender>
+
+  <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>info</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+
+    <file>./logs/logs.log</file>
+
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>./logs/logs.%d{yyyy-MM-dd}_%i.log.zip</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
   </appender>
 
   <!-- Enable the Console and Sentry appenders, Console is provided as an example
   of a non-Sentry logger that is set to a different logging threshold -->
   <root level="INFO">
-    <appender-ref ref="Console" />
-    <appender-ref ref="Sentry" />
+    <appender-ref ref="Console"/>
+    <appender-ref ref="File"/>
+    <appender-ref ref="Sentry"/>
   </root>
 
   <appender name="Sentry" class="io.sentry.logback.SentryAppender">
     <options>
-      <dsn>https://c3c1572293ee46d8b7d48d2b1372a910@o4505740223578112.ingest.sentry.io/4505740339249152</dsn>
+      <dsn>
+        https://c3c1572293ee46d8b7d48d2b1372a910@o4505740223578112.ingest.sentry.io/4505740339249152
+      </dsn>
     </options>
     <!-- Optionally change minimum Event level. Default for Events is ERROR -->
     <minimumEventLevel>WARN</minimumEventLevel>

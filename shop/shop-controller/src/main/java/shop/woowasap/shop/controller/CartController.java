@@ -1,6 +1,7 @@
 package shop.woowasap.shop.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,7 @@ import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.exception.NotExistsCartProductException;
 import shop.woowasap.auth.domain.in.LoginUser;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/carts")
@@ -60,6 +62,8 @@ public class CartController {
 
     @ExceptionHandler({NotExistsCartProductException.class, NotExistsProductException.class})
     public ResponseEntity<ErrorTemplate> handleException(final Exception exception) {
+        log.info(exception.getMessage());
+
         return ResponseEntity.badRequest()
             .body(ErrorTemplate.of(exception.getMessage()));
     }

@@ -1,6 +1,7 @@
 package shop.woowasap.shop.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.woowasap.core.util.web.ErrorTemplate;
-import shop.woowasap.shop.domain.exception.NotExistsProductException;
 import shop.woowasap.shop.domain.exception.ProductException;
 import shop.woowasap.shop.domain.in.product.ProductUseCase;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/products")
@@ -38,6 +39,8 @@ public class ProductController {
 
     @ExceptionHandler(ProductException.class)
     public ResponseEntity<ErrorTemplate> handleException(final ProductException productException) {
+        log.info(productException.getMessage());
+
         return ResponseEntity.badRequest()
             .body(ErrorTemplate.of(productException.getMessage()));
     }
