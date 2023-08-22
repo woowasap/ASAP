@@ -4,6 +4,9 @@ spring:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
+    hikari:
+      connection-timeout: 3000
+      maximum-pool-size: 80
   jpa:
     hibernate:
       ddl-auto: none

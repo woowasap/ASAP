@@ -2,10 +2,10 @@ package shop.woowasap.order.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.OrderType;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
@@ -30,7 +30,7 @@ public class OrderEventService implements OrderEventConsumer {
 
     @Override
     @Async(OrderAsyncConfig.PAY_FAIL)
-    @EventListener(PayFailEvent.class)
+    @TransactionalEventListener(PayFailEvent.class)
     public void listenPayFailEvent(final PayFailEvent payFailEvent) {
         final Order order = getOrder(payFailEvent.orderId(), payFailEvent.userId());
 
@@ -39,7 +39,7 @@ public class OrderEventService implements OrderEventConsumer {
 
     @Override
     @Async(OrderAsyncConfig.PAY_SUCCESS)
-    @EventListener(PaySuccessEvent.class)
+    @TransactionalEventListener(PaySuccessEvent.class)
     public void listenPaySuccessEvent(final PaySuccessEvent paySuccessEvent) {
         final Order order = getOrder(paySuccessEvent.orderId(), paySuccessEvent.userId());
 
