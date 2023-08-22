@@ -95,11 +95,11 @@ public class SaleTimeTest {
         }
 
         @Test
-        @DisplayName("endTime - startTime 이 12시간를 초과한다면 InvalidProductSaleDurationException 를 던진다.")
+        @DisplayName("endTime - startTime 이 10일을 초과한다면 InvalidProductSaleDurationException 를 던진다.")
         void throwExceptionSaleTimeIsOver12Hour() {
             // given
             final Instant startTime = Instant.parse("2023-08-05T20:00:00.000Z");
-            final Instant endTime = Instant.parse("2023-08-07T20:00:00.000Z");
+            final Instant endTime = Instant.parse("2023-08-20T20:00:00.000Z");
             final Instant nowTime = Instant.parse("2023-08-01T20:00:00.000Z");
 
             // when
