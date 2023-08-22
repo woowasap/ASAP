@@ -2,6 +2,7 @@ package shop.woowasap.payment.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import shop.woowasap.payment.domain.exception.DoesNotFindPaymentException;
 import shop.woowasap.payment.domain.out.PaymentRepository;
 import shop.woowasap.payment.service.config.PaymentAsyncConfig;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -25,6 +27,7 @@ public class PaymentEventService {
     @EventListener(StockSuccessEvent.class)
     @Async(PaymentAsyncConfig.STOCK_SUCCESS)
     public void successPayment(final StockSuccessEvent stockSuccessEvent) {
+        log.info("stock Success, order id : " + stockSuccessEvent.orderId());
         final List<Payment> payments = paymentRepository.findAllByOrderId(
             stockSuccessEvent.orderId());
         if (payments.isEmpty()) {
@@ -38,6 +41,7 @@ public class PaymentEventService {
     @EventListener(StockFailEvent.class)
     @Async(PaymentAsyncConfig.STOCK_FAIL)
     public void cancelPayment(final StockFailEvent stockFailEvent) {
+        log.info("stock Success, order id : " + stockFailEvent.orderId());
         final List<Payment> payments = paymentRepository.findAllByOrderId(
             stockFailEvent.orderId());
         if (payments.isEmpty()) {

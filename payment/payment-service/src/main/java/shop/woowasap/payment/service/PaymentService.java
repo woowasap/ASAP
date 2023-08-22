@@ -1,6 +1,7 @@
 package shop.woowasap.payment.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import shop.woowasap.payment.domain.in.request.PaymentRequest;
 import shop.woowasap.payment.domain.in.response.PaymentResponse;
 import shop.woowasap.payment.domain.out.PaymentRepository;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -37,12 +39,14 @@ public class PaymentService implements PaymentUseCase {
         final Payment payment = buildPayment(paymentRequest, order);
 
         if (Boolean.TRUE.equals(paymentRequest.isSuccess())) {
-            paymentRepository.save(payment);
+            Payment savedPayment = paymentRepository.save(payment);
+            log.info("payment saved, order id : " + savedPayment.getOrderId());
             applicationEventPublisher.publishEvent(
-                new PaySuccessEvent(paymentRequest.orderId(), paymentRequest.userId()));
+                new PaySuccessEvent(savedPayment.getOrderId(), savedPayment.getUserId()));
             return PaymentResponse.success();
         }
 
+        log.info("payment Failed, order id : " + paymentRequest.orderId());
         paymentRepository.save(payment.changeStatus(PayStatus.FAIL));
         return PaymentResponse.fail();
     }
