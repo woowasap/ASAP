@@ -19,7 +19,7 @@ public final class Name {
 
     private void validate(final String value) {
         if (value == null || value.isBlank()) {
-            throw new InvalidProductNameException();
+            throw new InvalidProductNameException("name 이 비어있거나 Null 입니다.");
         }
     }
 }

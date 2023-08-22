@@ -19,7 +19,7 @@ public final class Description {
 
     private void validate(final String value) {
         if (value == null || value.isBlank()) {
-            throw new InvalidProductDescriptionException();
+            throw new InvalidProductDescriptionException("description 이 비어있거나 Null 입니다.");
         }
     }
 }

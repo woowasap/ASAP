@@ -22,7 +22,7 @@ public final class Price {
     private void validate(final String value) {
         if (value == null || value.isBlank() || !value.matches(NUMBER_PATTERN_REGEX)
             || new BigInteger(value).compareTo(BigInteger.ZERO) <= 0) {
-            throw new InvalidProductPriceException();
+            throw new InvalidProductPriceException("price 는 양의 정수여야힙니다.");
         }
     }
 }

@@ -19,7 +19,7 @@ public final class Quantity {
 
     private void validate(final Long value) {
         if (value == null || value < 0) {
-            throw new InvalidProductQuantityException();
+            throw new InvalidProductQuantityException("quantity 가 null 이거나 음수입니다.");
         }
     }
 }
