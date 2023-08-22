@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import java.math.BigInteger;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -87,6 +88,14 @@ class PaymentServiceTest {
                         .build()))
                 .createdAt(instant)
                 .build();
+            final Payment payment = Payment.builder()
+                .paymentId(1234L)
+                .orderId(orderId)
+                .userId(userId)
+                .purchasedMoney(BigInteger.valueOf(10000))
+                .payType(PayType.CARD)
+                .payStatus(PayStatus.PENDING)
+                .build();
 
             final PaymentRequest paymentRequest = new PaymentRequest(orderId, userId, payType,
                 isSuccess);
@@ -96,7 +105,7 @@ class PaymentServiceTest {
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
             when(paymentRepository.findAllByOrderId(anyLong())).thenReturn(List.of());
-            when(paymentRepository.save(any())).thenReturn(null);
+            when(paymentRepository.save(any())).thenReturn(payment);
 
             // when
             final PaymentResponse result = paymentService.pay(paymentRequest);
@@ -129,6 +138,14 @@ class PaymentServiceTest {
                         .build()))
                 .createdAt(instant)
                 .build();
+            final Payment payment = Payment.builder()
+                .paymentId(1234L)
+                .orderId(orderId)
+                .userId(userId)
+                .purchasedMoney(BigInteger.valueOf(10000))
+                .payType(PayType.CARD)
+                .payStatus(PayStatus.PENDING)
+                .build();
 
             final PaymentRequest paymentRequest = new PaymentRequest(orderId, userId, payType,
                 isSuccess);
@@ -140,7 +157,7 @@ class PaymentServiceTest {
             when(paymentRepository.findAllByOrderId(anyLong())).thenReturn(List.of(
                 Payment.builder().payStatus(PayStatus.FAIL).build()
             ));
-            when(paymentRepository.save(any())).thenReturn(null);
+            when(paymentRepository.save(any())).thenReturn(payment);
 
             // when
             final PaymentResponse result = paymentService.pay(paymentRequest);
