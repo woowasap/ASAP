@@ -54,7 +54,7 @@ public class SaleTime {
 
     private void validateStartTime(final Instant nowTime, final Instant startTime) {
         if (startTime.isBefore(
-            nowTime.plusSeconds(SECONDS_OF_MINUTE * MIN_DIFF_NOW_AND_START_MINUTE))) {
+            nowTime.plusSeconds((long) SECONDS_OF_MINUTE * MIN_DIFF_NOW_AND_START_MINUTE))) {
             throw new InvalidProductStartTimeException(
                 MessageFormat.format("startTime 은 현재 시간으로부터 \"{0}\"분 이후여야합니다.",
                     MIN_DIFF_NOW_AND_START_MINUTE));
@@ -63,8 +63,8 @@ public class SaleTime {
 
     private void validateSaleDuration(final Instant startTime, final Instant endTime) {
         final long saleTimeSeconds = Duration.between(startTime, endTime).getSeconds();
-        if (saleTimeSeconds < SECONDS_OF_HOUR * MIN_SALE_DURATION_HOUR
-            || saleTimeSeconds > SECONDS_OF_HOUR * MAX_SALE_DURATION_HOUR) {
+        if (saleTimeSeconds < (long) SECONDS_OF_HOUR * MIN_SALE_DURATION_HOUR
+            || saleTimeSeconds > (long) SECONDS_OF_HOUR * MAX_SALE_DURATION_HOUR) {
             throw new InvalidProductSaleDurationException(
                 MessageFormat.format("판매 시간은 \"{0}\"시간과 \"{1}\"시간 사이어야합니다.", MIN_SALE_DURATION_HOUR,
                     MAX_SALE_DURATION_HOUR)
