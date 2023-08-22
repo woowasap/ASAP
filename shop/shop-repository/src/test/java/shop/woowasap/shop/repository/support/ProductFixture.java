@@ -1,6 +1,5 @@
 package shop.woowasap.shop.repository.support;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import shop.woowasap.shop.domain.product.Product;
@@ -22,14 +21,11 @@ public class ProductFixture {
     public static final LocalDateTime BEFORE_SALE_START_TIME = LocalDateTime.of(2023, 8, 2, 0, 0);
     public static final LocalDateTime BEFORE_SALE_END_TIME = LocalDateTime.of(2023, 8, 2, 1, 0);
 
-    private static final Instant BEFORE_ALL_TIME = Instant.parse("2022-08-01T00:00:00.000Z");
-
     public static Product beforeSaleProduct(final Long id) {
 
         final SaleTime saleTime = SaleTime.builder()
             .startTime(BEFORE_SALE_START_TIME.toInstant(ZoneOffset.UTC))
             .endTime(BEFORE_SALE_END_TIME.toInstant(ZoneOffset.UTC))
-            .nowTime(BEFORE_ALL_TIME)
             .build();
 
         return Product.builder()
@@ -46,7 +42,6 @@ public class ProductFixture {
         final SaleTime saleTime = SaleTime.builder()
             .startTime(ON_SALE_START_TIME.toInstant(ZoneOffset.UTC))
             .endTime(ON_SALE_END_TIME.toInstant(ZoneOffset.UTC))
-            .nowTime(BEFORE_ALL_TIME)
             .build();
 
         return Product.builder()
@@ -63,7 +58,6 @@ public class ProductFixture {
         final SaleTime saleTime = SaleTime.builder()
             .startTime(ON_SALE_START_TIME.toInstant(ZoneOffset.UTC))
             .endTime(ON_SALE_END_TIME.toInstant(ZoneOffset.UTC))
-            .nowTime(BEFORE_ALL_TIME)
             .build();
 
         return Product.builder()
@@ -80,7 +74,6 @@ public class ProductFixture {
         final SaleTime saleTime = SaleTime.builder()
             .startTime(AFTER_SALE_START_TIME.toInstant(ZoneOffset.UTC))
             .endTime(AFTER_SALE_END_TIME.toInstant(ZoneOffset.UTC))
-            .nowTime(BEFORE_ALL_TIME)
             .build();
 
         return Product.builder()
