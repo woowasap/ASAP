@@ -18,7 +18,7 @@ public class SaleTime {
 
     public static final int MIN_DIFF_NOW_AND_START_SECOND = 60 * 10;
     public static final int MIN_SALE_DURATION_HOUR = 1;
-    public static final int MAX_SALE_DURATION_HOUR = 12;
+    public static final int MAX_SALE_DURATION_HOUR = 24 * 10;
     public static final int SECONDS_OF_HOUR = 60 * 60;
 
     private final Instant startTime;

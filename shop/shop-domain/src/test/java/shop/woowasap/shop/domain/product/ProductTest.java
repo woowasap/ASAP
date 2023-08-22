@@ -182,11 +182,11 @@ class ProductTest {
         }
 
         @Test
-        @DisplayName("판매 시간이 12시간을 초과하는 경우, InvalidProductSaleDurationException 반환한다.")
+        @DisplayName("판매 시간이 10일을 초과하는 경우, InvalidProductSaleDurationException 반환한다.")
         void throwExceptionWhenDurationIsOver12Hour() {
             // given
             final Instant startTime = Instant.parse("2023-08-05T20:00:00.000Z");
-            final Instant endTime = Instant.parse("2023-08-07T20:00:00.000Z");
+            final Instant endTime = Instant.parse("2023-08-20T20:00:00.000Z");
             final Instant nowTime = Instant.parse("2023-08-01T00:00:00.000Z");
 
             // when

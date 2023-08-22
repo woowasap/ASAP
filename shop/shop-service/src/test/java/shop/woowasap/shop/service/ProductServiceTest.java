@@ -45,6 +45,8 @@ import shop.woowasap.shop.service.support.fixture.ProductFixture;
 @ContextConfiguration(classes = ProductService.class)
 class ProductServiceTest {
 
+    private static final Instant NOW_TIME = Instant.parse("2023-08-01T01:00:00.000Z");
+
     @Autowired
     private ProductService productService;
 
@@ -59,7 +61,7 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUpTime() {
-        when(timeUtil.now()).thenReturn(Instant.parse("2023-08-01T01:00:00.000Z"));
+        when(timeUtil.now()).thenReturn(NOW_TIME);
     }
 
     @Nested
@@ -242,11 +244,9 @@ class ProductServiceTest {
             Product product1 = beforeSaleProduct(1L);
             Product product2 = beforeSaleProduct(2L);
 
-            final Instant nowTime = Instant.parse("2023-08-01T01:00:00.000Z");
-
             List<Product> products = List.of(product1, product2);
 
-            when(productRepository.findAllValidWithPagination(page, pageSize, nowTime)).thenReturn(
+            when(productRepository.findAllValidWithPagination(page, pageSize, NOW_TIME)).thenReturn(
                 new ProductsPaginationResponse(products, page, totalPage));
 
             // when
