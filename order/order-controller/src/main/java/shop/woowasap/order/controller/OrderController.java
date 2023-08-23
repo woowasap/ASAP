@@ -3,6 +3,7 @@ package shop.woowasap.order.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,6 +76,15 @@ public class OrderController {
         @PathVariable("order-id") final long orderId, @LoginUser final Long userId) {
 
         return ResponseEntity.ok(orderUseCase.getOrderByOrderIdAndUserId(orderId, userId));
+    }
+
+    @DeleteMapping("/{order-id}")
+    public ResponseEntity<Void> cancelOrder(@PathVariable("order-id") final long orderId,
+        @LoginUser final Long userId) {
+
+        orderUseCase.cancelOrder(orderId, userId);
+
+        return ResponseEntity.ok().build();
     }
 
     @ExceptionHandler({DoesNotFindProductException.class,
