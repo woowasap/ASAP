@@ -2,14 +2,13 @@ package shop.woowasap.payment.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.core.util.time.TimeUtil;
 import shop.woowasap.order.domain.Order;
+import shop.woowasap.order.domain.exception.DoesNotOrderedException;
 import shop.woowasap.order.domain.in.OrderConnector;
-import shop.woowasap.order.domain.in.event.PaySuccessEvent;
 import shop.woowasap.payment.domain.PayStatus;
 import shop.woowasap.payment.domain.Payment;
 import shop.woowasap.payment.domain.exception.DoesNotFindOrderException;
@@ -26,7 +25,6 @@ import shop.woowasap.payment.domain.out.PaymentRepository;
 @Transactional(readOnly = true)
 public class PaymentService implements PaymentUseCase {
 
-    private final ApplicationEventPublisher applicationEventPublisher;
     private final PaymentRepository paymentRepository;
     private final OrderConnector orderConnector;
     private final IdGenerator idGenerator;
@@ -38,17 +36,20 @@ public class PaymentService implements PaymentUseCase {
         final Order order = findAndValidateOrder(paymentRequest);
         final Payment payment = buildPayment(paymentRequest, order);
 
-        if (Boolean.TRUE.equals(paymentRequest.isSuccess())) {
-            Payment savedPayment = paymentRepository.save(payment);
-            log.info("payment saved, order id : " + savedPayment.getOrderId());
-            applicationEventPublisher.publishEvent(
-                new PaySuccessEvent(savedPayment.getOrderId(), savedPayment.getUserId()));
-            return PaymentResponse.success();
+        if (Boolean.FALSE.equals(paymentRequest.isSuccess())) {
+            paymentRepository.save(payment.changeStatus(PayStatus.FAIL));
+            return PaymentResponse.fail();
         }
 
-        log.info("payment Failed, order id : " + paymentRequest.orderId());
-        paymentRepository.save(payment.changeStatus(PayStatus.FAIL));
-        return PaymentResponse.fail();
+        try {
+            orderConnector.consumeStock(order.getId(), order.getUserId());
+        } catch (final DoesNotOrderedException doesNotOrderedException) {
+            paymentRepository.save(payment.changeStatus(PayStatus.FAIL));
+            return PaymentResponse.fail();
+        }
+
+        paymentRepository.save(payment.changeStatus(PayStatus.SUCCESS));
+        return PaymentResponse.success();
     }
 
     private Order findAndValidateOrder(final PaymentRequest paymentRequest) {

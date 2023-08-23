@@ -7,4 +7,6 @@ public interface OrderConnector {
 
     Optional<Order> findByOrderIdAndUserId(final long orderId, final long userId);
 
+    void consumeStock(final long orderId, final long userId);
+
 }
