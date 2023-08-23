@@ -1,5 +1,7 @@
 package shop.woowasap.accept;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.math.BigInteger;
@@ -12,21 +14,22 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import shop.woowasap.accept.support.api.AuthApiSupporter;
 import shop.woowasap.accept.support.api.CartApiSupporter;
 import shop.woowasap.accept.support.api.OrderApiSupporter;
+import shop.woowasap.accept.support.api.PayApiSupporter;
 import shop.woowasap.accept.support.api.ShopApiSupporter;
 import shop.woowasap.accept.support.fixture.ProductFixture;
 import shop.woowasap.accept.support.valid.HttpValidator;
 import shop.woowasap.accept.support.valid.OrderValidator;
-import shop.woowasap.core.util.time.TimeUtil;
 import shop.woowasap.order.controller.request.OrderProductQuantityRequest;
 import shop.woowasap.order.domain.in.response.DetailOrderProductResponse;
 import shop.woowasap.order.domain.in.response.DetailOrderResponse;
+import shop.woowasap.order.domain.in.response.OrderIdResponse;
 import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
+import shop.woowasap.payment.controller.request.PayRequest;
 import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
@@ -191,6 +194,35 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         // then
         HttpValidator.assertBadRequest(result);
+    }
+
+    @Test
+    @DisplayName("구매 취소 API는 Order의 상태를 canceled로 변경하고, pay의 상태를 canceled로 변경한다.")
+    void changePayAndOrderStatusCanceled() {
+        // given
+        final long productId = getRandomProduct(accessToken).productId();
+        final int quantity = 2;
+        final OrderProductQuantityRequest orderProductRequest = new OrderProductQuantityRequest(
+            quantity);
+
+        timeUtil.clock(Clock.fixed(Instant.now().plus(25, ChronoUnit.MINUTES), ZoneId.of("UTC")));
+
+        final OrderIdResponse orderIdResponse = OrderApiSupporter.orderProduct(productId,
+            orderProductRequest,
+            accessToken).as(OrderIdResponse.class);
+
+        final PayRequest payRequest = new PayRequest("CARD", true);
+
+        PayApiSupporter.pay(payRequest, orderIdResponse.orderId(), accessToken);
+
+        // when
+        final ExtractableResponse<Response> result = OrderApiSupporter.cancelOrder(orderIdResponse.orderId(), accessToken);
+
+        // then
+        HttpValidator.assertOk(result);
+        final DetailOrderResponse detailOrderResponse = OrderApiSupporter.getOrderByOrderId(orderIdResponse.orderId(), accessToken)
+            .as(DetailOrderResponse.class);
+        assertThat(detailOrderResponse.type()).isEqualTo("CANCELED");
     }
 
     private ProductResponse getRandomProduct(final String accessToken) {

@@ -73,11 +73,10 @@ public class PaymentService implements PaymentUseCase {
     }
 
     private void validateDuplicatedPay(final PaymentRequest paymentRequest) {
-        paymentRepository.findAllByOrderId(paymentRequest.orderId()).forEach(payment -> {
-            if (!payment.getPayStatus().equals(PayStatus.FAIL)) {
-                throw new DuplicatedPayException(paymentRequest.orderId());
-            }
-        });
+        paymentRepository.findByOrderId(paymentRequest.orderId())
+            .ifPresent(payment -> {
+                throw new DuplicatedPayException(payment.getOrderId());
+            });
     }
 
     private Payment buildPayment(final PaymentRequest paymentRequest, final Order order) {

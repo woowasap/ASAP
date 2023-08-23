@@ -99,7 +99,7 @@ class PaymentServiceTest {
                 Optional.of(order));
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
-            when(paymentRepository.findAllByOrderId(anyLong())).thenReturn(List.of());
+            when(paymentRepository.findByOrderId(anyLong())).thenReturn(Optional.empty());
             when(paymentRepository.save(any())).thenReturn(payment);
 
             // when
@@ -147,9 +147,7 @@ class PaymentServiceTest {
                 Optional.of(order));
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
-            when(paymentRepository.findAllByOrderId(anyLong())).thenReturn(List.of(
-                Payment.builder().payStatus(PayStatus.FAIL).build()
-            ));
+            when(paymentRepository.findByOrderId(anyLong())).thenReturn(Optional.empty());
             when(paymentRepository.save(any())).thenReturn(payment);
 
             // when
@@ -247,7 +245,7 @@ class PaymentServiceTest {
                 Optional.of(order));
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
-            when(paymentRepository.findAllByOrderId(anyLong())).thenReturn(List.of(
+            when(paymentRepository.findByOrderId(anyLong())).thenReturn(Optional.of(
                 Payment.builder().payStatus(PayStatus.SUCCESS).build()
             ));
 
@@ -296,7 +294,7 @@ class PaymentServiceTest {
                 Optional.of(order));
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
-            when(paymentRepository.findAllByOrderId(anyLong())).thenReturn(List.of());
+            when(paymentRepository.findByOrderId(anyLong())).thenReturn(Optional.empty());
             when(paymentRepository.save(any())).thenReturn(payment);
             doThrow(DoesNotOrderedException.class).when(orderConnector)
                 .consumeStock(order.getId(), order.getUserId());

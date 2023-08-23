@@ -14,4 +14,6 @@ public interface OrderUseCase {
     OrdersResponse getOrderByUserId(final long userId, final int page, final int size);
 
     DetailOrderResponse getOrderByOrderIdAndUserId(final long orderId, final long userId);
+
+    void cancelOrder(final long orderId, final long userId);
 }
