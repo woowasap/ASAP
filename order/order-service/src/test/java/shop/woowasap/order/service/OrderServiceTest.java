@@ -267,4 +267,49 @@ class OrderServiceTest {
             assertThat(result).isInstanceOf(DoesNotFindOrderException.class);
         }
     }
+
+    @Nested
+    @DisplayName("cancelOrder 메소드는")
+    class cancelOrderMethod {
+
+        @Test
+        @DisplayName("orderId와 userId를 받아, 주문을 취소한다.")
+        void cancelOrderWhenReceiveOrderIdAndUserId() {
+            // given
+            final long orderId = 1L;
+            final long userId = 1L;
+
+            final Product product = ProductFixture.getDefaultBuilder().build();
+            final OrderProduct orderProduct = OrderProductFixture.from(product);
+            final Order defaultOrder = OrderFixture.getDefault(List.of(orderProduct));
+
+            when(orderRepository.findOrderByOrderIdAndUserId(orderId, userId)).thenReturn(
+                Optional.of(defaultOrder));
+
+            // when
+            final Exception result = catchException(
+                () -> orderUseCase.cancelOrder(orderId, userId));
+
+            // then
+            assertThat(result).isNull();
+        }
+
+        @Test
+        @DisplayName("orderId와 userId에 해당하는 Order가 없을경우, DoesNotFindOrderException 를 던진다.")
+        void throwDoesNotFindOrderExceptionIfOrderNotExist() {
+            // given
+            final long orderId = 1L;
+            final long userId = 1L;
+
+            when(orderRepository.findOrderByOrderIdAndUserId(orderId, userId)).thenReturn(
+                Optional.empty());
+
+            // when
+            final Exception result = catchException(
+                () -> orderUseCase.cancelOrder(orderId, userId));
+
+            // then
+            assertThat(result).isInstanceOf(DoesNotFindOrderException.class);
+        }
+    }
 }

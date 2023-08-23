@@ -3,11 +3,13 @@ package shop.woowasap.order.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.core.util.time.TimeUtil;
 import shop.woowasap.order.domain.Order;
+import shop.woowasap.order.domain.OrderType;
 import shop.woowasap.order.domain.exception.DoesNotFindCartException;
 import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.exception.DoesNotFindProductException;
@@ -20,6 +22,7 @@ import shop.woowasap.order.domain.in.response.OrderProductResponse;
 import shop.woowasap.order.domain.in.response.OrderResponse;
 import shop.woowasap.order.domain.in.response.OrdersResponse;
 import shop.woowasap.order.domain.out.OrderRepository;
+import shop.woowasap.order.domain.out.event.OrderCanceledEvent;
 import shop.woowasap.order.domain.out.response.OrdersPaginationResponse;
 import shop.woowasap.order.service.mapper.OrderMapper;
 import shop.woowasap.shop.domain.cart.Cart;
@@ -37,6 +40,7 @@ public class OrderService implements OrderUseCase {
     private final CartConnector cartConnector;
     private final OrderRepository orderRepository;
     private final TimeUtil timeUtil;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Value("${shop.woowasap.locale:UTC}")
     private String locale;
@@ -45,7 +49,8 @@ public class OrderService implements OrderUseCase {
     @Transactional
     public OrderIdResponse orderProduct(final OrderProductRequest orderProductRequest) {
         final Product product = getProductByProductId(orderProductRequest.productId());
-        final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product, timeUtil.now());
+        final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product,
+            timeUtil.now());
 
         orderRepository.persist(order);
 
@@ -90,6 +95,17 @@ public class OrderService implements OrderUseCase {
             .stream()
             .map(OrderMapper::toOrderProductResponse)
             .toList();
+    }
+
+    @Override
+    @Transactional
+    public void cancelOrder(final long orderId, final long userId) {
+        final Order order = orderRepository.findOrderByOrderIdAndUserId(orderId, userId)
+            .orElseThrow(() -> new DoesNotFindOrderException(orderId, userId));
+
+        orderRepository.persist(order.updateOrderType(OrderType.CANCELED));
+
+        applicationEventPublisher.publishEvent(new OrderCanceledEvent(order.getId()));
     }
 
     @Override

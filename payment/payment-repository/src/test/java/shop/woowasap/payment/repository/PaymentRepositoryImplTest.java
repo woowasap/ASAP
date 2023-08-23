@@ -1,24 +1,20 @@
 package shop.woowasap.payment.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import java.math.BigInteger;
 import java.time.Instant;
-import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import shop.woowasap.BeanScanBaseLocation;
 import shop.woowasap.payment.domain.PayStatus;
 import shop.woowasap.payment.domain.PayType;
 import shop.woowasap.payment.domain.Payment;
-import shop.woowasap.payment.repository.entity.PaymentEntity;
 import shop.woowasap.payment.repository.jpa.PaymentEntityRepository;
 
 @DataJpaTest
@@ -29,7 +25,7 @@ class PaymentRepositoryImplTest {
     @Autowired
     private PaymentRepositoryImpl paymentRepository;
 
-    @MockBean
+    @Autowired
     private PaymentEntityRepository paymentEntityRepository;
 
     @Nested
@@ -50,9 +46,6 @@ class PaymentRepositoryImplTest {
                 .payStatus(PayStatus.SUCCESS)
                 .createdAt(instant)
                 .build();
-            final PaymentEntity entity = PaymentEntityMapper.toEntity(payment);
-
-            when(paymentEntityRepository.save(any())).thenReturn(entity);
 
             // when
             final Payment result = paymentRepository.save(payment);
@@ -65,7 +58,7 @@ class PaymentRepositoryImplTest {
     }
 
     @Nested
-    @DisplayName("findAllByOrderId 메소드")
+    @DisplayName("findByOrderId 메소드")
     class FindByOrderIdMethod {
 
         @Test
@@ -82,16 +75,15 @@ class PaymentRepositoryImplTest {
                 .payStatus(PayStatus.SUCCESS)
                 .createdAt(instant)
                 .build();
-            final PaymentEntity entity = PaymentEntityMapper.toEntity(payment);
 
-            when(paymentEntityRepository.findByOrderIdOrderByUpdatedAtDesc(12L)).thenReturn(
-                List.of(entity));
+            paymentRepository.save(payment);
 
             // when
-            final List<Payment> result = paymentRepository.findAllByOrderId(12L);
+            final Optional<Payment> result = paymentRepository.findByOrderId(12L);
 
             // then
-            assertThat(result.get(0)).usingRecursiveComparison().ignoringFields("createdAt")
+            assertThat(result).isPresent();
+            assertThat(result.get()).usingRecursiveComparison().ignoringFields("createdAt")
                 .isEqualTo(payment);
         }
     }
