@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.math.BigInteger;
@@ -17,15 +18,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.event.ApplicationEvents;
-import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.core.util.time.TimeUtil;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.OrderProduct;
+import shop.woowasap.order.domain.exception.DoesNotOrderedException;
 import shop.woowasap.order.domain.in.OrderConnector;
-import shop.woowasap.order.domain.in.event.PaySuccessEvent;
 import shop.woowasap.payment.domain.PayStatus;
 import shop.woowasap.payment.domain.PayType;
 import shop.woowasap.payment.domain.Payment;
@@ -36,7 +35,6 @@ import shop.woowasap.payment.domain.in.request.PaymentRequest;
 import shop.woowasap.payment.domain.in.response.PaymentResponse;
 import shop.woowasap.payment.domain.out.PaymentRepository;
 
-@RecordApplicationEvents
 @ExtendWith(SpringExtension.class)
 @DisplayName("PaymentService 클래스")
 @ContextConfiguration(classes = PaymentService.class)
@@ -44,9 +42,6 @@ class PaymentServiceTest {
 
     @Autowired
     private PaymentService paymentService;
-
-    @Autowired
-    private ApplicationEvents applicationEvents;
 
     @MockBean
     private PaymentRepository paymentRepository;
@@ -111,9 +106,7 @@ class PaymentServiceTest {
             final PaymentResponse result = paymentService.pay(paymentRequest);
 
             // then
-            long count = applicationEvents.stream(PaySuccessEvent.class).count();
             assertThat(result.isSuccess()).isTrue();
-            assertThat(count).isOne();
         }
 
         @Test
@@ -168,7 +161,7 @@ class PaymentServiceTest {
 
         @Test
         @DisplayName("orderId 없으면 예외 발생")
-        void payOrderIdNotFournThenThrow() {
+        void payOrderIdNotFoundThenThrow() {
             // given
             final long orderId = 123L;
             final long userId = 12345L;
@@ -265,5 +258,54 @@ class PaymentServiceTest {
             assertThat(exception).isInstanceOf(DuplicatedPayException.class);
         }
 
+        @Test
+        @DisplayName("consumeStock이 실패하면, fail을 반환한다.")
+        void returnFailIfConsumeStockFail() {
+            // given
+            final long orderId = 123L;
+            final long userId = 12345L;
+            final PayType payType = PayType.CARD;
+            final boolean isSuccess = true;
+            final Order order = Order.builder()
+                .id(orderId)
+                .userId(userId)
+                .orderProducts(List.of(
+                    OrderProduct.builder()
+                        .productId(1L)
+                        .name("name")
+                        .quantity(1L)
+                        .price("10000")
+                        .startTime(Instant.MIN)
+                        .endTime(Instant.MAX)
+                        .build()))
+                .createdAt(instant)
+                .build();
+            final Payment payment = Payment.builder()
+                .paymentId(1234L)
+                .orderId(orderId)
+                .userId(userId)
+                .purchasedMoney(BigInteger.valueOf(10000))
+                .payType(PayType.CARD)
+                .payStatus(PayStatus.PENDING)
+                .build();
+
+            final PaymentRequest paymentRequest = new PaymentRequest(orderId, userId, payType,
+                isSuccess);
+
+            when(orderConnector.findByOrderIdAndUserId(orderId, userId)).thenReturn(
+                Optional.of(order));
+            when(idGenerator.generate()).thenReturn(1L);
+            when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
+            when(paymentRepository.findAllByOrderId(anyLong())).thenReturn(List.of());
+            when(paymentRepository.save(any())).thenReturn(payment);
+            doThrow(DoesNotOrderedException.class).when(orderConnector)
+                .consumeStock(order.getId(), order.getUserId());
+
+            // when
+            final PaymentResponse result = paymentService.pay(paymentRequest);
+
+            // then
+            assertThat(result.isSuccess()).isFalse();
+        }
     }
 }
