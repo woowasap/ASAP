@@ -76,7 +76,7 @@ public final class OrderApiSupporter {
             .accept(JSON)
             .header(HttpHeaders.AUTHORIZATION, token)
             .when().log().all()
-            .post(API_VERSION + "/orders/{order-id}", orderId)
+            .delete(API_VERSION + "/orders/{order-id}", orderId)
             .then().log().all()
             .extract();
     }
