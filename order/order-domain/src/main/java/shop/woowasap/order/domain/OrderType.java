@@ -4,6 +4,7 @@ public enum OrderType {
 
     PENDING,
     SUCCESS,
+    CANCELED,
     FAIL,
     ;
 }

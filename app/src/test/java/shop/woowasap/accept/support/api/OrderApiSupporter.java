@@ -68,4 +68,16 @@ public final class OrderApiSupporter {
             .then().log().all()
             .extract();
     }
+
+    public static ExtractableResponse<Response> cancelOrder(final long orderId, String token) {
+
+        return given().log().all()
+            .contentType(JSON)
+            .accept(JSON)
+            .header(HttpHeaders.AUTHORIZATION, token)
+            .when().log().all()
+            .post(API_VERSION + "/orders/{order-id}", orderId)
+            .then().log().all()
+            .extract();
+    }
 }
