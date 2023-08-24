@@ -7,7 +7,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-      show-sql: true
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -16,11 +16,16 @@ spring:
     enabled: true
     baseline-on-migrate: true
     baseline-version: 0
+    locations: classpath:/db/migration
 
 jwt:
   secret:
     key: thisissecretkeyforissuejwtfortemporary
     expiration: 216000000
+
+sentry:
+  dsn: ${SENTRY_DSN}
+  traces-sample-rate: 1.0
 
 shop:
   woowasap:
