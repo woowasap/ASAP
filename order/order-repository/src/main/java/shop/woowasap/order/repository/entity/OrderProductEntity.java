@@ -44,7 +44,7 @@ public class OrderProductEntity extends BaseEntity implements Persistable<OrderP
     private Long quantity;
 
     @Transient
-    private boolean isNew = true;
+    private boolean isNew = false;
 
     protected OrderProductEntity(final OrderEntity orderEntity, final OrderProduct orderProduct) {
         this.orderEntity = orderEntity;

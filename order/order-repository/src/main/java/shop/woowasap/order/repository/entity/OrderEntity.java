@@ -47,7 +47,7 @@ public class OrderEntity extends BaseEntity implements Persistable<Long> {
     private OrderEntityType orderType;
 
     @Transient
-    private boolean isNew = true;
+    private boolean isNew = false;
 
     public OrderEntity(final Order order) {
         this.id = order.getId();

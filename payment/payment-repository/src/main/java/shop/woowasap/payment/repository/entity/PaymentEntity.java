@@ -48,7 +48,7 @@ public class PaymentEntity extends BaseEntity implements Persistable<Long> {
     private PaymentEntityStatus payStatus;
 
     @Transient
-    private boolean isNew = true;
+    private boolean isNew;
 
     @Builder
     public PaymentEntity(Long paymentId, Long userId, Long orderId, BigInteger purchasedMoney,

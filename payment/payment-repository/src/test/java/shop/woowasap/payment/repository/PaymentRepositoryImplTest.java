@@ -2,6 +2,7 @@ package shop.woowasap.payment.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.persistence.EntityManager;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Optional;
@@ -28,6 +29,9 @@ class PaymentRepositoryImplTest {
     @Autowired
     private PaymentEntityRepository paymentEntityRepository;
 
+    @Autowired
+    private EntityManager entityManager;
+
     @Nested
     @DisplayName("create 메소드")
     class createMethod {
@@ -53,6 +57,7 @@ class PaymentRepositoryImplTest {
             // then
             assertThat(result).usingRecursiveComparison().ignoringFields("createdAt")
                 .isEqualTo(payment);
+            entityManager.flush();
         }
 
     }
