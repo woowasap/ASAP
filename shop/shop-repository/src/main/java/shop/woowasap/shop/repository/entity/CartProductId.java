@@ -11,6 +11,11 @@ public class CartProductId implements Serializable {
     private CartProductId() {
     }
 
+    protected CartProductId(final CartEntity cartEntity, final ProductEntity productEntity) {
+        this.cartEntity = cartEntity;
+        this.productEntity = productEntity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

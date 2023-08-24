@@ -24,6 +24,6 @@ public class PaymentEventService {
 
         payment.changeStatus(PayStatus.CANCELED);
 
-        paymentRepository.save(payment);
+        paymentRepository.persist(payment);
     }
 }

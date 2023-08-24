@@ -37,18 +37,18 @@ public class PaymentService implements PaymentUseCase {
         final Payment payment = buildPayment(paymentRequest, order);
 
         if (Boolean.FALSE.equals(paymentRequest.isSuccess())) {
-            paymentRepository.save(payment.changeStatus(PayStatus.FAIL));
+            paymentRepository.create(payment.changeStatus(PayStatus.FAIL));
             return PaymentResponse.fail();
         }
 
         try {
             orderConnector.consumeStock(order.getId(), order.getUserId());
         } catch (final DoesNotOrderedException doesNotOrderedException) {
-            paymentRepository.save(payment.changeStatus(PayStatus.FAIL));
+            paymentRepository.create(payment.changeStatus(PayStatus.FAIL));
             return PaymentResponse.fail();
         }
 
-        paymentRepository.save(payment.changeStatus(PayStatus.SUCCESS));
+        paymentRepository.create(payment.changeStatus(PayStatus.SUCCESS));
         return PaymentResponse.success();
     }
 

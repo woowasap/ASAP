@@ -7,9 +7,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PostPersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Persistable;
 import shop.woowasap.shop.domain.cart.CartProduct;
 import shop.woowasap.shop.domain.cart.CartProductQuantity;
 
@@ -18,7 +22,7 @@ import shop.woowasap.shop.domain.cart.CartProductQuantity;
 @NoArgsConstructor
 @Table(name = "cart_product")
 @IdClass(CartProductId.class)
-public class CartProductEntity {
+public class CartProductEntity implements Persistable<CartProductId> {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,6 +36,9 @@ public class CartProductEntity {
 
     @Column(name = "quantity", nullable = false)
     private Long quantity;
+
+    @Transient
+    private boolean isNew = true;
 
     protected CartProductEntity(final ProductEntity productEntity, final Long quantity) {
         this.productEntity = productEntity;
@@ -53,5 +60,21 @@ public class CartProductEntity {
 
     void setCartEntity(final CartEntity cartEntity) {
         this.cartEntity = cartEntity;
+    }
+
+    @Override
+    public CartProductId getId() {
+        return new CartProductId(cartEntity, productEntity);
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+
+    @PostLoad
+    @PostPersist
+    protected void loadOrPersist() {
+        this.isNew = false;
     }
 }

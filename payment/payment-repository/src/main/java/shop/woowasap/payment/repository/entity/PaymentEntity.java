@@ -6,19 +6,25 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PostPersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.math.BigInteger;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.domain.Persistable;
 import shop.woowasap.payment.domain.PayStatus;
 import shop.woowasap.payment.domain.PayType;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "payment", indexes = {@Index(name = "index_order_id", columnList = "order_id")})
-public class PaymentEntity extends BaseEntity {
+public class PaymentEntity extends BaseEntity implements Persistable<Long> {
 
     @Id
     @Column(name = "payment_id", nullable = false)
@@ -41,6 +47,9 @@ public class PaymentEntity extends BaseEntity {
     @Column(name = "pay_status", length = 16, nullable = false)
     private PaymentEntityStatus payStatus;
 
+    @Transient
+    private boolean isNew = true;
+
     @Builder
     public PaymentEntity(Long paymentId, Long userId, Long orderId, BigInteger purchasedMoney,
         PayType payType, PayStatus payStatus) {
@@ -50,5 +59,21 @@ public class PaymentEntity extends BaseEntity {
         this.purchasedMoney = purchasedMoney;
         this.payType = PaymentEntityType.valueOf(payType.getValue());
         this.payStatus = PaymentEntityStatus.valueOf(payStatus.getValue());
+    }
+
+    @Override
+    public Long getId() {
+        return paymentId;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+
+    @PostLoad
+    @PostPersist
+    protected void loadOrPersist() {
+        this.isNew = false;
     }
 }

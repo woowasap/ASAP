@@ -11,6 +11,11 @@ public class OrderProductId implements Serializable {
     private OrderProductId() {
     }
 
+    protected OrderProductId(final OrderEntity orderEntity, final Long productId) {
+        this.orderEntity = orderEntity;
+        this.productId = productId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

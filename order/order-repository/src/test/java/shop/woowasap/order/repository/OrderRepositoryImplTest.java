@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import shop.woowasap.order.BeanScanBaseLocation;
 import shop.woowasap.order.domain.Order;
+import shop.woowasap.order.domain.OrderType;
 import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.response.OrdersPaginationResponse;
 import shop.woowasap.order.repository.support.OrderFixture;
@@ -30,6 +31,28 @@ class OrderRepositoryImplTest {
     class persistMethod {
 
         @Test
+        @DisplayName("Order를 받아, 업데이트 한다.")
+        void saveByOrder() {
+            // given
+            final Order order = OrderFixture.defaultBuilder()
+                .build();
+
+            orderRepository.create(order);
+            order.updateOrderType(OrderType.CANCELED);
+
+            // when
+            final Exception exception = catchException(() -> orderRepository.persist(order));
+
+            // then
+            assertThat(exception).isNull();
+        }
+    }
+
+    @Nested
+    @DisplayName("create 메소드는")
+    class createMethod {
+
+        @Test
         @DisplayName("Order를 받아, 저장한다.")
         void saveByOrder() {
             // given
@@ -37,7 +60,7 @@ class OrderRepositoryImplTest {
                 .build();
 
             // when
-            final Exception exception = catchException(() -> orderRepository.persist(order));
+            final Exception exception = catchException(() -> orderRepository.create(order));
 
             // then
             assertThat(exception).isNull();
@@ -55,7 +78,7 @@ class OrderRepositoryImplTest {
             final Order order = OrderFixture.defaultBuilder()
                 .build();
 
-            orderRepository.persist(order);
+            orderRepository.create(order);
 
             // when
             final Optional<Order> result = orderRepository.findOrderByOrderIdAndUserId(
@@ -93,12 +116,12 @@ class OrderRepositoryImplTest {
             final Order firstOrder = OrderFixture.defaultBuilder()
                 .id(1L)
                 .build();
-            orderRepository.persist(firstOrder);
+            orderRepository.create(firstOrder);
 
             final Order secondOrder = OrderFixture.defaultBuilder()
                 .id(2L)
                 .build();
-            orderRepository.persist(secondOrder);
+            orderRepository.create(secondOrder);
 
             final int page = 1;
             final int size = 1;
@@ -121,12 +144,12 @@ class OrderRepositoryImplTest {
             final Order firstOrder = OrderFixture.defaultBuilder()
                 .id(1L)
                 .build();
-            orderRepository.persist(firstOrder);
+            orderRepository.create(firstOrder);
 
             final Order secondOrder = OrderFixture.defaultBuilder()
                 .id(2L)
                 .build();
-            orderRepository.persist(secondOrder);
+            orderRepository.create(secondOrder);
 
             final int page = 1;
             final int size = 2;

@@ -2,7 +2,6 @@ package shop.woowasap.order.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +41,6 @@ public class OrderService implements OrderUseCase {
     private final TimeUtil timeUtil;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    @Value("${shop.woowasap.locale:UTC}")
-    private String locale;
-
     @Override
     @Transactional
     public OrderIdResponse orderProduct(final OrderProductRequest orderProductRequest) {
@@ -52,7 +48,7 @@ public class OrderService implements OrderUseCase {
         final Order order = OrderMapper.toDomain(idGenerator, orderProductRequest, product,
             timeUtil.now());
 
-        orderRepository.persist(order);
+        orderRepository.create(order);
 
         return new OrderIdResponse(order.getId());
     }
@@ -70,7 +66,7 @@ public class OrderService implements OrderUseCase {
 
         final Order order = OrderMapper.toDomain(idGenerator, userId, cart, timeUtil.now());
 
-        orderRepository.persist(order);
+        orderRepository.create(order);
 
         return new OrderIdResponse(order.getId());
     }
@@ -83,7 +79,7 @@ public class OrderService implements OrderUseCase {
 
         final List<OrderResponse> orderResponses = orders.stream()
             .map(
-                order -> OrderMapper.toOrderResponse(order, getOrderProductResponse(order), locale))
+                order -> OrderMapper.toOrderResponse(order, getOrderProductResponse(order)))
             .toList();
 
         return OrderMapper.toOrdersResponse(orderResponses, ordersPaginationResponse.page(),
@@ -118,6 +114,6 @@ public class OrderService implements OrderUseCase {
             .map(OrderMapper::toDetailOrderProductResponse)
             .toList();
 
-        return OrderMapper.toDetailOrderResponse(order, detailOrderProductResponses, locale);
+        return OrderMapper.toDetailOrderResponse(order, detailOrderProductResponses);
     }
 }

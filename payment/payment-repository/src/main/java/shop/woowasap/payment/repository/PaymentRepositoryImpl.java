@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import shop.woowasap.payment.domain.Payment;
 import shop.woowasap.payment.domain.out.PaymentRepository;
 import shop.woowasap.payment.repository.entity.PaymentEntity;
+import shop.woowasap.payment.repository.entity.PaymentEntityStatus;
 import shop.woowasap.payment.repository.jpa.PaymentEntityRepository;
 
 @Repository
@@ -15,10 +16,20 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     private final PaymentEntityRepository paymentEntityRepository;
 
     @Override
-    public Payment save(final Payment payment) {
+    public Payment create(final Payment payment) {
         final PaymentEntity paymentEntity = PaymentEntityMapper.toEntity(payment);
         final PaymentEntity result = paymentEntityRepository.save(paymentEntity);
         return PaymentEntityMapper.toDomain(result);
+    }
+
+    @Override
+    public Payment persist(final Payment payment) {
+        PaymentEntity paymentEntity = paymentEntityRepository.findById(payment.getPaymentId())
+            .orElseThrow();
+
+        paymentEntity.setPayStatus(PaymentEntityStatus.valueOf(payment.getPayStatus().toString()));
+
+        return PaymentEntityMapper.toDomain(paymentEntity);
     }
 
     @Override

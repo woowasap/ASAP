@@ -8,19 +8,26 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PostPersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.domain.Persistable;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.OrderType;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "orders")
-public class OrderEntity extends BaseEntity {
+public class OrderEntity extends BaseEntity implements Persistable<Long> {
 
     @Id
     @Column(name = "order_id", nullable = false)
@@ -38,6 +45,9 @@ public class OrderEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "order_type", length = 10, nullable = false)
     private OrderEntityType orderType;
+
+    @Transient
+    private boolean isNew = true;
 
     public OrderEntity(final Order order) {
         this.id = order.getId();
@@ -61,5 +71,37 @@ public class OrderEntity extends BaseEntity {
             .createdAt(this.createdAt)
             .orderType(OrderType.valueOf(this.orderType.toString()))
             .build();
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+
+    @PostLoad
+    @PostPersist
+    protected void loadOrPersist() {
+        this.isNew = false;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof final OrderEntity that)) {
+            return false;
+        }
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

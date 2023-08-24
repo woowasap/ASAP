@@ -10,6 +10,7 @@ import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.domain.out.response.OrdersPaginationResponse;
 import shop.woowasap.order.repository.entity.OrderEntity;
+import shop.woowasap.order.repository.entity.OrderEntityType;
 import shop.woowasap.order.repository.jpa.OrderJpaRepository;
 
 @Repository
@@ -19,15 +20,24 @@ public class OrderRepositoryImpl implements OrderRepository {
     private final OrderJpaRepository orderJpaRepository;
 
     @Override
-    public void persist(final Order order) {
+    public void create(final Order order) {
         orderJpaRepository.save(new OrderEntity(order));
+    }
+
+    @Override
+    public void persist(final Order order) {
+        orderJpaRepository.findById(order.getId()).ifPresent(
+            orderEntity -> orderEntity.setOrderType(
+                OrderEntityType.valueOf(order.getOrderType().toString()))
+        );
     }
 
     @Override
     public OrdersPaginationResponse findAllOrderByUserId(final long userId, final int page,
         final int size) {
         final PageRequest pageRequest = PageRequest.of(page - 1, size);
-        final Page<OrderEntity> pagination = orderJpaRepository.findAllByUserId(userId, pageRequest);
+        final Page<OrderEntity> pagination = orderJpaRepository.findAllByUserId(userId,
+            pageRequest);
 
         final List<Order> orders = pagination.get()
             .map(OrderEntity::toDomain)
@@ -38,7 +48,8 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Optional<Order> findOrderByOrderIdAndUserId(final long orderId, final long userId) {
-        final Optional<OrderEntity> orderEntity = orderJpaRepository.findByIdAndUserId(orderId, userId);
+        final Optional<OrderEntity> orderEntity = orderJpaRepository.findByIdAndUserId(orderId,
+            userId);
         return orderEntity.map(OrderEntity::toDomain);
     }
 }

@@ -100,7 +100,7 @@ class PaymentServiceTest {
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
             when(paymentRepository.findByOrderId(anyLong())).thenReturn(Optional.empty());
-            when(paymentRepository.save(any())).thenReturn(payment);
+            when(paymentRepository.create(any())).thenReturn(payment);
 
             // when
             final PaymentResponse result = paymentService.pay(paymentRequest);
@@ -148,7 +148,7 @@ class PaymentServiceTest {
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
             when(paymentRepository.findByOrderId(anyLong())).thenReturn(Optional.empty());
-            when(paymentRepository.save(any())).thenReturn(payment);
+            when(paymentRepository.create(any())).thenReturn(payment);
 
             // when
             final PaymentResponse result = paymentService.pay(paymentRequest);
@@ -295,7 +295,7 @@ class PaymentServiceTest {
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
             when(paymentRepository.findByOrderId(anyLong())).thenReturn(Optional.empty());
-            when(paymentRepository.save(any())).thenReturn(payment);
+            when(paymentRepository.create(any())).thenReturn(payment);
             doThrow(DoesNotOrderedException.class).when(orderConnector)
                 .consumeStock(order.getId(), order.getUserId());
 
