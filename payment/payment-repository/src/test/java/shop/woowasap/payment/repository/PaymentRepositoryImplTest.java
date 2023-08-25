@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigInteger;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -84,6 +85,36 @@ class PaymentRepositoryImplTest {
             // then
             assertThat(result).isPresent();
             assertThat(result.get()).usingRecursiveComparison().ignoringFields("createdAt")
+                .isEqualTo(payment);
+        }
+    }
+
+    @Nested
+    @DisplayName("findAllByOrderId 메소드")
+    class FindAllByOrderIdMethod {
+
+        @Test
+        @DisplayName("정상 입력시 객체 반환")
+        void findSuccess() {
+            // given
+            final Instant instant = Instant.parse("2023-08-15T00:00:02.00Z");
+            final Payment payment = Payment.builder()
+                .paymentId(1L)
+                .orderId(12L)
+                .userId(123L)
+                .purchasedMoney(BigInteger.valueOf(10000L))
+                .payType(PayType.CARD)
+                .payStatus(PayStatus.SUCCESS)
+                .createdAt(instant)
+                .build();
+
+            paymentRepository.save(payment);
+
+            // when
+            final List<Payment> result = paymentRepository.findAllByOrderId(12L);
+
+            // then
+            assertThat(result.get(0)).usingRecursiveComparison().ignoringFields("createdAt")
                 .isEqualTo(payment);
         }
     }

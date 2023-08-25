@@ -99,14 +99,14 @@ class PaymentServiceTest {
                 Optional.of(order));
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
-            when(paymentRepository.findByOrderId(anyLong())).thenReturn(Optional.empty());
+            when(paymentRepository.findAllByOrderId(anyLong())).thenReturn(List.of());
             when(paymentRepository.save(any())).thenReturn(payment);
 
             // when
             final PaymentResponse result = paymentService.pay(paymentRequest);
 
             // then
-            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.payStatus()).isEqualTo(PayStatus.SUCCESS.getValue());
         }
 
         @Test
@@ -147,14 +147,16 @@ class PaymentServiceTest {
                 Optional.of(order));
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
-            when(paymentRepository.findByOrderId(anyLong())).thenReturn(Optional.empty());
+            when(paymentRepository.findAllByOrderId(anyLong())).thenReturn(List.of(
+                Payment.builder().payStatus(PayStatus.FAIL).build()
+            ));
             when(paymentRepository.save(any())).thenReturn(payment);
 
             // when
             final PaymentResponse result = paymentService.pay(paymentRequest);
 
             // then
-            assertThat(result.isSuccess()).isFalse();
+            assertThat(result.payStatus()).isEqualTo(PayStatus.FAIL.getValue());
         }
 
         @Test
@@ -245,7 +247,7 @@ class PaymentServiceTest {
                 Optional.of(order));
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
-            when(paymentRepository.findByOrderId(anyLong())).thenReturn(Optional.of(
+            when(paymentRepository.findAllByOrderId(anyLong())).thenReturn(List.of(
                 Payment.builder().payStatus(PayStatus.SUCCESS).build()
             ));
 
@@ -257,7 +259,7 @@ class PaymentServiceTest {
         }
 
         @Test
-        @DisplayName("consumeStock이 실패하면, fail을 반환한다.")
+        @DisplayName("consumeStock이 실패하면, canceled을 반환한다.")
         void returnFailIfConsumeStockFail() {
             // given
             final long orderId = 123L;
@@ -294,7 +296,7 @@ class PaymentServiceTest {
                 Optional.of(order));
             when(idGenerator.generate()).thenReturn(1L);
             when(timeUtil.now()).thenReturn(instant.plusMillis(100L));
-            when(paymentRepository.findByOrderId(anyLong())).thenReturn(Optional.empty());
+            when(paymentRepository.findAllByOrderId(anyLong())).thenReturn(List.of());
             when(paymentRepository.save(any())).thenReturn(payment);
             doThrow(DoesNotOrderedException.class).when(orderConnector)
                 .consumeStock(order.getId(), order.getUserId());
@@ -303,7 +305,7 @@ class PaymentServiceTest {
             final PaymentResponse result = paymentService.pay(paymentRequest);
 
             // then
-            assertThat(result.isSuccess()).isFalse();
+            assertThat(result.payStatus()).isEqualTo(PayStatus.CANCELED.getValue());
         }
     }
 }
