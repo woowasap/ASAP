@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.OrderType;
 
@@ -29,6 +30,7 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "orderEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProductEntity> orderProducts = new ArrayList<>();
 
