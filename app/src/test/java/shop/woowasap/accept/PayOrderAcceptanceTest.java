@@ -20,6 +20,7 @@ import shop.woowasap.order.domain.in.response.OrderIdResponse;
 import shop.woowasap.payment.controller.request.PayRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
 @DisplayName("Pay Order 인수테스트")

@@ -33,6 +33,7 @@ import shop.woowasap.payment.controller.request.PayRequest;
 import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
 @DisplayName("Order 인수테스트")

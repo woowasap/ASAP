@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
-import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.product.SaleTime;
 
@@ -151,7 +151,7 @@ public class ProductFixture {
         );
     }
 
-    public static ProductsResponse productsResponse(final List<Product> products) {
+    public static ProductsAdminResponse productsResponse(final List<Product> products) {
         final List<ProductResponse> productResponses = products.stream()
             .map(product -> new ProductResponse(
                 product.getId(),
@@ -161,6 +161,6 @@ public class ProductFixture {
                 LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), ZoneId.of("UTC"))
             )).toList();
 
-        return new ProductsResponse(productResponses, PAGE, TOTAL_PAGE);
+        return new ProductsAdminResponse(productResponses, PAGE, TOTAL_PAGE);
     }
 }

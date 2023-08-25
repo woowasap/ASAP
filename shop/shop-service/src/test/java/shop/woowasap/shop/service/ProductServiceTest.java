@@ -33,8 +33,10 @@ import shop.woowasap.shop.domain.exception.SaleEndedProductException;
 import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 import shop.woowasap.shop.domain.out.ProductRepository;
+import shop.woowasap.shop.domain.out.response.ProductsPaginationAdminResponse;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.service.support.fixture.ProductDtoFixture;
@@ -217,15 +219,15 @@ class ProductServiceTest {
                 beforeSaleProductBuilder(1L).build(), beforeSaleProductBuilder(2L).build());
 
             when(productRepository.findAllWithPagination(page, size))
-                .thenReturn(new ProductsPaginationResponse(products, page, totalPage));
-            final ProductsResponse expectedProductsResponse = productsResponse(products);
+                .thenReturn(new ProductsPaginationAdminResponse(products, page, totalPage));
+            final ProductsAdminResponse expectedProductsAdminResponse = productsResponse(products);
 
             // when
-            final ProductsResponse productsResponse = productService.getProductsInAdmin(page, size);
+            final ProductsAdminResponse productsAdminResponse = productService.getProductsInAdmin(page, size);
 
             // then
-            assertThat(productsResponse).usingRecursiveComparison()
-                .isEqualTo(expectedProductsResponse);
+            assertThat(productsAdminResponse).usingRecursiveComparison()
+                .isEqualTo(expectedProductsAdminResponse);
         }
     }
 
@@ -237,24 +239,23 @@ class ProductServiceTest {
         @DisplayName("endTime 이 현재 시간보다 이후인 상품들을 반환한다")
         void returnValidProducts() {
             // given
-            final int page = 1;
-            final int pageSize = 4;
-            final int totalPage = 1;
+            final String startTime = "1980-01-01T00:00:00.000Z";
+            final long productId = 0L;
 
             Product product1 = beforeSaleProduct(1L);
             Product product2 = beforeSaleProduct(2L);
 
             List<Product> products = List.of(product1, product2);
 
-            when(productRepository.findAllValidWithPagination(page, pageSize, NOW_TIME)).thenReturn(
-                new ProductsPaginationResponse(products, page, totalPage));
+            when(productRepository.findAllValidWithPagination(Instant.parse(startTime), productId, NOW_TIME)).thenReturn(
+                new ProductsPaginationResponse(products, false));
 
             // when
-            ProductsResponse result = productService.getValidProducts(page, pageSize);
+            ProductsResponse result = productService.getValidProducts(startTime, productId);
 
             // then
             ProductsResponse expected = new ProductsResponse(
-                ProductFixture.productsOfProductsResponse(products), page, totalPage);
+                ProductFixture.productsOfProductsResponse(products), false);
 
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }

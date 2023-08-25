@@ -1,13 +1,13 @@
 package shop.woowasap.accept;
 
 import static shop.woowasap.accept.support.api.ShopApiSupporter.registerProduct;
-import static shop.woowasap.accept.support.fixture.ProductFixture.productsResponse;
+import static shop.woowasap.accept.support.fixture.ProductFixture.productsAdminResponse;
 import static shop.woowasap.accept.support.fixture.ProductFixture.registerValidProductRequest;
 import static shop.woowasap.accept.support.fixture.ProductFixture.updateProductRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertBadRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertOk;
 import static shop.woowasap.accept.support.valid.ShopValidator.assertProductRegistered;
-import static shop.woowasap.accept.support.valid.ShopValidator.assertProductsFound;
+import static shop.woowasap.accept.support.valid.ShopValidator.assertAdminProductsFound;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -25,6 +25,7 @@ import shop.woowasap.accept.support.valid.ShopValidator;
 import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
 @DisplayName("Product 인수테스트")
@@ -140,7 +141,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
             .getRegisteredProducts(accessToken);
 
         // then
-        assertProductsFound(response, productsResponse(productId));
+        assertAdminProductsFound(response, ProductFixture.productsAdminResponse(productId));
     }
 
     @Test
@@ -192,11 +193,11 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         ShopApiSupporter.registerProduct(accessToken, registerProductRequest);
 
-        final ProductsResponse productsResponse = ShopApiSupporter.getRegisteredProducts(
+        final ProductsAdminResponse productsAdminResponse = ShopApiSupporter.getRegisteredProducts(
                 accessToken)
-            .as(ProductsResponse.class);
+            .as(ProductsAdminResponse.class);
 
-        final long anyProductId = productsResponse.products().get(0).productId();
+        final long anyProductId = productsAdminResponse.products().get(0).productId();
 
         final ProductDetailsResponse expected = ProductFixture.productResponse(anyProductId,
             registerProductRequest);

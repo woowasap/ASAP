@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import shop.woowasap.BeanScanBaseLocation;
+import shop.woowasap.shop.domain.out.response.ProductsPaginationAdminResponse;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
 import shop.woowasap.shop.domain.product.Product;
 
@@ -113,29 +114,24 @@ class ProductRepositoryImplTest {
         @DisplayName("판매 예정이거나 판매 중인 Product 들을 startTime 기준 오름차순으로 반환한다.")
         void returnAllValidProducts() {
             // given
-            final int page = 1;
-            final int size = 10;
-            final int totalPage = 1;
+            final Instant startTime = Instant.parse("1980-01-01T00:00:00.000Z");
+            final long productId = 0L;
+            final Instant nowTime = Instant.parse("2023-08-01T01:00:00.000Z");
 
             final Product afterSaleProduct = afterSaleProduct(1L);
             final Product beforeSaleProduct = beforeSaleProduct(2L);
             final Product onSaleProduct = onSaleProduct(3L);
-
-            final Instant nowTime = Instant.parse("2023-08-01T01:00:00.000Z");
 
             productRepository.persist(afterSaleProduct);
             productRepository.persist(beforeSaleProduct);
             productRepository.persist(onSaleProduct);
 
             ProductsPaginationResponse expected = new ProductsPaginationResponse(
-                List.of(onSaleProduct, beforeSaleProduct),
-                page,
-                totalPage
-            );
+                List.of(onSaleProduct, beforeSaleProduct), false);
 
             // when
             final ProductsPaginationResponse result = productRepository
-                .findAllValidWithPagination(page, size, nowTime);
+                .findAllValidWithPagination(startTime, productId, nowTime);
 
             // then
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
@@ -163,14 +159,14 @@ class ProductRepositoryImplTest {
             productRepository.persist(beforeSaleProduct);
             productRepository.persist(onSaleProduct);
 
-            ProductsPaginationResponse expected = new ProductsPaginationResponse(
+            ProductsPaginationAdminResponse expected = new ProductsPaginationAdminResponse(
                 List.of(afterSaleProduct, onSaleProduct, beforeSaleProduct),
                 page,
                 totalPage
             );
 
             // when
-            final ProductsPaginationResponse result = productRepository.findAllWithPagination(
+            final ProductsPaginationAdminResponse result = productRepository.findAllWithPagination(
                 page, size);
 
             // then
