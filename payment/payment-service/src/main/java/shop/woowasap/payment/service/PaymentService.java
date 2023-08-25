@@ -38,18 +38,18 @@ public class PaymentService implements PaymentUseCase {
 
         if (Boolean.FALSE.equals(paymentRequest.isSuccess())) {
             paymentRepository.save(payment.changeStatus(PayStatus.FAIL));
-            return PaymentResponse.fail();
+            return new PaymentResponse(PayStatus.FAIL.getValue());
         }
 
         try {
             orderConnector.consumeStock(order.getId(), order.getUserId());
         } catch (final DoesNotOrderedException doesNotOrderedException) {
-            paymentRepository.save(payment.changeStatus(PayStatus.FAIL));
-            return PaymentResponse.fail();
+            paymentRepository.save(payment.changeStatus(PayStatus.CANCELED));
+            return new PaymentResponse(PayStatus.CANCELED.getValue());
         }
 
         paymentRepository.save(payment.changeStatus(PayStatus.SUCCESS));
-        return PaymentResponse.success();
+        return new PaymentResponse(PayStatus.SUCCESS.getValue());
     }
 
     private Order findAndValidateOrder(final PaymentRequest paymentRequest) {
@@ -73,9 +73,12 @@ public class PaymentService implements PaymentUseCase {
     }
 
     private void validateDuplicatedPay(final PaymentRequest paymentRequest) {
-        paymentRepository.findByOrderId(paymentRequest.orderId())
+        paymentRepository.findAllByOrderId(paymentRequest.orderId())
+            .stream()
+            .filter(payment -> !payment.getPayStatus().equals(PayStatus.FAIL))
+            .findAny()
             .ifPresent(payment -> {
-                throw new DuplicatedPayException(payment.getOrderId());
+                throw new DuplicatedPayException(paymentRequest.orderId());
             });
     }
 
