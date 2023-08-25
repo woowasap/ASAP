@@ -6,6 +6,7 @@ on:
       - 'develop'
       - 'main'
       - 'release:*'
+      - 'protose/base-#237'
 
 jobs:
   build:
@@ -52,4 +53,13 @@ jobs:
           platforms: linux/arm64/v8
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/asap:${{ steps.set-branch.outputs.BRANCH }}
+            ghcr.io/${{ github.repository_owner }}/asap:test
+  deploy:
+    name: deploy
+    runs-on: self-hosted
+    steps:
+      - name: Deploy Server
+        run: |
+          cd ~/Deploy
+          ./run.sh start
+          
