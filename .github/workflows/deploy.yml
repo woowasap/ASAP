@@ -1,9 +1,9 @@
-name: docker-image-build
+name: docker-image-build-deploy
 
 on:
   push:
     branches:
-      - 'develop'
+      - 'main'
 
 jobs:
   build:
@@ -13,12 +13,6 @@ jobs:
       - name: Set Branch
         id: set-branch
         run: |
-          echo ${{ github.head_ref }}
-          echo ${{ github.base_ref }}
-          echo ${{ env.BRANCH }}
-          echo ${{ env.TAG }}
-          echo $GITHUB_REF
-          echo $(echo $GITHUB_REF | sed 's/refs\/heads\///')
           echo "BRANCH=$(echo $GITHUB_REF | sed 's/refs\/heads\///')" >> $GITHUB_OUTPUT
       - name: Checkout
         uses: actions/checkout@v3
@@ -51,3 +45,13 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/asap:${{ steps.set-branch.outputs.BRANCH }}
+
+  deploy:
+    needs: build
+    name: deploy
+    runs-on: self-hosted
+    steps:
+      - name: Deploy Server
+        run: |
+          cd ~/Deploy
+          ./run.sh start
