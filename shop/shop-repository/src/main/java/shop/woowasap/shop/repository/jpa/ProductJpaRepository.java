@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,19 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
         final Instant nowTime);
 
     Page<ProductEntity> findAllByEndTimeAfter(final Instant nowTime, final Pageable pageable);
+
+    Slice<ProductEntity> findAllWithV3ByEndTimeAfter(
+        final Instant nowTime,
+        final Pageable pageable
+    );
+
+    @Query("SELECT p FROM ProductEntity p WHERE p.endTime > :nowTime AND (p.startTime > :startTime OR (p.startTime = :startTime AND p.id > :productId))")
+    Slice<ProductEntity> findAllByEndTimeAfterWithV2(
+        @Param("nowTime") final Instant nowTime,
+        @Param("startTime") final Instant startTime,
+        @Param("productId") final Long productId,
+        final Pageable pageable
+    );
 
     Page<ProductEntity> findAll(final Pageable pageable);
 

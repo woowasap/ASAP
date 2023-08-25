@@ -10,7 +10,9 @@ import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsResponseV2;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.out.response.ProductsPaginationResponseV2;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.product.SaleTime;
 
@@ -60,5 +62,21 @@ public final class ProductMapper {
 
         return new ProductsResponse(products, paginationResponse.page(),
             paginationResponse.totalPage());
+    }
+
+    public static ProductsResponseV2 toProductsResponseV2(
+        final ProductsPaginationResponseV2 paginationResponse,
+        final ZoneId zoneId
+    ) {
+        final List<ProductResponse> products = paginationResponse.products().stream()
+            .map(product -> new ProductResponse(
+                product.getId(),
+                product.getName().getValue(),
+                product.getPrice().getValue().toString(),
+                LocalDateTime.ofInstant(product.getSaleTime().getStartTime(), zoneId),
+                LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), zoneId)
+            )).toList();
+
+        return new ProductsResponseV2(products, paginationResponse.hasNext());
     }
 }

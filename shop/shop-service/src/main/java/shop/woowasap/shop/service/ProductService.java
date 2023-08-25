@@ -4,6 +4,7 @@ import static shop.woowasap.shop.service.mapper.ProductMapper.toDomain;
 import static shop.woowasap.shop.service.mapper.ProductMapper.toProductsResponse;
 
 import java.text.MessageFormat;
+import java.time.Instant;
 import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,8 +19,10 @@ import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsResponseV2;
 import shop.woowasap.shop.domain.out.ProductRepository;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
+import shop.woowasap.shop.domain.out.response.ProductsPaginationResponseV2;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.service.mapper.ProductMapper;
 
@@ -70,6 +73,22 @@ public class ProductService implements ProductUseCase {
             .findAllValidWithPagination(page, size, timeUtil.now());
 
         return ProductMapper.toProductsResponse(pagination, ZoneId.of(locale));
+    }
+
+    @Override
+    public ProductsResponseV2 getValidProductsV2(final String startTime, final Long productId) {
+        final ProductsPaginationResponseV2 response = productRepository.findAllValidWithPaginationV2(
+            Instant.parse(startTime), productId, timeUtil.now());
+
+        return ProductMapper.toProductsResponseV2(response, ZoneId.of(locale));
+    }
+
+    public ProductsResponseV2 getValidProductsV3(final int page, final int size) {
+        final ProductsPaginationResponseV2 response = productRepository.findAllValidWithPaginationV3(
+            page, size, timeUtil.now());
+
+        return ProductMapper.toProductsResponseV2(response, ZoneId.of(locale));
+
     }
 
     @Override
