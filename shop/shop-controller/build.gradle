@@ -1,5 +1,7 @@
 dependencies {
-    implementation project(':shop:shop-service')
+    implementation project(':core:util')
+    implementation project(':shop:shop-domain')
+    implementation project(':auth:auth-domain')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 }

@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL;
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 10
+        dialect: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:/db/migration
+
+jwt:
+  secret:
+    key: thisissecretkeyforissuejwtfortemporary
+    expiration: 216000000
+
+sentry:
+  dsn: ${SENTRY_DSN}
+  traces-sample-rate: 1.0
+
+shop:
+  woowasap:
+    auth:
+      path:
+        get:
+          /*/products/**
+        post:
+          /*/signup,
+          /*/login
+        admin:
+          /*/admin/**

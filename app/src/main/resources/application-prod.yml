@@ -1,0 +1,53 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    hikari:
+      connection-timeout: 3000
+      maximum-pool-size: 80
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 10
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:/db/migration
+    url: ${MYSQL_URL}
+    user: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+
+jwt:
+  secret:
+    key: ${JWT_SECRET_KEY}
+    expiration: ${JWT_SECRET_EXPIRATION}
+
+sentry:
+  dsn: ${SENTRY_DSN}
+  traces-sample-rate: 1.0
+
+shop:
+  woowasap:
+    auth:
+      path:
+        get:
+          /*/products/**
+        post:
+          /*/signup,
+          /*/login
+        admin:
+          /*/admin/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
