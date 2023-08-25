@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import shop.woowasap.shop.domain.cart.Cart;
 
 @Entity
@@ -30,6 +31,7 @@ public class CartEntity extends BaseEntity {
     @Column(name = "user_id", nullable = false, unique = true)
     private Long userId;
 
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "cartEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartProductEntity> cartProducts = new ArrayList<>();
 
@@ -43,7 +45,8 @@ public class CartEntity extends BaseEntity {
             .map(CartProductEntity::from).toList();
         final CartEntity cartEntity = new CartEntity(cart.getId(), cart.getUserId(),
             cartProductEntities);
-        cartProductEntities.forEach(cartProductEntity -> cartProductEntity.setCartEntity(cartEntity));
+        cartProductEntities.forEach(
+            cartProductEntity -> cartProductEntity.setCartEntity(cartEntity));
         return cartEntity;
     }
 
@@ -54,5 +57,9 @@ public class CartEntity extends BaseEntity {
             .cartProducts(this.cartProducts.stream().map(CartProductEntity::toDomain)
                 .collect(Collectors.toList()))
             .build();
+    }
+
+    public List<CartProductEntity> getCartProducts() {
+        return cartProducts;
     }
 }
