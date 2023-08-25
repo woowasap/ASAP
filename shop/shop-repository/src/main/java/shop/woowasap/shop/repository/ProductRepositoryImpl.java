@@ -76,7 +76,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         final Instant nowTime
     ) {
         final PageRequest pageRequest = PageRequest.of(0, 20,
-            Sort.by("startTime", "productId").ascending());
+            Sort.by("startTime", "id").ascending());
 
         final Slice<ProductEntity> pagination = productJpaRepository.
             findAllByEndTimeAfterWithV2(nowTime, startTime, productId,
