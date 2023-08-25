@@ -10,6 +10,7 @@ import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
 public class ProductFixture {
@@ -63,8 +64,8 @@ public class ProductFixture {
         );
     }
 
-    public static ProductsResponse productsResponse(final Long productId) {
-        return new ProductsResponse(
+    public static ProductsAdminResponse productsAdminResponse(final Long productId) {
+        return new ProductsAdminResponse(
             List.of(new ProductResponse(
                 productId,
                 NAME,
@@ -111,7 +112,7 @@ public class ProductFixture {
         );
     }
 
-    public static ProductsResponse productsResponse(
+    public static ProductsAdminResponse productsAdminResponse(
         final List<RegisterProductRequest> registerProductRequests) {
         final List<ProductResponse> products = registerProductRequests.stream()
             .map(product -> new ProductResponse(
@@ -122,7 +123,20 @@ public class ProductFixture {
                 product.endTime()
             )).collect(Collectors.toList());
 
-        return new ProductsResponse(products, PAGE, TOTAL_PAGE);
+        return new ProductsAdminResponse(products, PAGE, TOTAL_PAGE);
+    }
+
+    public static ProductsResponse productsResponse(final List<RegisterProductRequest> registerProductRequests) {
+        final List<ProductResponse> products = registerProductRequests.stream()
+            .map(product -> new ProductResponse(
+                UNKNOWN_ID,
+                product.name(),
+                product.price(),
+                product.startTime(),
+                product.endTime()
+            )).collect(Collectors.toList());
+
+        return new ProductsResponse(products, false);
     }
 
     public static ProductDetailsResponse productResponse(long id,

@@ -19,7 +19,7 @@ import shop.woowasap.shop.domain.in.product.ProductUseCase;
 import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
-import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
 
 @Slf4j
 @RestController
@@ -46,13 +46,13 @@ public class ProductAdminController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductsResponse> readProducts(
+    public ResponseEntity<ProductsAdminResponse> readProducts(
         @RequestParam(defaultValue = "1") final int page,
         @RequestParam(defaultValue = "20") final int size
     ) {
-        final ProductsResponse productsResponse = productUseCase.getProductsInAdmin(page, size);
+        final ProductsAdminResponse productsAdminResponse = productUseCase.getProductsInAdmin(page, size);
 
-        return ResponseEntity.ok(productsResponse);
+        return ResponseEntity.ok(productsAdminResponse);
     }
 
     @GetMapping("/{product-id}")

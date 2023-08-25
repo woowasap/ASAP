@@ -6,6 +6,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
 public final class ShopValidator {
@@ -36,6 +37,20 @@ public final class ShopValidator {
     }
 
     private static void assertProducts(ProductsResponse result, ProductsResponse expected) {
+        assertThat(result).usingRecursiveComparison(RecursiveComparisonConfiguration.builder()
+            .withIgnoredFields("products.productId", "products.startTime", "products.endTime")
+            .build()).isEqualTo(expected);
+    }
+
+    public static void assertAdminProductsFound(ExtractableResponse<Response> result,
+        ProductsAdminResponse expected) {
+        HttpValidator.assertOk(result);
+
+        ProductsAdminResponse resultResponse = result.as(ProductsAdminResponse.class);
+        assertAdminProducts(resultResponse, expected);
+    }
+
+    private static void assertAdminProducts(ProductsAdminResponse result, ProductsAdminResponse expected) {
         assertThat(result.page()).isEqualTo(expected.page());
         assertThat(result.totalPage()).isEqualTo(expected.totalPage());
 

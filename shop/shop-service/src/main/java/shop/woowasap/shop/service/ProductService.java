@@ -1,13 +1,12 @@
 package shop.woowasap.shop.service;
 
 import static shop.woowasap.shop.service.mapper.ProductMapper.toDomain;
-import static shop.woowasap.shop.service.mapper.ProductMapper.toProductsResponse;
+import static shop.woowasap.shop.service.mapper.ProductMapper.toProductsAdminResponse;
 
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
@@ -18,11 +17,11 @@ import shop.woowasap.shop.domain.in.product.ProductUseCase;
 import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
 import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
+import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
-import shop.woowasap.shop.domain.in.product.response.ProductsResponseV2;
 import shop.woowasap.shop.domain.out.ProductRepository;
+import shop.woowasap.shop.domain.out.response.ProductsPaginationAdminResponse;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
-import shop.woowasap.shop.domain.out.response.ProductsPaginationResponseV2;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.service.mapper.ProductMapper;
 
@@ -34,11 +33,6 @@ public class ProductService implements ProductUseCase {
     private final ProductRepository productRepository;
     private final IdGenerator idGenerator;
     private final TimeUtil timeUtil;
-
-    @Value("${shop.woowasap.locale:UTC}")
-    private String locale;
-    @Value("${shop.woowasap.offsetid:+00:00}")
-    private String offsetId;
 
     @Override
     @Transactional
@@ -62,41 +56,25 @@ public class ProductService implements ProductUseCase {
     @Transactional
     public Long registerProduct(final RegisterProductRequest registerProductRequest) {
         final Product persistProduct = productRepository.persist(
-            toDomain(idGenerator, registerProductRequest, offsetId, timeUtil.now()));
+            toDomain(idGenerator, registerProductRequest, timeUtil.now()));
 
         return persistProduct.getId();
     }
 
     @Override
-    public ProductsResponse getValidProducts(final int page, final int size) {
-        final ProductsPaginationResponse pagination = productRepository
-            .findAllValidWithPagination(page, size, timeUtil.now());
-
-        return ProductMapper.toProductsResponse(pagination, ZoneId.of(locale));
-    }
-
-    @Override
-    public ProductsResponseV2 getValidProductsV2(final String startTime, final Long productId) {
-        final ProductsPaginationResponseV2 response = productRepository.findAllValidWithPaginationV2(
+    public ProductsResponse getValidProducts(final String startTime, final Long productId) {
+        final ProductsPaginationResponse response = productRepository.findAllValidWithPagination(
             Instant.parse(startTime), productId, timeUtil.now());
 
-        return ProductMapper.toProductsResponseV2(response, ZoneId.of(locale));
-    }
-
-    public ProductsResponseV2 getValidProductsV3(final int page, final int size) {
-        final ProductsPaginationResponseV2 response = productRepository.findAllValidWithPaginationV3(
-            page, size, timeUtil.now());
-
-        return ProductMapper.toProductsResponseV2(response, ZoneId.of(locale));
-
+        return ProductMapper.toProductsResponse(response);
     }
 
     @Override
-    public ProductsResponse getProductsInAdmin(final int page, final int size) {
-        final ProductsPaginationResponse paginationResponse = productRepository
+    public ProductsAdminResponse getProductsInAdmin(final int page, final int size) {
+        final ProductsPaginationAdminResponse paginationResponse = productRepository
             .findAllWithPagination(page, size);
 
-        return toProductsResponse(paginationResponse, ZoneId.of(locale));
+        return toProductsAdminResponse(paginationResponse);
     }
 
     @Override
@@ -111,14 +89,14 @@ public class ProductService implements ProductUseCase {
             );
         }
 
-        return ProductMapper.toProductResponse(product, ZoneId.of(locale));
+        return ProductMapper.toProductResponse(product);
     }
 
     @Override
     public ProductDetailsResponse getByProductIdWithAdmin(final long productId) {
         final Product persistProduct = getProduct(productId);
 
-        return ProductMapper.toProductResponse(persistProduct, ZoneId.of(locale));
+        return ProductMapper.toProductResponse(persistProduct);
     }
 
     private Product getProduct(final long productId) {
