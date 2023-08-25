@@ -6,7 +6,7 @@ on:
       - 'develop'
       - 'main'
       - 'release:*'
-      - 'protose/base-#237'
+      - 'protoseo/base-#237'
 
 jobs:
   build:
