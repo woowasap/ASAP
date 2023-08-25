@@ -13,7 +13,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     ResponseEntity<ErrorTemplate> handleException(final Exception exception) {
-        log.error(exception.getMessage());
+        log.error(exception.getMessage(), exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ErrorTemplate.of(exception.getMessage()));
     }

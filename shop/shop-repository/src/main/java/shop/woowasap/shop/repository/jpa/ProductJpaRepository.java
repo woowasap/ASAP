@@ -24,6 +24,7 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
     );
 
     @Query("SELECT p FROM ProductEntity p WHERE p.endTime > :nowTime AND (p.startTime > :startTime OR (p.startTime = :startTime AND p.id > :productId))")
+//    @Query(value = "select * from product where end_time > :nowTime and (start_time, product_id) > (:startTime, :productId) order by start_time, product_id asc limit 20", nativeQuery = true)
     Slice<ProductEntity> findAllByEndTimeAfterWithV2(
         @Param("nowTime") final Instant nowTime,
         @Param("startTime") final Instant startTime,
