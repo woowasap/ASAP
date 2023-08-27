@@ -57,4 +57,8 @@ public final class Cart {
             );
         }
     }
+
+    public void clear() {
+        cartProducts.clear();
+    }
 }

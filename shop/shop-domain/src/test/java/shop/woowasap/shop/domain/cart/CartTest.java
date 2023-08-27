@@ -207,4 +207,24 @@ class CartTest {
                 .isEqualTo(remainQuantity);
         }
     }
+
+    @Nested
+    @DisplayName("clear 메서드는")
+    class ClearMethod {
+
+        @Test
+        @DisplayName("cart 안의 cartProducts 를 초기화한다.")
+        void clearCart() {
+            // given
+            final CartProduct cartProduct = getCartProductBuilder().build();
+            final List<CartProduct> cartProducts = new ArrayList<>(List.of(cartProduct));
+            final Cart cart = getEmptyCartBuilder().cartProducts(cartProducts).build();
+
+            // when
+            cart.clear();
+
+            // then
+            assertThat(cart.getCartProducts()).isEmpty();
+        }
+    }
 }

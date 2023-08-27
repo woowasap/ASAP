@@ -3,6 +3,7 @@ package shop.woowasap.order.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import shop.woowasap.order.domain.out.OrderRepository;
 import shop.woowasap.order.service.support.fixture.OrderFixture;
 import shop.woowasap.order.service.support.fixture.OrderProductFixture;
 import shop.woowasap.order.service.support.fixture.ProductFixture;
+import shop.woowasap.shop.domain.in.cart.CartConnector;
 import shop.woowasap.shop.domain.in.product.ProductConnector;
 import shop.woowasap.shop.domain.product.Product;
 
@@ -39,6 +41,9 @@ class OrderConnectorServiceTest {
 
     @MockBean
     private ProductConnector productConnector;
+
+    @MockBean
+    private CartConnector cartConnector;
 
     @Nested
     @DisplayName("findByOrderIdAndUserId 메소드는")
@@ -88,11 +93,10 @@ class OrderConnectorServiceTest {
 
     @Nested
     @DisplayName("consumeStock 메소드는")
-    class consumeStockMethod
-    {
+    class consumeStockMethod {
 
         @Test
-        @DisplayName("orderId와 userId를 받아, Order를 Success상태로 변경한다.")
+        @DisplayName("orderId와 userId를 받아, Order를 Success상태로 변경하고 장바구니를 비운다.")
         void updateOrderTypeSuccess() {
             // given
             final long orderId = 1L;
@@ -111,6 +115,7 @@ class OrderConnectorServiceTest {
 
             // then
             assertThat(result).isNull();
+            verify(cartConnector).clearCartByUserId(userId);
         }
 
         @Test
