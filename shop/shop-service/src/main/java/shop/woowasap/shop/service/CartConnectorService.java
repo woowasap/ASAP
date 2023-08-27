@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.in.cart.CartConnector;
 import shop.woowasap.shop.domain.out.CartRepository;
@@ -15,7 +16,7 @@ import shop.woowasap.shop.domain.out.CartRepository;
 public class CartConnectorService implements CartConnector {
 
     private final CartRepository cartRepository;
-    private final CartService cartService;
+    private final IdGenerator idGenerator;
 
     @Override
     public Optional<Cart> findByCartIdAndUserId(final long cartId, final long userId) {
@@ -32,6 +33,12 @@ public class CartConnectorService implements CartConnector {
 
     @Override
     public void clearCartByUserId(final long userId) {
-        cartService.clearCartByUserId(userId);
+        try {
+            final Cart cart = cartRepository.getByUserId(userId);
+            cart.clear();
+            cartRepository.persist(cart);
+        } catch (InvalidDataAccessApiUsageException invalidDataAccessApiUsageException) {
+            cartRepository.createEmptyCart(userId, idGenerator.generate());
+        }
     }
 }

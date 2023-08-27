@@ -14,6 +14,4 @@ public interface CartUseCase {
     void deleteCartProduct(final long userId, final long productId);
 
     CartResponse getCartByUserId(final long userId);
-
-    void clearCartByUserId(final long userId);
 }

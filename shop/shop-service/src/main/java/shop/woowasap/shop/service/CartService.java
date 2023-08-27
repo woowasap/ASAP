@@ -21,7 +21,7 @@ import shop.woowasap.shop.domain.product.Product;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class CartService implements CartUseCase {
 
     private final CartRepository cartRepository;
@@ -29,7 +29,6 @@ public class CartService implements CartUseCase {
     private final IdGenerator idGenerator;
 
     @Override
-    @Transactional
     public void updateCartProduct(final long userId,
         final UpdateCartProductRequest updateCartProductRequest) {
         createCartIfNotExists(userId);
@@ -46,7 +45,6 @@ public class CartService implements CartUseCase {
     }
 
     @Override
-    @Transactional
     public void addCartProduct(final long userId,
         final AddCartProductRequest addCartProductRequest) {
         createCartIfNotExists(userId);
@@ -63,7 +61,6 @@ public class CartService implements CartUseCase {
     }
 
     @Override
-    @Transactional
     public void deleteCartProduct(final long userId, final long productId) {
         createCartIfNotExists(userId);
 
@@ -72,12 +69,6 @@ public class CartService implements CartUseCase {
 
         cart.deleteProduct(product);
         cartRepository.persist(cart);
-    }
-
-    private void createCartIfNotExists(final long userId) {
-        if (!cartRepository.existCartByUserId(userId)) {
-            cartRepository.createEmptyCart(userId, idGenerator.generate());
-        }
     }
 
     @Override
@@ -95,10 +86,9 @@ public class CartService implements CartUseCase {
             ));
     }
 
-    public void clearCartByUserId(final long userId) {
-        createCartIfNotExists(userId);
-
-        final Cart cart = cartRepository.getByUserId(userId);
-        cartRepository.createEmptyCart(userId, cart.getId());
+    private void createCartIfNotExists(final long userId) {
+        if (!cartRepository.existCartByUserId(userId)) {
+            cartRepository.createEmptyCart(userId, idGenerator.generate());
+        }
     }
 }

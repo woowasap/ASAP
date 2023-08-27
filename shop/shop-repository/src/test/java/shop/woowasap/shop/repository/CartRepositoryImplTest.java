@@ -74,27 +74,6 @@ class CartRepositoryImplTest {
             // then
             assertThat(emptyCart).usingRecursiveComparison().isEqualTo(expected);
         }
-
-        @Test
-        @DisplayName("기존의 장바구니가 존재했다면, 장바구니가 초기화된다.")
-        void clearCart() {
-            // given
-            final long userId = 1L;
-            final long cartId = 1L;
-
-            final CartProduct cartProduct = CartProduct.builder().product(product)
-                .quantity(new CartProductQuantity(10L))
-                .build();
-
-            cartRepository.persist(new Cart(cartId, userId, List.of(cartProduct)));
-
-            // when
-            cartRepository.createEmptyCart(userId, cartId);
-            final Cart cart = cartRepository.getByUserId(userId);
-
-            // then
-            assertThat(cart.getCartProducts()).isEmpty();
-        }
     }
 
     @Nested
@@ -158,6 +137,28 @@ class CartRepositoryImplTest {
 
             // then
             assertThat(persist).usingRecursiveComparison().isEqualTo(update);
+        }
+
+        @Test
+        @DisplayName("기존의 장바구니가 존재할 때 빈 장바구니를 저장할 경우, 장바구니가 초기화된다.")
+        void clearCart() {
+            // given
+            final long userId = 1L;
+            final long cartId = 1L;
+
+            final CartProduct cartProduct = CartProduct.builder().product(product)
+                .quantity(new CartProductQuantity(10L))
+                .build();
+            final Cart cart = new Cart(cartId, userId, new ArrayList<>(List.of(cartProduct)));
+
+            cartRepository.persist(cart);
+
+            // when
+            cart.clear();
+            cartRepository.persist(cart);
+
+            // then
+            assertThat(cart.getCartProducts()).isEmpty();
         }
     }
 

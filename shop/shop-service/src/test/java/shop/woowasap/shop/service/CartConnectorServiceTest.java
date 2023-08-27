@@ -1,9 +1,13 @@
 package shop.woowasap.shop.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchException;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -14,7 +18,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.domain.cart.Cart;
+import shop.woowasap.shop.domain.cart.CartProduct;
 import shop.woowasap.shop.domain.in.cart.CartConnector;
 import shop.woowasap.shop.domain.out.CartRepository;
 import shop.woowasap.shop.service.support.fixture.CartFixture;
@@ -31,7 +37,7 @@ class CartConnectorServiceTest {
     private CartRepository cartRepository;
 
     @MockBean
-    private CartService cartService;
+    private IdGenerator idGenerator;
 
     @Nested
     @DisplayName("findByCartIdAndUserId 메소드는")
@@ -104,17 +110,36 @@ class CartConnectorServiceTest {
     class ClearCartByUserIdMethod {
 
         @Test
-        @DisplayName("userId 에 해당하는 user 의 Cart 를 초기화한다.")
+        @DisplayName("userId 에 해당하는 Cart 를 초기화한다.")
         void clearCartWithUserId() {
             // given
             final long userId = 1L;
+            final CartProduct cartProduct = CartFixture.cartProduct();
+            final Cart cart = CartFixture.Cart(userId, new ArrayList<>(List.of(cartProduct)));
+
+            when(cartRepository.getByUserId(userId)).thenReturn(cart);
 
             // when
-            final Exception exception = catchException(() -> cartService.clearCartByUserId(userId));
+            cartConnector.clearCartByUserId(userId);
 
             // then
-            assertThat(exception).isNull();
+            assertThat(cart.getCartProducts()).isEmpty();
+        }
+
+        @Test
+        @DisplayName("userId 에 해당하는 Cart 가 없다면, 빈 Cart 를 생성한다.")
+        void createEmptyCartWhenNotExistsCart() {
+            // given
+            final long userId = 1L;
+
+            when(cartRepository.getByUserId(userId)).thenThrow(
+                InvalidDataAccessApiUsageException.class);
+
+            // when
+            cartConnector.clearCartByUserId(userId);
+
+            // then
+            verify(cartRepository).createEmptyCart(eq(userId), anyLong());
         }
     }
-
 }
