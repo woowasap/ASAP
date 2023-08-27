@@ -74,6 +74,27 @@ class CartRepositoryImplTest {
             // then
             assertThat(emptyCart).usingRecursiveComparison().isEqualTo(expected);
         }
+
+        @Test
+        @DisplayName("기존의 장바구니가 존재했다면, 장바구니가 초기화된다.")
+        void clearCart() {
+            // given
+            final long userId = 1L;
+            final long cartId = 1L;
+
+            final CartProduct cartProduct = CartProduct.builder().product(product)
+                .quantity(new CartProductQuantity(10L))
+                .build();
+
+            cartRepository.persist(new Cart(cartId, userId, List.of(cartProduct)));
+
+            // when
+            cartRepository.createEmptyCart(userId, cartId);
+            final Cart cart = cartRepository.getByUserId(userId);
+
+            // then
+            assertThat(cart.getCartProducts()).isEmpty();
+        }
     }
 
     @Nested

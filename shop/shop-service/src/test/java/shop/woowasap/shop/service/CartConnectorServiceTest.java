@@ -1,6 +1,7 @@
 package shop.woowasap.shop.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -13,8 +14,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import shop.woowasap.shop.domain.in.cart.CartConnector;
 import shop.woowasap.shop.domain.cart.Cart;
+import shop.woowasap.shop.domain.in.cart.CartConnector;
 import shop.woowasap.shop.domain.out.CartRepository;
 import shop.woowasap.shop.service.support.fixture.CartFixture;
 
@@ -28,6 +29,9 @@ class CartConnectorServiceTest {
 
     @MockBean
     private CartRepository cartRepository;
+
+    @MockBean
+    private CartService cartService;
 
     @Nested
     @DisplayName("findByCartIdAndUserId 메소드는")
@@ -92,6 +96,24 @@ class CartConnectorServiceTest {
 
             // then
             assertThat(result).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("clearCartByUserId 메서드는")
+    class ClearCartByUserIdMethod {
+
+        @Test
+        @DisplayName("userId 에 해당하는 user 의 Cart 를 초기화한다.")
+        void clearCartWithUserId() {
+            // given
+            final long userId = 1L;
+
+            // when
+            final Exception exception = catchException(() -> cartService.clearCartByUserId(userId));
+
+            // then
+            assertThat(exception).isNull();
         }
     }
 

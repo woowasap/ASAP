@@ -7,4 +7,5 @@ public interface CartConnector {
 
     Optional<Cart> findByCartIdAndUserId(final long cartId, final long userId);
 
+    void clearCartByUserId(final long userId);
 }
