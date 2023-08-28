@@ -50,6 +50,10 @@ dependencies {
 
     testImplementation 'io.rest-assured:rest-assured:5.3.0'
     runtimeOnly 'com.h2database:h2'
+
+    // https://mvnrepository.com/artifact/com.github.codemonstur/embedded-redis
+    testImplementation 'com.github.codemonstur:embedded-redis:1.0.0'
+
 }
 
 jar {
