@@ -5,6 +5,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import shop.woowasap.order.domain.Order;
 import shop.woowasap.order.domain.out.OrderRepository;
@@ -26,7 +27,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public OrdersPaginationResponse findAllOrderByUserId(final long userId, final int page,
         final int size) {
-        final PageRequest pageRequest = PageRequest.of(page - 1, size);
+        final PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("id").descending());
         final Page<OrderEntity> pagination = orderJpaRepository.findAllByUserId(userId, pageRequest);
 
         final List<Order> orders = pagination.get()

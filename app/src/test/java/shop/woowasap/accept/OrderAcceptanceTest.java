@@ -100,7 +100,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
             product.productId(), product.name(), product.price(), quantity);
         final OrderResponse expectedOrderResponse = new OrderResponse(1L,
             List.of(expectedOrderProductResponse),
-            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(),
+            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(), "PENDING",
             LocalDateTime.now());
         final OrdersResponse expected = new OrdersResponse(List.of(expectedOrderResponse), 1, 1);
 
