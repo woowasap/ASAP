@@ -12,7 +12,7 @@ create table if not exists product (
     created_at TIMESTAMP(6) not null,
     end_time TIMESTAMP(6) not null,
     product_id bigint not null,
-    quantity bigint not null,
+    quantity bigint not null check (quantity >= 0),
     start_time TIMESTAMP(6) not null,
     updated_at TIMESTAMP(6) not null,
     name varchar(255) not null,
