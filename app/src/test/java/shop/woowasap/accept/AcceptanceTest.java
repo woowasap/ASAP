@@ -1,16 +1,14 @@
 package shop.woowasap.accept;
 
-import static org.mockito.Mockito.when;
-
 import io.restassured.RestAssured;
-import java.time.Instant;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,8 +27,15 @@ abstract class AcceptanceTest {
     @Autowired
     protected TimeUtil timeUtil;
 
+    @Autowired
+    protected RedisTemplate<String, Object> redisTemplate;
+
     @BeforeEach
     public void setPort() {
         RestAssured.port = port;
+        final Set<String> keys = redisTemplate.keys("*");
+        if (keys != null && !keys.isEmpty()) {
+            redisTemplate.delete(keys);
+        }
     }
 }
