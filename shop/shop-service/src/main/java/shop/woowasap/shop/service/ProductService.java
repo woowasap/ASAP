@@ -6,6 +6,7 @@ import static shop.woowasap.shop.service.mapper.ProductMapper.toProductsAdminRes
 import java.text.MessageFormat;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
@@ -61,6 +62,7 @@ public class ProductService implements ProductUseCase {
     }
 
     @Override
+    @Cacheable(value = "products", key = "#startTime+':'+#productId", cacheManager = "cacheManager")
     public ProductsResponse getValidProducts(final String startTime, final Long productId) {
         final ProductsPaginationResponse response = productRepository.findAllValidWithPagination(
             Instant.parse(startTime), productId, timeUtil.now());

@@ -124,8 +124,8 @@ public class ProductFixture {
             product.getId(),
             product.getName().getValue(),
             product.getPrice().getValue().toString(),
-            LocalDateTime.ofInstant(product.getSaleTime().getStartTime(), ZoneId.of("UTC")),
-            LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), ZoneId.of("UTC"))
+            product.getSaleTime().getStartTime().toString(),
+            product.getSaleTime().getEndTime().toString()
         );
     }
 
@@ -157,8 +157,8 @@ public class ProductFixture {
                 product.getId(),
                 product.getName().getValue(),
                 product.getPrice().getValue().toString(),
-                LocalDateTime.ofInstant(product.getSaleTime().getStartTime(), ZoneId.of("UTC")),
-                LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), ZoneId.of("UTC"))
+                product.getSaleTime().getStartTime().toString(),
+                product.getSaleTime().getEndTime().toString()
             )).toList();
 
         return new ProductsAdminResponse(productResponses, PAGE, TOTAL_PAGE);

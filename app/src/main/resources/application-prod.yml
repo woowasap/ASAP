@@ -24,6 +24,12 @@ spring:
     url: ${MYSQL_URL}
     user: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 jwt:
   secret:

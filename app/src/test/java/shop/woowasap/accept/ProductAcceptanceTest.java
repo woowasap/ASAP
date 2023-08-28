@@ -1,7 +1,6 @@
 package shop.woowasap.accept;
 
 import static shop.woowasap.accept.support.api.ShopApiSupporter.registerProduct;
-import static shop.woowasap.accept.support.fixture.ProductFixture.productsAdminResponse;
 import static shop.woowasap.accept.support.fixture.ProductFixture.registerValidProductRequest;
 import static shop.woowasap.accept.support.fixture.ProductFixture.updateProductRequest;
 import static shop.woowasap.accept.support.valid.HttpValidator.assertBadRequest;
