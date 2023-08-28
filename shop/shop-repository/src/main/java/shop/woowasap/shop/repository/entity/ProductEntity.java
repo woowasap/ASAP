@@ -19,7 +19,10 @@ import shop.woowasap.shop.domain.product.SaleTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "product", indexes = @Index(columnList = "start_time, end_time"))
+@Table(name = "product", indexes = {
+    @Index(name = "index_product_start_time", columnList = "start_time"),
+    @Index(name = "index_product_end_time", columnList = "end_time")
+})
 public class ProductEntity extends BaseEntity {
 
     @Id
