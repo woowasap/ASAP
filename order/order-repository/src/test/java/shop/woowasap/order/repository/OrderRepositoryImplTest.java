@@ -104,7 +104,7 @@ class OrderRepositoryImplTest {
             final int size = 1;
 
             final OrdersPaginationResponse expected = new OrdersPaginationResponse(
-                List.of(firstOrder), page, 2);
+                List.of(secondOrder), page, 2);
 
             // when
             final OrdersPaginationResponse result = orderRepository.findAllOrderByUserId(
@@ -132,7 +132,7 @@ class OrderRepositoryImplTest {
             final int size = 2;
 
             final OrdersPaginationResponse expected = new OrdersPaginationResponse(
-                List.of(firstOrder, secondOrder), page, 1);
+                List.of(secondOrder, firstOrder), page, 1);
 
             // when
             final OrdersPaginationResponse result = orderRepository.findAllOrderByUserId(

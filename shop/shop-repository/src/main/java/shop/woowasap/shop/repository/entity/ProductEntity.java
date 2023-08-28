@@ -3,6 +3,7 @@ package shop.woowasap.shop.repository.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.time.Instant;
@@ -10,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Check;
 import shop.woowasap.shop.domain.product.Product;
 import shop.woowasap.shop.domain.product.SaleTime;
 
@@ -17,7 +19,10 @@ import shop.woowasap.shop.domain.product.SaleTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "product")
+@Table(name = "product", indexes = {
+    @Index(name = "index_product_start_time", columnList = "start_time"),
+    @Index(name = "index_product_end_time", columnList = "end_time")
+})
 public class ProductEntity extends BaseEntity {
 
     @Id
@@ -35,6 +40,7 @@ public class ProductEntity extends BaseEntity {
     private String price;
 
     @Column(name = "quantity", nullable = false)
+    @Check(constraints = "quantity >= 0")
     private Long quantity;
 
     @Column(name = "start_time", columnDefinition = "TIMESTAMP(6)", nullable = false)

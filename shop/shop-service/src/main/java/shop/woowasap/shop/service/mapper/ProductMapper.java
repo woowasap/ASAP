@@ -54,8 +54,8 @@ public final class ProductMapper {
                 product.getId(),
                 product.getName().getValue(),
                 product.getPrice().getValue().toString(),
-                LocalDateTime.ofInstant(product.getSaleTime().getStartTime(), ZONE_ID),
-                LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), ZONE_ID)
+                product.getSaleTime().getStartTime().toString(),
+                product.getSaleTime().getEndTime().toString()
             )).toList();
 
         return new ProductsAdminResponse(products, paginationResponse.page(),
@@ -69,8 +69,8 @@ public final class ProductMapper {
                 product.getId(),
                 product.getName().getValue(),
                 product.getPrice().getValue().toString(),
-                LocalDateTime.ofInstant(product.getSaleTime().getStartTime(), ZONE_ID),
-                LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), ZONE_ID)
+                product.getSaleTime().getStartTime().toString(),
+                product.getSaleTime().getEndTime().toString()
             )).toList();
 
         return new ProductsResponse(products, paginationResponse.hasNext());

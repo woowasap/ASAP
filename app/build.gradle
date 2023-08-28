@@ -46,8 +46,13 @@ dependencies {
     implementation 'io.sentry:sentry-logback:6.28.0'
     implementation 'io.sentry:sentry-spring-boot-starter-jakarta:6.28.0'
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     testImplementation 'io.rest-assured:rest-assured:5.3.0'
     runtimeOnly 'com.h2database:h2'
+
+    testImplementation 'com.github.codemonstur:embedded-redis:1.0.0'
+
 }
 
 jar {

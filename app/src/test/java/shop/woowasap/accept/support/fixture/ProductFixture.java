@@ -70,8 +70,8 @@ public class ProductFixture {
                 productId,
                 NAME,
                 PRICE,
-                BEFORE_SALE_START_TIME,
-                BEFORE_SALE_END_TIME
+                BEFORE_SALE_START_TIME.toString(),
+                BEFORE_SALE_END_TIME.toString()
             )),
             1,
             1
@@ -119,8 +119,8 @@ public class ProductFixture {
                 UNKNOWN_ID,
                 product.name(),
                 product.price(),
-                product.startTime(),
-                product.endTime()
+                product.startTime().toString(),
+                product.endTime().toString()
             )).collect(Collectors.toList());
 
         return new ProductsAdminResponse(products, PAGE, TOTAL_PAGE);
@@ -132,8 +132,8 @@ public class ProductFixture {
                 UNKNOWN_ID,
                 product.name(),
                 product.price(),
-                product.startTime(),
-                product.endTime()
+                product.startTime().toString(),
+                product.endTime().toString()
             )).collect(Collectors.toList());
 
         return new ProductsResponse(products, false);

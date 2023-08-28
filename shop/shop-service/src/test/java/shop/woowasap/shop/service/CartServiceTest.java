@@ -149,7 +149,6 @@ class CartServiceTest {
 
             // then
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
-            verify(cartRepository).persist(emptyCart);
         }
     }
 

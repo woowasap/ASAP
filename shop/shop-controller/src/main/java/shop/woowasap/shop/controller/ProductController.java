@@ -13,7 +13,6 @@ import shop.woowasap.core.util.web.ErrorTemplate;
 import shop.woowasap.shop.domain.exception.ProductException;
 import shop.woowasap.shop.domain.in.product.ProductUseCase;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
-import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
 @Slf4j
@@ -38,7 +37,6 @@ public class ProductController {
     ) {
         return ResponseEntity.ok(productUseCase.getValidProducts(startTime, productId));
     }
-
 
     @ExceptionHandler(ProductException.class)
     public ResponseEntity<ErrorTemplate> handleException(final ProductException productException) {

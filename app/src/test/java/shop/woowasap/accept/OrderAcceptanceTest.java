@@ -33,7 +33,6 @@ import shop.woowasap.payment.controller.request.PayRequest;
 import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
 import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
-import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsResponse;
 
 @DisplayName("Order 인수테스트")
@@ -101,7 +100,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
             product.productId(), product.name(), product.price(), quantity);
         final OrderResponse expectedOrderResponse = new OrderResponse(1L,
             List.of(expectedOrderProductResponse),
-            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(),
+            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(), "PENDING",
             LocalDateTime.now());
         final OrdersResponse expected = new OrdersResponse(List.of(expectedOrderResponse), 1, 1);
 
@@ -134,7 +133,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
                 quantity);
         final DetailOrderResponse expectedDetailOrderResponse = new DetailOrderResponse(orderId,
             List.of(expectedDetailOrderProductResponse),
-            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(), "PENDING",
+            new BigInteger(product.price()).multiply(BigInteger.valueOf(quantity)).toString(),
+            "PENDING",
             LocalDateTime.now());
 
         // when
@@ -217,11 +217,13 @@ class OrderAcceptanceTest extends AcceptanceTest {
         PayApiSupporter.pay(payRequest, orderIdResponse.orderId(), accessToken);
 
         // when
-        final ExtractableResponse<Response> result = OrderApiSupporter.cancelOrder(orderIdResponse.orderId(), accessToken);
+        final ExtractableResponse<Response> result = OrderApiSupporter.cancelOrder(
+            orderIdResponse.orderId(), accessToken);
 
         // then
         HttpValidator.assertOk(result);
-        final DetailOrderResponse detailOrderResponse = OrderApiSupporter.getOrderByOrderId(orderIdResponse.orderId(), accessToken)
+        final DetailOrderResponse detailOrderResponse = OrderApiSupporter.getOrderByOrderId(
+                orderIdResponse.orderId(), accessToken)
             .as(DetailOrderResponse.class);
         assertThat(detailOrderResponse.type()).isEqualTo("CANCELED");
     }

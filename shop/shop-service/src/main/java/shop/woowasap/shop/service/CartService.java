@@ -7,21 +7,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.woowasap.core.id.api.IdGenerator;
-import shop.woowasap.shop.domain.in.cart.CartUseCase;
-import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
-import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
-import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.cart.Cart;
 import shop.woowasap.shop.domain.cart.CartProduct;
 import shop.woowasap.shop.domain.cart.CartProductQuantity;
 import shop.woowasap.shop.domain.exception.NotExistsProductException;
-import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.in.cart.CartUseCase;
+import shop.woowasap.shop.domain.in.cart.request.AddCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.request.UpdateCartProductRequest;
+import shop.woowasap.shop.domain.in.cart.response.CartResponse;
 import shop.woowasap.shop.domain.out.CartRepository;
 import shop.woowasap.shop.domain.out.ProductRepository;
+import shop.woowasap.shop.domain.product.Product;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class CartService implements CartUseCase {
 
     private final CartRepository cartRepository;
@@ -29,47 +29,40 @@ public class CartService implements CartUseCase {
     private final IdGenerator idGenerator;
 
     @Override
-    @Transactional
     public void updateCartProduct(final long userId,
         final UpdateCartProductRequest updateCartProductRequest) {
-        if (!cartRepository.existCartByUserId(userId)) {
-            cartRepository.createEmptyCart(userId, idGenerator.generate());
-        }
+        createCartIfNotExists(userId);
 
         final Cart cart = cartRepository.getByUserId(userId);
         final Product product = getByProductId(updateCartProductRequest.productId());
 
         cart.updateCartProduct(CartProduct.builder()
             .product(product)
-            .quantity(new CartProductQuantity(updateCartProductRequest.quantity(), product.getQuantity()))
+            .quantity(
+                new CartProductQuantity(updateCartProductRequest.quantity(), product.getQuantity()))
             .build());
         cartRepository.persist(cart);
     }
 
     @Override
-    @Transactional
     public void addCartProduct(final long userId,
         final AddCartProductRequest addCartProductRequest) {
-        if (!cartRepository.existCartByUserId(userId)) {
-            cartRepository.createEmptyCart(userId, idGenerator.generate());
-        }
+        createCartIfNotExists(userId);
 
         final Cart cart = cartRepository.getByUserId(userId);
         final Product product = getByProductId(addCartProductRequest.productId());
 
         cart.addProduct(CartProduct.builder()
             .product(product)
-            .quantity(new CartProductQuantity(addCartProductRequest.quantity(), product.getQuantity()))
+            .quantity(
+                new CartProductQuantity(addCartProductRequest.quantity(), product.getQuantity()))
             .build());
         cartRepository.persist(cart);
     }
 
     @Override
-    @Transactional
     public void deleteCartProduct(final long userId, final long productId) {
-        if (!cartRepository.existCartByUserId(userId)) {
-            cartRepository.createEmptyCart(userId, idGenerator.generate());
-        }
+        createCartIfNotExists(userId);
 
         final Cart cart = cartRepository.getByUserId(userId);
         final Product product = getByProductId(productId);
@@ -80,10 +73,7 @@ public class CartService implements CartUseCase {
 
     @Override
     public CartResponse getCartByUserId(final long userId) {
-        if (!cartRepository.existCartByUserId(userId)) {
-            final Cart emptyCart = cartRepository.createEmptyCart(userId, idGenerator.generate());
-            cartRepository.persist(emptyCart);
-        }
+        createCartIfNotExists(userId);
 
         return toCartResponse(cartRepository.getByUserId(userId));
     }
@@ -94,5 +84,11 @@ public class CartService implements CartUseCase {
                 MessageFormat.format("productId 에 해당하는 Product 가 존재하지 않습니다. productId : \"{0}\"",
                     productId)
             ));
+    }
+
+    private void createCartIfNotExists(final long userId) {
+        if (!cartRepository.existCartByUserId(userId)) {
+            cartRepository.createEmptyCart(userId, idGenerator.generate());
+        }
     }
 }

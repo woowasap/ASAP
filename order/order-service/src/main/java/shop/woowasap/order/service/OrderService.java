@@ -2,7 +2,6 @@ package shop.woowasap.order.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +41,6 @@ public class OrderService implements OrderUseCase {
     private final TimeUtil timeUtil;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    @Value("${shop.woowasap.locale:UTC}")
-    private String locale;
-
     @Override
     @Transactional
     public OrderIdResponse orderProduct(final OrderProductRequest orderProductRequest) {
@@ -82,8 +78,7 @@ public class OrderService implements OrderUseCase {
         final List<Order> orders = ordersPaginationResponse.orders();
 
         final List<OrderResponse> orderResponses = orders.stream()
-            .map(
-                order -> OrderMapper.toOrderResponse(order, getOrderProductResponse(order), locale))
+            .map(order -> OrderMapper.toOrderResponse(order, getOrderProductResponse(order)))
             .toList();
 
         return OrderMapper.toOrdersResponse(orderResponses, ordersPaginationResponse.page(),
@@ -118,6 +113,6 @@ public class OrderService implements OrderUseCase {
             .map(OrderMapper::toDetailOrderProductResponse)
             .toList();
 
-        return OrderMapper.toDetailOrderResponse(order, detailOrderProductResponses, locale);
+        return OrderMapper.toDetailOrderResponse(order, detailOrderProductResponses);
     }
 }

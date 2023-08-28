@@ -11,6 +11,7 @@ import shop.woowasap.order.domain.exception.DoesNotFindOrderException;
 import shop.woowasap.order.domain.exception.DoesNotOrderedException;
 import shop.woowasap.order.domain.in.OrderConnector;
 import shop.woowasap.order.domain.out.OrderRepository;
+import shop.woowasap.shop.domain.in.cart.CartConnector;
 import shop.woowasap.shop.domain.in.product.ProductConnector;
 
 @Service
@@ -19,6 +20,7 @@ public class OrderConnectorService implements OrderConnector {
 
     private final OrderRepository orderRepository;
     private final ProductConnector productConnector;
+    private final CartConnector cartConnector;
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
@@ -37,6 +39,7 @@ public class OrderConnectorService implements OrderConnector {
             throw new DoesNotOrderedException();
         }
         persistOrderType(order, OrderType.SUCCESS);
+        cartConnector.clearCartByUserId(userId);
     }
 
     private Order getOrder(final long orderId, final long userId) {
