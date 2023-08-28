@@ -31,7 +31,9 @@ public final class OrderDtoFixture {
         return orders.stream()
             .map(order -> new OrderResponse(order.getId(),
                 getOrderProductResponse(order, fixedName, fixedPrice),
-                order.getTotalPrice().toString(), LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale))))
+                order.getTotalPrice().toString(),
+                order.getOrderType().toString(),
+                LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale))))
             .toList();
     }
 

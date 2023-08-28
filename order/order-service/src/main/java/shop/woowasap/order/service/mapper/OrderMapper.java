@@ -72,11 +72,11 @@ public final class OrderMapper {
     }
 
     public static OrderResponse toOrderResponse(final Order order,
-        final List<OrderProductResponse> orderProductResponses, final String locale) {
+        final List<OrderProductResponse> orderProductResponses) {
 
         return new OrderResponse(order.getId(), orderProductResponses,
-            order.getTotalPrice().toString(),
-            LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
+            order.getTotalPrice().toString(), order.getOrderType().toString(),
+            LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of("UTC")));
     }
 
     public static OrdersResponse toOrdersResponse(final List<OrderResponse> orderResponses,
@@ -86,11 +86,11 @@ public final class OrderMapper {
     }
 
     public static DetailOrderResponse toDetailOrderResponse(final Order order,
-        final List<DetailOrderProductResponse> detailOrderProductResponses, final String locale) {
+        final List<DetailOrderProductResponse> detailOrderProductResponses) {
 
         return new DetailOrderResponse(order.getId(), detailOrderProductResponses,
             order.getTotalPrice().toString(), order.getOrderType().toString(),
-            LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of(locale)));
+            LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of("UTC")));
     }
 
     public static DetailOrderProductResponse toDetailOrderProductResponse(
