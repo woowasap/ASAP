@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import shop.woowasap.shop.domain.exception.InvalidCartProductQuantityException;
+import shop.woowasap.shop.domain.exception.InvalidProductQuantityException;
 import shop.woowasap.shop.domain.product.Quantity;
 
 @Getter
@@ -16,7 +17,7 @@ public final class CartProductQuantity {
     private final Long value;
 
     public CartProductQuantity(final Long value, final Quantity quantity) {
-        validate(value);
+        validate(value, quantity.getValue());
         this.value = getBoundValue(value, quantity.getValue());
     }
 
@@ -24,9 +25,12 @@ public final class CartProductQuantity {
         this(value, new Quantity(MAX_CART_PRODUCT_QUANTITY));
     }
 
-    private void validate(final Long value) {
+    private void validate(final Long value, final long productQuantity) {
         if (value == null) {
             throw new InvalidCartProductQuantityException("해당 장바구니의 상품 수량이 입력이 잘못되었습니다.");
+        }
+        if (productQuantity <= 0) {
+            throw new InvalidProductQuantityException("해당 상품 수량이 부족해서 구매할 수 없습니다.");
         }
     }
 
