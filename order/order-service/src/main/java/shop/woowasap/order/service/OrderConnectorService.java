@@ -29,7 +29,7 @@ public class OrderConnectorService implements OrderConnector {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = DoesNotOrderedException.class)
     public void consumeStock(final long orderId, final long userId) {
         final Order order = getOrder(orderId, userId);
         try {
