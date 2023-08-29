@@ -6,6 +6,7 @@ import static shop.woowasap.shop.service.mapper.ProductMapper.toProductsAdminRes
 import java.text.MessageFormat;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,7 @@ public class ProductService implements ProductUseCase {
 
     @Override
     @Transactional
+    @CacheEvict(value = "products", allEntries = true, cacheManager = "cacheManager")
     public void update(final long productId, final UpdateProductRequest updateProductRequest) {
         final Product product = getProduct(productId);
 
@@ -52,6 +54,7 @@ public class ProductService implements ProductUseCase {
         productRepository.persist(updateProduct);
     }
 
+    @CacheEvict(value = "products", allEntries = true, cacheManager = "cacheManager")
     @Override
     @Transactional
     public Long registerProduct(final RegisterProductRequest registerProductRequest) {
