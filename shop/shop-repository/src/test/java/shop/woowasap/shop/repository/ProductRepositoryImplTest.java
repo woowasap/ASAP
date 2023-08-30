@@ -6,8 +6,6 @@ import static shop.woowasap.shop.repository.support.ProductFixture.beforeSalePro
 import static shop.woowasap.shop.repository.support.ProductFixture.onSaleProduct;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +18,7 @@ import shop.woowasap.BeanScanBaseLocation;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationAdminResponse;
 import shop.woowasap.shop.domain.out.response.ProductsPaginationResponse;
 import shop.woowasap.shop.domain.product.Product;
+import shop.woowasap.shop.domain.product.SaleTime;
 
 @DataJpaTest
 @ContextConfiguration(classes = {BeanScanBaseLocation.class, ProductRepositoryImpl.class})
@@ -60,9 +59,11 @@ class ProductRepositoryImplTest {
                 product.getDescription().getValue(),
                 product.getPrice().getValue().toString(),
                 product.getQuantity().getValue(),
-                LocalDateTime.ofInstant(product.getSaleTime().getStartTime(), ZoneId.of("UTC")),
-                LocalDateTime.ofInstant(product.getSaleTime().getEndTime(), ZoneId.of("UTC")),
-                Instant.parse("2023-08-01T00:00:00.000Z")
+                SaleTime.builder()
+                    .startTime(product.getSaleTime().getStartTime())
+                    .endTime(product.getSaleTime().getEndTime())
+                    .build()
+                , Instant.parse("2023-08-01T01:00:00.000Z")
             );
 
             final Product result = productRepository.persist(product);

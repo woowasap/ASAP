@@ -232,8 +232,17 @@ class ProductTest {
                 .build();
 
             // when
-            final Product update = original.update(name, description, price, quantity, startTime,
-                endTime, updateTime);
+            final Product update = original.update(
+                name,
+                description,
+                price,
+                quantity,
+                SaleTime.builder()
+                    .startTime(startTime.toInstant(ZoneOffset.UTC))
+                    .endTime(endTime.toInstant(ZoneOffset.UTC))
+                    .build(),
+                updateTime
+            );
 
             // then
             assertThat(update).usingRecursiveAssertion().isEqualTo(expected);
@@ -265,12 +274,19 @@ class ProductTest {
 
             // when
             final Exception exception = catchException(
-                () -> original.update(name, description, price, quantity, startTime, endTime,
+                () -> original.update(
+                    name,
+                    description,
+                    price,
+                    quantity,
+                    SaleTime.builder()
+                        .startTime(startTime.toInstant(ZoneOffset.UTC))
+                        .endTime(endTime.toInstant(ZoneOffset.UTC))
+                        .build(),
                     updateTime));
 
             // then
             assertThat(exception).isInstanceOf(ProductModificationPermissionException.class);
-
         }
     }
 

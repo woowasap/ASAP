@@ -1,11 +1,13 @@
 package shop.woowasap.shop.service;
 
-import static shop.woowasap.shop.service.mapper.ProductMapper.toDomain;
 import static shop.woowasap.shop.service.mapper.ProductMapper.toProductsAdminResponse;
+import static shop.woowasap.shop.service.mapper.ProductMapper.toRegisterProduct;
+import static shop.woowasap.shop.service.mapper.ProductMapper.toUpdateProduct;
 
 import java.text.MessageFormat;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,27 +38,19 @@ public class ProductService implements ProductUseCase {
 
     @Override
     @Transactional
+    @CacheEvict(value = "products", allEntries = true, cacheManager = "cacheManager")
     public void update(final long productId, final UpdateProductRequest updateProductRequest) {
         final Product product = getProduct(productId);
 
-        final Product updateProduct = product.update(
-            updateProductRequest.name(),
-            updateProductRequest.description(),
-            updateProductRequest.price(),
-            updateProductRequest.quantity(),
-            updateProductRequest.startTime(),
-            updateProductRequest.endTime(),
-            timeUtil.now()
-        );
-
-        productRepository.persist(updateProduct);
+        productRepository.persist(toUpdateProduct(product, updateProductRequest, timeUtil.now()));
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "products", allEntries = true, cacheManager = "cacheManager")
     public Long registerProduct(final RegisterProductRequest registerProductRequest) {
         final Product persistProduct = productRepository.persist(
-            toDomain(idGenerator, registerProductRequest, timeUtil.now()));
+            toRegisterProduct(idGenerator, registerProductRequest, timeUtil.now()));
 
         return persistProduct.getId();
     }

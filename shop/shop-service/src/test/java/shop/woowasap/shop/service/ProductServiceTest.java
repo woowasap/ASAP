@@ -135,9 +135,13 @@ class ProductServiceTest {
             // given
             final long onSaleProductId = 1L;
             final Product product = onSaleProduct(onSaleProductId);
-            final UpdateProductRequest updateProductRequest = updateProductRequest(product);
+            final Product updateProduct = beforeSaleProduct(onSaleProductId);
+            final Instant updateTime = Instant.parse("2023-08-01T02:00:00.000Z");
+            final UpdateProductRequest updateProductRequest = updateProductRequest(updateProduct);
 
-            when(productRepository.findById(onSaleProductId)).thenReturn(Optional.of(product));
+            when(productRepository.findById(onSaleProductId)).thenReturn(
+                Optional.of(product));
+            when(timeUtil.now()).thenReturn(updateTime);
 
             // when
             Exception exception = catchException(
@@ -223,7 +227,8 @@ class ProductServiceTest {
             final ProductsAdminResponse expectedProductsAdminResponse = productsResponse(products);
 
             // when
-            final ProductsAdminResponse productsAdminResponse = productService.getProductsInAdmin(page, size);
+            final ProductsAdminResponse productsAdminResponse = productService.getProductsInAdmin(
+                page, size);
 
             // then
             assertThat(productsAdminResponse).usingRecursiveComparison()
@@ -247,7 +252,8 @@ class ProductServiceTest {
 
             List<Product> products = List.of(product1, product2);
 
-            when(productRepository.findAllValidWithPagination(Instant.parse(startTime), productId, NOW_TIME)).thenReturn(
+            when(productRepository.findAllValidWithPagination(Instant.parse(startTime), productId,
+                NOW_TIME)).thenReturn(
                 new ProductsPaginationResponse(products, false));
 
             // when
