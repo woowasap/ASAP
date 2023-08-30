@@ -54,9 +54,9 @@ public class ProductService implements ProductUseCase {
         productRepository.persist(updateProduct);
     }
 
-    @CacheEvict(value = "products", allEntries = true, cacheManager = "cacheManager")
     @Override
     @Transactional
+    @CacheEvict(value = "products", allEntries = true, cacheManager = "cacheManager")
     public Long registerProduct(final RegisterProductRequest registerProductRequest) {
         final Product persistProduct = productRepository.persist(
             toDomain(idGenerator, registerProductRequest, timeUtil.now()));
