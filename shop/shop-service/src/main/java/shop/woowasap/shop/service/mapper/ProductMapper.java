@@ -7,6 +7,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import shop.woowasap.core.id.api.IdGenerator;
 import shop.woowasap.shop.domain.in.product.request.RegisterProductRequest;
+import shop.woowasap.shop.domain.in.product.request.UpdateProductRequest;
 import shop.woowasap.shop.domain.in.product.response.ProductDetailsResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductResponse;
 import shop.woowasap.shop.domain.in.product.response.ProductsAdminResponse;
@@ -23,7 +24,23 @@ public final class ProductMapper {
     private ProductMapper() {
     }
 
-    public static Product toDomain(final IdGenerator idGenerator,
+    public static Product toUpdateProduct(final Product product,
+        final UpdateProductRequest updateProductRequest, final Instant nowTime) {
+        return product.update(
+            updateProductRequest.name(),
+            updateProductRequest.description(),
+            updateProductRequest.price(),
+            updateProductRequest.quantity(),
+            SaleTime.builder()
+                .startTime(updateProductRequest.startTime().toInstant(ZoneOffset.UTC))
+                .endTime(updateProductRequest.endTime().toInstant(ZoneOffset.UTC))
+                .nowTime(nowTime)
+                .build(),
+            nowTime
+        );
+    }
+
+    public static Product toRegisterProduct(final IdGenerator idGenerator,
         final RegisterProductRequest registerProductRequest, final Instant nowTime) {
         return Product.builder()
             .id(idGenerator.generate())

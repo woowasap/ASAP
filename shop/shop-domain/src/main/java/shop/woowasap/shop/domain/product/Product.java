@@ -2,8 +2,6 @@ package shop.woowasap.shop.domain.product;
 
 import java.text.MessageFormat;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -53,8 +51,7 @@ public final class Product {
         final String description,
         final String price,
         final long quantity,
-        final LocalDateTime startTime,
-        final LocalDateTime endTime,
+        final SaleTime saleTime,
         final Instant nowTime
     ) {
         validateUpdateTime(nowTime);
@@ -65,11 +62,7 @@ public final class Product {
             .description(description)
             .price(price)
             .quantity(quantity)
-            .saleTime(SaleTime.builder()
-                .startTime(startTime.atZone(ZoneOffset.UTC).toInstant())
-                .endTime(endTime.atZone(ZoneOffset.UTC).toInstant())
-                .nowTime(nowTime)
-                .build())
+            .saleTime(saleTime)
             .build();
     }
 
